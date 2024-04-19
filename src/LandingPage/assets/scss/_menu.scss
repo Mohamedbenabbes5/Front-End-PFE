@@ -1,0 +1,197 @@
+//
+// _menu.scss
+//
+
+/*********************************/
+/*         Menu                  */
+/*===============================*/
+
+input,
+PhoneInput {
+  display: block;
+  box-sizing: border-box !important ;
+  border-radius: 30px !important;
+}
+
+.hover-effect {
+    position: relative;
+    
+   
+  }
+  
+  .hover-effect::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px; /* Ajustez cette valeur selon votre préférence */
+    width: 0; /* Largeur initiale du soulignement */
+    height: 3px; /* Épaisseur du soulignement */
+    background-color: $primary ; /* Couleur du soulignement */
+    transition: width 0.3s ease; /* Transition de la largeur pour l'effet de gauche à droite */
+    
+  }
+  .hover-effect  {
+    transition: transform 0.3s ease; /* Ajoute une transition fluide */
+}
+
+.hover-effect:hover {
+    transform: scale(1.2); /* Applique une échelle au titre lors du survol */
+}
+  .hover-effect:hover::after {
+    width: 100%; /* Largeur complète du soulignement lors du survol */
+    font-size: 1.3em;
+  }
+.navbar {
+    transition: all 0.5s ease;
+    padding: 0;
+    .navbar-nav {
+        .nav-item {
+            .nav-link {
+                color: $dark;
+                font-size: $font-size-menu;
+                letter-spacing: 0.05rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                background-color: transparent;
+                margin: 0px 6px;
+                transition: all 0.3s ease;
+                font-family: $font-family-base;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                &:hover{
+                    transform: scale(1.2); /* Applique une échelle au titre lors du survol */
+
+                }
+                &:active,
+                &.active {
+                    color: $primary !important;
+                }
+            }
+            &:active,
+            &.active {
+                .nav-link {
+                    color: $primary !important;
+                }
+            }
+        }
+    }
+    .navbar-brand {
+        line-height: 70px;
+        font-size: 0;
+        padding: 0;
+        .l-dark,
+        .logo-dark-mode {
+        
+            width: 200px
+        }
+        .l-light,
+        .logo {
+            width: 300px;
+        }
+        @media (max-width: 991.98px) {
+            .l-dark {
+                display: inline-block !important;
+            }
+            .l-light {
+                display: none !important;
+            }
+        }
+    }
+    .navbar-toggler {
+        padding: 0px;
+        border: none;
+        font-size: 24px;
+        &:focus {
+            box-shadow: none;
+        }
+    }
+    .menu-social {
+        .login-btn-primary {
+            display: none;
+        }
+        .login-btn-light {
+            display: inline-block;
+        }
+
+        @media (max-width: 991.98px) {
+            .login-btn-primary {
+                display: inline-block !important;
+            }
+            .login-btn-light {
+                display: none !important;
+            }
+        }
+    }
+    &.nav-sticky {
+        background: $white;
+        margin-top: 0px;
+        box-shadow: $shadow;
+        .navbar-brand {
+            .l-dark {
+                display: inline-block;
+            }
+            .l-light {
+                display: none;
+            }
+        }
+        .menu-social {
+            .login-btn-primary {
+                display: inline-block;
+            }
+            .login-btn-light {
+                display: none;
+            }
+        }
+    }
+    @media (min-width: 992px) {
+        .navbar-nav {
+            &.ms-auto {
+                .nav-item {
+                    &:last-child {
+                        .nav-link {
+                            padding-right: 0;
+                            margin-right: 0;
+                        }
+                    }
+                }
+            }
+        }
+        &.nav-light {
+            .navbar-nav {
+                .nav-item {
+                    .nav-link {
+                        color: rgba($white, 0.8);
+                        font-family: $font-family-base;
+                        &:hover,
+                        &:active,
+                        &.active {
+                            color: $white !important;
+                        }
+                    }
+                }
+            }
+            &.nav-sticky {
+                background: $white;
+                .nav-item {
+                    .nav-link {
+                        color: $dark;
+                        &:hover,
+                        &.active,
+                        &:active {
+                            color: $primary !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @media (max-width: 991px) {
+        background-color: $white;
+        box-shadow: $shadow;
+
+        .menu-social {
+            margin-bottom: 20px !important;
+        }
+    }
+}

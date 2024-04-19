@@ -1,0 +1,78 @@
+/* Template Name: Motos - Multipurpose Landing Page Template
+   Author: Shreethemes
+   Email: support@shreethemes.in
+   Website: https://shreethemes.in
+   Version: 1.1.0
+   Created: Feb 2022
+   File Description: Main Css file of the template
+*/
+
+/*********************************/
+/*         INDEX                 */
+/*================================
+ *     01.  Variables            *
+ *     02.  General              *
+ *     03.  Helper               *
+ *     04.  Bootstrap Custom     *
+ *     05.  Components           *
+ *     06.  Menu                 *
+ *     07.  Home / Landing       *
+ *     08.  About Us             *
+ *     09.  Blog                 *
+ *     11.  Countdown            *
+ *     12.  Features             *
+ *     13.  Testimonial          *
+ *     14.  Price                *
+ *     15.  Team                 *
+ *     16.  Contact              *
+ *     17.  Footer               *
+ ================================*/
+
+@import "variables";
+@import "general";
+@import "helper";
+@import "bootstrap-custom";
+@import "components";
+@import "menu";
+@import "home";
+@import "blog";
+@import "features";
+@import "team";
+@import "testi";
+@import "work";
+@import "contact";
+@import "footer";
+
+
+// .fixed-top {
+//    z-index: 999;
+// }
+
+.nav-item, .back-to-top {
+   cursor: pointer;
+}
+
+.swiper-slider-hero .swiper-container .swiper-button-prev, .swiper-slider-hero .swiper-container .swiper-button-next {
+   background: transparent;
+   width: 40px;
+   height: 40px;
+   line-height: 35px;
+   margin-top: -30px;
+   border: 1px solid #ffffff;
+   border-radius: 30px;
+}
+
+.swiper-button-prev:after, .swiper-button-next:after {
+   font-family: swiper-icons;
+   font-size: 12px !important;
+   text-transform: none !important;
+   letter-spacing: 0;
+   font-variant: initial;
+   line-height: 1;
+   font-size: 16px;
+   color: #ffffff;
+}
+
+.btn-close {
+   background: transparent url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill=%27%23000%27%3e%3cpath d=%27M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z%27/%3e%3c/svg%3e") center/1em auto no-repeat !important
+}
