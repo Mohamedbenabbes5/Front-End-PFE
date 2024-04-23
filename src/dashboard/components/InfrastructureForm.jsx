@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
-const InfrastForm = ({ onUpdate }) => {
+const InfrastForm = ({  onUpdate, triggerValidation  }) => {
   const [formData, setFormData] = useState({
     name: null,
     type: null,

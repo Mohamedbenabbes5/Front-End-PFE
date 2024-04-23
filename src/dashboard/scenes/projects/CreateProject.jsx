@@ -37,50 +37,76 @@ import { ThemeProvider } from "@mui/material/styles"; // Importez le ThemeProvid
 const FormWizard = () => {
   const [activeTab, setactiveTab] = useState(0);
 
+
   const [passedSteps, setPassedSteps] = useState([1]);
 
 
   const [showInfrastForm, setShowInfrastForm] = useState(false);
 
 
+  const [triggerValidation, setTriggerValidation] = useState(false);
+  const [isStepValid, setIsStepValid] = useState(false); // État de validation
+
+
+
 
   function toggleTab(tab) {
-    if (activeTab !== tab) {
+    console.log(`toggleTab executed, isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}     tab=${tab} activeTab=${activeTab} passedSteps=${passedSteps}  `)
+    setTriggerValidation(true); 
+    if (activeTab !== tab && isStepValid) {
       var modifiedSteps = [...passedSteps, tab];
       if (tab >= 0 && tab <= 4) {
         setactiveTab(tab);
         setPassedSteps(modifiedSteps);
+        setIsStepValid(true);
       }
     }
+    console.log(`toggleTab end execute, isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}     tab=${tab} activeTab=${activeTab} passedSteps=${passedSteps}  `)
+
   }
 
 
   const [formData, setFormData] = useState({
     project: [],
-    infrastructue: [],
+    infrastructure: [],
     images: [],
     videos_Fpath: []
   });
 
+
   // Fonctions de mise à jour pour chaque étape
-  const handleChangeStep = (field, value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+
+  const handelChangeProject = (isValid, formData) => {
+    console.log(`handelChangeProject executed, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}  isStepValid=${isStepValid}    activeTab=${activeTab} passedSteps=${passedSteps}  `)
+
+    if (isValid == true && formData) {
+      console.log('handelChangeProject validating',isValid,formData)
+       setIsStepValid(true);
+      setFormData(prevState => ({
+        ...prevState,
+        project: formData
+      }));
+      setTriggerValidation(false); // Réinitialiser le déclenchement de validation
+    console.log(`handelChangeProject end execute, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}      activeTab=${activeTab} passedSteps=${passedSteps}  `)
+
+    }
+
   };
-  const handelChangeProject = (data) => {
-    setFormData(prevState => ({
-      ...prevState,
-      project: data
-    }));
-  };
-  
-  const handelChangeInfrastructure = (data) => {
-    setFormData(prevState => ({
-      ...prevState,
-      infrastructue: data
-    }));
+
+  const handelChangeInfrastructure = (isValid, formData) => {
+    console.log(`handelChangeInfrastructure executed, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}       activeTab=${activeTab} passedSteps=${passedSteps}  `)
+
+
+    if (isValid == true && formData) {
+      setIsStepValid(true); // Mettre à jour l'état de validation
+      setFormData(prevState => ({
+        ...prevState,
+        project: formData
+      }));
+      setTriggerValidation(false); // Réinitialiser le déclenchement de validation
+    }
+    console.log(`end handelChangeInfrastructure ,isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}    activeTab=${activeTab} passedSteps=${passedSteps}  `)
+
   };
   const handelChangeImages = (data) => {
     console.log(data);
@@ -102,21 +128,21 @@ const FormWizard = () => {
 
   const handleSaveAndUploadAll = async () => {
     setLoading(true); // Démarrer le chargement
-    console.log("createproject formData  handleSaveAndUploadAll ",formData)
+    console.log("createproject formData  handleSaveAndUploadAll ", formData)
 
     try {
       console.log('form data', formData);
       const formDataToSend = new FormData();
-  
+
       if (formData.project) {
         formDataToSend.append('project', JSON.stringify(formData.project));
       }
-  
-      // Ajouter l'objet infrastructue (détails de l'infrastructure) à FormData
-      if (formData.infrastructue) {
-        formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructue));
+
+      // Ajouter l'objet infrastructure (détails de l'infrastructure) à FormData
+      if (formData.infrastructure) {
+        formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructure));
       }
-    
+
       // Parcours de images (tableau de fichiers)
       formData.images.forEach((file, index) => {
         formDataToSend.append(`image_${index}`, file);
@@ -152,8 +178,8 @@ const FormWizard = () => {
     } finally {
       setLoading(false); // Arrêter le chargement
     }
-  };   
-  console.log("createproject formData",formData)
+  };
+  console.log("createproject formData", formData)
 
   return (
     <>
@@ -196,7 +222,7 @@ const FormWizard = () => {
                       </NavLink>
                     </NavItem>
 
-                  
+
                     <NavItem className={classnames({ active: activeTab === 2 })}>
                       <NavLink
                         data-toggle="tab"
@@ -249,7 +275,11 @@ const FormWizard = () => {
 
                     <TabPane tabId={0}>
                       <div>
-                        <ProjectForm onUpdate={handelChangeProject}/>
+                        <ProjectForm
+                          onUpdate={handelChangeProject}
+                          triggerValidation={triggerValidation}
+
+                        />
                       </div>
                     </TabPane>
 
@@ -257,7 +287,10 @@ const FormWizard = () => {
                     <TabPane tabId={1}>
                       {showInfrastForm ? (
                         <div>
-                          <InfrastForm onUpdate={handelChangeInfrastructure} />
+                          <InfrastForm onUpdate={handelChangeInfrastructure}
+                            triggerValidation={triggerValidation}
+
+                          />
                           <a style={{
                             cursor: 'pointer',
                             fontSize: '20px',
@@ -269,8 +302,10 @@ const FormWizard = () => {
 
                       ) : (
                         <div >
-                          
-                          <SelectInfrastructure onUpdate={handelChangeInfrastructure} />
+
+                          <SelectInfrastructure onUpdate={handelChangeInfrastructure}
+                            triggerValidation={triggerValidation}
+                          />
 
                           <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
                             <Fab color="secondary" aria-label="add">
@@ -286,14 +321,16 @@ const FormWizard = () => {
 
                     <TabPane tabId={2}>
                       <div>
-                        <UploadImages onUpdate={handelChangeImages} />
+                        <UploadImages onUpdate={handelChangeImages}
+                        />
                       </div>
                     </TabPane>
 
                     <TabPane tabId={3}>
                       <div>
                         {/* <FormUpload/> */}
-                        <DynamicTable onUpdate={handelChangeVideos} />
+                        <DynamicTable onUpdate={handelChangeVideos}
+                        />
                       </div>
                     </TabPane>
 
@@ -347,6 +384,7 @@ const FormWizard = () => {
 
                     <li
                       className={activeTab === 4 ? "next disabled" : "next"}
+
                     >
                       {activeTab === 3 ?
                         (

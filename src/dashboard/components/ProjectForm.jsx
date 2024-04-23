@@ -3,13 +3,14 @@ import {
     Col,
     Form,
     Input,
+    FormFeedback,
     Label,
     Row,
-
+    FormGroup,
 } from "reactstrap";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-const ProjectForm = ({ onUpdate }) => {
+const ProjectForm = ({ onUpdate, triggerValidation }) => {
     const top100Films = [
         { title: 'The Shawshank Redemption', year: 1994 },
         { title: 'The Godfather', year: 1972 },
@@ -27,6 +28,31 @@ const ProjectForm = ({ onUpdate }) => {
         endate: null,
         guests: null
     });
+    const [errors, setnewErrors] = useState({});
+
+    const validateFields = () => {
+        const newErrors = {};
+
+        if (!formData.name) {
+            newErrors.name = "Project name is required";
+        }
+
+        if (!formData.startdate) {
+            newErrors.startdate = "Start date is required";
+        }
+
+        if (!formData.enddate) {
+            newErrors.enddate = "End date is required";
+        }
+
+        if (!formData.description) {
+            newErrors.description = "Description is required";
+        }
+        setnewErrors(newErrors);
+        return newErrors; // Retourner les erreurs nouvellement mises à jour
+
+
+    };
 
     const handleChangeInputForm = (e) => {
         const { name, value } = e.target;
@@ -41,115 +67,109 @@ const ProjectForm = ({ onUpdate }) => {
     }, []);
 
     useEffect(() => {
-        // Appeler onUpdate chaque fois que formData change
-        onUpdate(formData);
-    }, [formData]); // Ajoutez formData comme dépendance
+        if (triggerValidation) {
+           
+            const newErrors = validateFields(); // Appel à validateFields pour mettre à jour les erreurs
+            const isValid = Object.keys(newErrors).length === 0;
+            console.log("useEffect projectForm ,Validation=", isValid)
+            // Envoyer la validité et les données au parent
+            onUpdate(isValid, formData);
+        }
+    }, [triggerValidation]);
 
     return (
-        <Form >
+        <Form>
             <Row>
-                <Col lg="12"
-
-                >
-                    <div className="mb-3">
-                        <Label >
-                            Project Name
-                        </Label>
+                <Col lg="12">
+                    <FormGroup>
+                        <Label>Project Name</Label>
                         <Input
                             name="name"
                             type="text"
                             required
+                            invalid={!!errors.name}
                             className="form-control"
-                            id="basicpill-firstname-input1"
-                            placeholder="eg. Tacoma Narrows Bridge"
+                            placeholder="e.g., Tacoma Narrows Bridge"
                             onChange={handleChangeInputForm}
-
                         />
-                    </div>
+                        {errors.name && (
+                            <FormFeedback>{errors.name}</FormFeedback>
+                        )}
+                    </FormGroup>
                 </Col>
-
-
             </Row>
             <Row>
                 <Col lg="6">
-                    <div className="mb-3">
-                        <Label >
-                            Start Date
-                        </Label>
+                    <FormGroup>
+                        <Label>Start Date</Label>
                         <Input
                             name="startdate"
-                            onChange={handleChangeInputForm}
-
                             type="date"
                             required
+                            invalid={!!errors.startdate}
                             className="form-control"
-                            id="basicpill-firstname-input1"
+                            onChange={handleChangeInputForm}
                         />
-                    </div>
+                        {errors.startdate && (
+                            <FormFeedback>{errors.startdate}</FormFeedback>
+                        )}
+                    </FormGroup>
                 </Col>
                 <Col lg="6">
-                    <div className="mb-3">
-                        <Label >
-                            End Date
-                        </Label>
+                    <FormGroup>
+                        <Label>End Date</Label>
                         <Input
                             name="enddate"
-                            onChange={handleChangeInputForm}
-
                             type="date"
                             required
+                            invalid={!!errors.enddate}
                             className="form-control"
-                            id="basicpill-firstname-input1"
+                            onChange={handleChangeInputForm}
                         />
-                    </div>
+                        {errors.enddate && (
+                            <FormFeedback>{errors.enddate}</FormFeedback>
+                        )}
+                    </FormGroup>
                 </Col>
             </Row>
             <Row>
                 <Col lg="12">
-                    <div className="mb-3 mt-3">
-
-                        <Label >
-                            shared with
-                        </Label>
+                    <FormGroup>
+                        <Label>Shared With</Label>
                         <Autocomplete
                             className="custom-autocomplete"
-
                             multiple
                             id="tags-outlined"
-
                             options={top100Films}
                             getOptionLabel={(option) => option.title}
-                            defaultValue={[top100Films[3]]}
-                            filterSelectedOptions
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    placeholder="add guests"
+                                    placeholder="Add guests"
                                 />
                             )}
                         />
-                    </div>
+                    </FormGroup>
                 </Col>
             </Row>
             <Row>
                 <Col lg="12">
-                    <div className="mb-3">
-                        <Label htmlFor="basicpill-address-input1">
-                            Description
-                        </Label>
+                    <FormGroup>
+                        <Label>Description</Label>
                         <textarea
                             name="description"
-                            onChange={handleChangeInputForm}
-                            id="basicpill-address-input1"
                             className="form-control"
                             rows="2"
-                            placeholder="Enter Your description ..."
-
+                            placeholder="Enter your description..."
+                            onChange={handleChangeInputForm}
                         />
-                    </div>
+                        {errors.description && (
+                            <FormFeedback>{errors.description}</FormFeedback>
+                        )}
+                    </FormGroup>
                 </Col>
             </Row>
-        </Form >
-    )
+        </Form>
+    );
 }
 export default ProjectForm;

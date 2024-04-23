@@ -3,7 +3,7 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const SelectInfrastructure = ({ onUpdate }) => {
+const SelectInfrastructure = ({ onUpdate, triggerValidation   }) => {
   const [infrastructurelist, setInfrastructurelist] = useState([]);
   const [selectedInfrastructure, setSelectedInfrastructure] = useState(null);
 
@@ -46,7 +46,6 @@ const SelectInfrastructure = ({ onUpdate }) => {
   };
   
 
-console.log("SelectedInfrastructure",selectedInfrastructure)
   return (
     <div className="text-center">
       <h5>Select Infrastructure</h5>
