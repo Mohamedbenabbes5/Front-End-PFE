@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 import BackgroundImageAdmin from '../assets/images/bg/admin4.jpeg';
 import BackgroundImageGuest from '../assets/images/bg/guest.jpg';
-
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import Logo from '../assets/images/unboxing.gif';
 
 /**
@@ -15,11 +16,13 @@ import Logo from '../assets/images/unboxing.gif';
  */
 export default function Login() {
     const state = useLocation(); // Utilisation du hook useLocation pour obtenir l'objet location
+    const user = state.state?.userType; // Récupérer la valeur de user depuis location.state
+
     const navigate = useNavigate();
     
-    const [errorMessage, setErrorMessage] = useState("");
-
-    const user = state.state?.userType; // Récupérer la valeur de user depuis location.state
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [OtherError, setOtherError] = useState("");
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -31,10 +34,15 @@ export default function Login() {
             ...formData, [name]: value
         })
     };
+
    console.log('Utilisateur :', user); // Afficher la valeur de user dans la console
+
    const loginAdmin = async (data) => {
     try {
         console.log("loginAdmin called");
+          // Réinitialiser les messages d'erreur
+          setEmailError('');
+          setPasswordError('');
         const response = await axios.post('http://localhost:3000/auth/login-company', data, {
             headers: {
                 'Content-Type': 'application/json'
@@ -43,6 +51,8 @@ export default function Login() {
 
         if (response.status === 201) {
             // Enregistrement réussi, afficher un message de succès et rediriger vers la dashboard
+            const token = response.data.accessToken ;
+            localStorage.setItem('accessToken', token);
                 navigate(
                     '/dashboard',
                     { state: { userType: state?.userType } }
@@ -52,10 +62,14 @@ export default function Login() {
     } catch (error) {
         if (error.response && error.response.data.error) {
             // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
-            setErrorMessage(error.response.data.error);
+            if (error.response.data.error === 'Invalid email') {
+                setEmailError('Invalid email');
+            } else if (error.response.data.error === 'Invalid password') {
+                setPasswordError('Invalid password');
+            }
+
         } else {
-            // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-            setErrorMessage("An error occurred while registering the company.");
+            setOtherError("An error occurred while registering the company.");
         }
     }
 };
@@ -102,14 +116,14 @@ export default function Login() {
                                                                         <input onChange={handleChange} type="email" className="form-control" placeholder="Email" name="email" required />
                                                                     </div>
                                                                 </Col>
-
+                                                                {emailError && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" ,marginTop:"0px"}}>{emailError}</span>}
                                                                 <Col lg={12} >
                                                                     <div className="mb-3">
                                                                         <label className="form-label">Password <span className="text-danger">*</span></label>
                                                                         <input onChange={handleChange} type="password" className="form-control" placeholder="Password" name="password" required />
                                                                     </div>
                                                                 </Col>
-
+                                                                {passwordError && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px"  ,marginTop:"0px"}}>{passwordError}</span>}
                                                                 <Col lg={12} >
                                                                     <div className="d-flex justify-content-between">
                                                                         <div className="mb-3">
@@ -145,7 +159,16 @@ export default function Login() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user==="Admin"?BackgroundImageAdmin:BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'></div>
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user==="Admin"?BackgroundImageAdmin:BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
+                        <Stack sx={{ width: '100%' }} spacing={2}>
+                                {OtherError && (
+                                    <Alert variant="filled" severity="error" className="mt-2">
+                                        {OtherError}
+                                    </Alert>
+                                )}
+                             
+                            </Stack>
+                        </div>
                     </Row>
                 </div>
             </section>

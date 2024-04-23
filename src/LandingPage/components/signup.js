@@ -161,7 +161,7 @@ export default function Signup() {
 
                     <Row className="g-0 position-relative">
                         <Col lg={4} className="cover-my-30 order-2 ">
-                           <div className="mt-md-0   mb-4 text-center">
+                            <div className="mt-md-0   mb-4 text-center">
                                 <Link to="/"><img src={Logo} alt="" width="100px" /></Link>
                             </div>
 
@@ -287,20 +287,19 @@ export default function Signup() {
                         </Col>
 
                         <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${state?.userType === "Admin" ? BackgroundImageAdmin : BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
-                            {/* {errorMessage && <div className="alert alert-error show">{errorMessage}</div>}
-                            {successMessage && <div className="alert alert-success show">{successMessage}</div>} */}
+                           
                             <Stack sx={{ width: '100%' }} spacing={2}>
-      {errorMessage && (
-        <Alert variant="filled" severity="error" className="mt-2">
-          {errorMessage}
-        </Alert>
-      )}
-      {successMessage && (
-        <Alert variant="filled" severity="success"  className="mt-2">
-          {successMessage}
-        </Alert>
-      )}
-    </Stack>
+                                {errorMessage && (
+                                    <Alert variant="filled" severity="error" className="mt-2">
+                                        {errorMessage}
+                                    </Alert>
+                                )}
+                                {successMessage && (
+                                    <Alert variant="filled" severity="success" className="mt-2">
+                                        {successMessage}
+                                    </Alert>
+                                )}
+                            </Stack>
 
                         </div>
                     </Row>

@@ -11,7 +11,7 @@ import { mdiCloudUpload } from '@mdi/js';
 import Icon from '@mdi/react';
 import { Link } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-const FormUpload = ({ onUpdate }) => {
+const UploadImages = ({ onUpdate }) => {
   // State pour stocker les fichiers sélectionnés
   const [selectedFiles, setSelectedFiles] = useState([]);
 
@@ -20,15 +20,12 @@ const FormUpload = ({ onUpdate }) => {
     // Filtrer les fichiers pour accepter uniquement les images
     const imageFiles = files.filter(file => file.type.includes("image"));
 
-    // Concaténer les nouveaux fichiers avec les fichiers existants
-    const updatedSelectedFiles = [...selectedFiles, ...imageFiles.map(file => ({
-      ...file,
-      preview: URL.createObjectURL(file),
-      formattedSize: formatBytes(file.size)
-    }))];
-    setSelectedFiles(updatedSelectedFiles);
-
-    onUpdate(imageFiles); // Passer les nouveaux fichiers à la fonction onUpdate
+   // Mettre à jour l'état selectedFiles
+    setSelectedFiles(prevSelectedFiles => {
+      const updatedFiles = [...prevSelectedFiles, ...imageFiles];
+      onUpdate(updatedFiles); // Passer les nouveaux fichiers à la fonction onUpdate
+      return updatedFiles;//, lorsque nous retournons updatedFiles, cela signifie que selectedFiles sera équivalent à updatedFiles après que la mise à jour de l'état ait été effectuée.
+    });
   };
 
   // Fonction pour formater la taille du fichier
@@ -85,12 +82,11 @@ const FormUpload = ({ onUpdate }) => {
                                   width="100"
                                   className="avatar-sm rounded bg-light"
                                   alt={file.name}
-                                  src={file.preview}
+                                  src={URL.createObjectURL(file)}
                                 />
                               </Col>
                               <Col>
-                                <Link to="#" className="text-muted font-weight-bold">{file.name}</Link>
-                                <p className="mb-0"><strong>{file.formattedSize}</strong></p>
+                                <p className="mb-0"><strong>{formatBytes(file.size)}</strong></p>
                               </Col>
                               <Col className="col-auto">
 
@@ -116,4 +112,4 @@ const FormUpload = ({ onUpdate }) => {
   );
 };
 
-export default FormUpload;
+export default UploadImages;

@@ -184,33 +184,6 @@ $value in $colors {
     font-size: 90%;
 }
 
-//card
-.card {
-    .card-body {
-        padding: 1.5rem;
-    }
-    border: none;
-    .card-img {
-        position: relative;
-        .card-overlay {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            opacity: 0;
-            background: $card-overlay;
-            transition: all 0.5s ease;
-        }
-    }
-    &:hover {
-        .card-img {
-            .card-overlay {
-                opacity: 1;
-            }
-        }
-    }
-}
 
 //Offcanvas
 .offcanvas {

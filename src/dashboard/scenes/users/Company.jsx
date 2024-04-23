@@ -137,7 +137,7 @@ const Company = () => {
         <Header title="All Companies" subtitle="List of Company account" />
 
         <Box>
-          <Link to="/form" style={{ textDecoration: "none" }}>
+          <Link to="/dashboard/form" style={{ textDecoration: "none" }}>
             <Button
               sx={{
                 backgroundColor: colors.blueAccent[700],

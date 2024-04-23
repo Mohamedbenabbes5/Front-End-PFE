@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Icon from '@mdi/react';
 import { mdiCheckCircle } from '@mdi/js';
-
+import Box from '@mui/material/Box';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import {
   Card,
   CardBody,
@@ -21,39 +23,31 @@ import {
 
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import FormUpload from "../../components/FormUpload";
 import DynamicTable from "../../components/UploadVideoTable";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
+import UploadImages from "../../components/UploadImages";
+import SelectInfrastructure from "../../components/SelectInfrastructure";
+import InfrastForm from "../../components/InfrastructureForm";
+import ProjectForm from "../../components/ProjectForm";
+import { ThemeProvider } from "@mui/material/styles"; // Importez le ThemeProvider
 
 //Import Breadcrumb
 
 const FormWizard = () => {
-  document.title = "Form Wizard | Upzet - React Admin & Dashboard Template";
-  const [activeTab, setactiveTab] = useState(1);
-  const [activeTabwiz, setoggleTabwiz] = useState(1);
+  const [activeTab, setactiveTab] = useState(0);
 
   const [passedSteps, setPassedSteps] = useState([1]);
-  const [passedStepswiz, setpassedStepswiz] = useState([1]);
-
-  const idGuest = 123; // Remplacez par l'ID utilisateur de test
-  const idCompany = 456; // Remplacez par l'ID entreprise de test
-  const payload = {
-    idGuest: idGuest,
-    idCompany: idCompany,
-  };
 
 
-  // Décodage du token pour vérification
+  const [showInfrastForm, setShowInfrastForm] = useState(false);
 
-  // Utilisation du token
-  // Vous pouvez stocker ce token dans localStorage ou le transmettre à votre backend pour authentification
-  // Exemple de stockage dans localStorage :
+
 
   function toggleTab(tab) {
     if (activeTab !== tab) {
       var modifiedSteps = [...passedSteps, tab];
-      if (tab >= 1 && tab <= 4) {
+      if (tab >= 0 && tab <= 4) {
         setactiveTab(tab);
         setPassedSteps(modifiedSteps);
       }
@@ -62,43 +56,44 @@ const FormWizard = () => {
 
 
   const [formData, setFormData] = useState({
-    step1: {
-      infrastructure: '',
-      type: '',
-      creationDate: '',
-      span: '',
-      length: '',
-      country: '',
-      locationAddress: '',
-      description: ''
-    },
-    step2: [],
-    step3: []
+    project: [],
+    infrastructue: [],
+    images: [],
+    videos_Fpath: []
   });
 
   // Fonctions de mise à jour pour chaque étape
-  const handleChangeInputForm = (event) => {
-    const { name, value } = event.target;
-    setFormData(prevState => ({
+  const handleChangeStep = (field, value) => {
+    setFormData((prevState) => ({
       ...prevState,
-      step1: {
-        ...prevState.step1,
-        [name]: value
-      }
+      [field]: value,
     }));
   };
-
-  const handelChangeImages = (data) => {
+  const handelChangeProject = (data) => {
     setFormData(prevState => ({
       ...prevState,
-      step2: data
+      project: data
+    }));
+  };
+  
+  const handelChangeInfrastructure = (data) => {
+    setFormData(prevState => ({
+      ...prevState,
+      infrastructue: data
+    }));
+  };
+  const handelChangeImages = (data) => {
+    console.log(data);
+    setFormData(prevState => ({
+      ...prevState,
+      images: data
     }));
   };
 
   const handelChangeVideos = (data) => {
     setFormData(prevState => ({
       ...prevState,
-      step3: data
+      videos_Fpath: data
     }));
 
   };
@@ -107,77 +102,105 @@ const FormWizard = () => {
 
   const handleSaveAndUploadAll = async () => {
     setLoading(true); // Démarrer le chargement
+    console.log("createproject formData  handleSaveAndUploadAll ",formData)
 
     try {
+      console.log('form data', formData);
       const formDataToSend = new FormData();
   
-      // Ajouter les valeurs de step1 à formDataToSend
-      for (const key in formData.step1) {
-        formDataToSend.append(key, formData.step1[key]);
+      if (formData.project) {
+        formDataToSend.append('project', JSON.stringify(formData.project));
       }
-      
-      // Parcours de step2 (tableau de fichiers)
-      formData.step2.forEach((file, index) => {
+  
+      // Ajouter l'objet infrastructue (détails de l'infrastructure) à FormData
+      if (formData.infrastructue) {
+        formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructue));
+      }
+    
+      // Parcours de images (tableau de fichiers)
+      formData.images.forEach((file, index) => {
         formDataToSend.append(`image_${index}`, file);
       });
-      
-      // Parcours de step3 (tableau d'objets avec des fichiers)
-      formData.step3.forEach(obj => {
+
+      // Parcours de videos_Fpath (tableau d'objets avec des fichiers)
+      formData.videos_Fpath.forEach(obj => {
         for (const key in obj) {
           if (key !== 'id') { // Exclure la clé 'id'
             formDataToSend.append(`${key}_${obj.id}`, obj[key]);
           }
         }
       });
-  
-// Parcourir les entrées de formDataToSend
-for (const [key, value] of formDataToSend.entries()) {
-  console.log(`${key}: ${value}`);
-}
-
+      console.log('formDataToSend', formDataToSend);
+      // // Parcourir les entrées de formDataToSend
+      // for (const [key, value] of formDataToSend.entries()) {
+      //   console.log(`${key}: ${value}`);
+      // }
+      const token = localStorage.getItem('accessToken');
+      console.log("token:", token);
       const response = await axios.post('http://localhost:3000/project/create_project', formDataToSend, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
         }
       });
-  
+
       console.log(response.data); // Afficher la réponse du backend
-  
+
     } catch (error) {
       // Gérer les erreurs d'upload
       console.error("Erreur lors de l'upload : ", error);
     } finally {
       setLoading(false); // Arrêter le chargement
     }
-  };
+  };   
+  console.log("createproject formData",formData)
+
   return (
-    <React.Fragment>
+    <>
       <div className="page-content">
+
         <Container fluid={true}>
 
 
-          <Col lg="12">
-            <Card>
+          <Col lg="12" >
+
+            <Card className="Card">
               <CardBody>
-                <h4 className="card-title mb-4">Creaction New Inspection  </h4>
+                <h4 className="card-title mb-4">Creaction New Inspection Project  </h4>
                 <div id="basic-pills-wizard" className="twitter-bs-wizard">
                   <ul className="twitter-bs-wizard-nav nav nav-pills nav-justified">
+
+                    <NavItem className={classnames({ active: activeTab === 0 })}>
+                      <NavLink
+                        data-toggle="tab"
+                        className={classnames({ active: activeTab === 0, NavLink })}
+                        onClick={() => {
+                          setactiveTab(0);
+                        }}
+                      >
+                        <span className="step-number">0</span>
+                        <span className="step-title" style={{ paddingLeft: "10px" }}>Project Details</span>
+                      </NavLink>
+                    </NavItem>
+
                     <NavItem className={classnames({ active: activeTab === 1 })}>
                       <NavLink
                         data-toggle="tab"
-                        className={classnames({ active: activeTab === 1 })}
+                        className={classnames({ active: activeTab === 1, NavLink })}
                         onClick={() => {
                           setactiveTab(1);
                         }}
                       >
-                        <span className="step-number">01</span>
+                        <span className="step-number">1</span>
                         <span className="step-title" style={{ paddingLeft: "10px" }}>Infrastructure Details</span>
                       </NavLink>
                     </NavItem>
+
+                  
                     <NavItem className={classnames({ active: activeTab === 2 })}>
                       <NavLink
                         data-toggle="tab"
-                        className={classnames({ active: activeTab === 2 })}
+                        className={classnames({ active: activeTab === 2, NavLink })}
                         onClick={() => {
                           setactiveTab(2);
                         }}
@@ -188,10 +211,11 @@ for (const [key, value] of formDataToSend.entries()) {
                         <span className="step-title" style={{ paddingLeft: "10px" }}>upload Images</span>
                       </NavLink>
                     </NavItem>
+
                     <NavItem className={classnames({ active: activeTab === 3 })}>
                       <NavLink
                         data-toggle="tab"
-                        className={classnames({ active: activeTab === 3 })}
+                        className={classnames({ active: activeTab === 3, NavLink })}
                         onClick={() => {
                           setactiveTab(3);
                         }}
@@ -202,10 +226,12 @@ for (const [key, value] of formDataToSend.entries()) {
                         <span className="step-title" style={{ paddingLeft: "10px" }}>upload Videos & flightpaths</span>
                       </NavLink>
                     </NavItem>
+
+
                     <NavItem className={classnames({ active: activeTab === 4 })}>
                       <NavLink
                         data-toggle="tab"
-                        className={classnames({ active: activeTab === 4 })}
+                        className={classnames({ active: activeTab === 4, NavLink })}
                         onClick={() => {
                           setactiveTab(4);
                         }}
@@ -216,161 +242,51 @@ for (const [key, value] of formDataToSend.entries()) {
                     </NavItem>
                   </ul>
 
+
+
                   <TabContent activeTab={activeTab} className="twitter-bs-wizard-tab-content">
-                    {/***************form to creating project **************** */}
-                    <TabPane tabId={1}>
-                      <Form >
-                        <Row>
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-firstname-input1">
-                                Infrastructure
-                              </Label>
-                              <Input
-                                name="infrastructure"
-                                type="text"
-                                required
-                                className="form-control"
-                                id="basicpill-firstname-input1"
-                                placeholder="eg. Tacoma Narrows Bridge"
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-lastname-input2">
-                                Type
-                              </Label>
-                              <Input
-                                type="text"
-                                name="type"
-                                required
-                                className="form-control"
-                                id="basicpill-lastname-input2"
-                                placeholder="eg. Bridge ,Dam ,... "
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
 
 
-                        </Row>
-                        <Row>
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-firstname-input1">
-                                creation date
-                              </Label>
-                              <Input
-                                name="creationDate"
-
-                                type="date"
-                                required
-                                className="form-control"
-                                id="basicpill-firstname-input1"
-                              />
-                            </div>
-                          </Col>
-                          <Col lg="3">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-firstname-input1">
-                                Span
-                              </Label>
-                              <Input
-                                name="span"
-
-                                type="number"
-                                className="form-control"
-                                id="basicpill-firstname-input1"
-                                placeholder="eg. 853 m"
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-                          <Col lg="3">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-lastname-input2">
-                                Length
-                              </Label>
-                              <Input
-                                name="length"
-                                type="number"
-                                className="form-control"
-                                id="basicpill-lastname-input2"
-                                placeholder="eg. 1,822 m"
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-
-
-                        </Row>
-                        <Row>
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-phoneno-input3">
-                                Country
-                              </Label>
-                              <Input
-                                name="country"
-                                required
-                                type="text"
-                                className="form-control"
-                                id="basicpill-phoneno-input3"
-                                placeholder="eg. Canada"
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-
-                          <Col lg="6">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-email-input4">
-                                Location address
-                              </Label>
-                              <Input
-                                name="locationAddress"
-                                type="email"
-                                required
-                                className="form-control"
-                                id="basicpill-email-input4"
-                                placeholder="eg. 1 Peace Brg, Buffalo, NY 14213"
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-                        </Row>
-                        <Row>
-                          <Col lg="12">
-                            <div className="mb-3">
-                              <Label htmlFor="basicpill-address-input1">
-                                Description
-                              </Label>
-                              <textarea
-                                name="description"
-                                id="basicpill-address-input1"
-                                className="form-control"
-                                rows="2"
-                                placeholder="Enter Your description ..."
-                                onChange={handleChangeInputForm}
-
-                              />
-                            </div>
-                          </Col>
-                        </Row>
-                      </Form >
+                    <TabPane tabId={0}>
+                      <div>
+                        <ProjectForm onUpdate={handelChangeProject}/>
+                      </div>
                     </TabPane>
+
+
+                    <TabPane tabId={1}>
+                      {showInfrastForm ? (
+                        <div>
+                          <InfrastForm onUpdate={handelChangeInfrastructure} />
+                          <a style={{
+                            cursor: 'pointer',
+                            fontSize: '20px',
+                            display: 'inline-block',
+                            marginTop: '10px',
+                            transition: 'red 0.5s',
+                          }} onClick={() => setShowInfrastForm(false)}>Select existing Infrastructure</a>
+                        </div>
+
+                      ) : (
+                        <div >
+                          
+                          <SelectInfrastructure onUpdate={handelChangeInfrastructure} />
+
+                          <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
+                            <Fab color="secondary" aria-label="add">
+                              <AddIcon onClick={() => setShowInfrastForm(true)} />
+                            </Fab><a onClick={() => setShowInfrastForm(true)}>Create New Infrastructure</a>
+                          </Box>
+                        </div>
+                      )}
+                      <div>
+                      </div>
+                    </TabPane>
+
 
                     <TabPane tabId={2}>
                       <div>
-                        <FormUpload onUpdate={handelChangeImages} />
+                        <UploadImages onUpdate={handelChangeImages} />
                       </div>
                     </TabPane>
 
@@ -453,13 +369,13 @@ for (const [key, value] of formDataToSend.entries()) {
                           <Link
                             to="#"
                             onClick={() => {
-                              
+
                             }}
-                          > 
+                          >
 
                             Start Processing
                           </Link>
-                          <Link to="/" className="btn btn-danger mx-2" style={{background:"red" }}>Exit</Link>
+                          <Link to="/" className="btn btn-danger mx-2" style={{ background: "red" }}>Exit</Link>
 
                         </div>
                         ) : (
@@ -490,7 +406,7 @@ for (const [key, value] of formDataToSend.entries()) {
 
         </Container>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

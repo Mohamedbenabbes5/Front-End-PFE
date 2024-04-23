@@ -518,7 +518,7 @@ body,
       content: "";
       width: 100%;
       height: 2px;
-      background-color: rgba(192, 192, 192, 0.505);
+      background-color: rgba(255, 255, 255, 0.485);
       position: absolute;
       left: 0;
       top: 42px;
@@ -543,11 +543,10 @@ body,
     }
 
     .nav-link {
-      background-color: white;
 
       .step-title {
         display: block;
-        margin-top: 8px;
+        margin-top: 10px;
         font-weight: bold;
 
         @media (max-width: 575.98px) {
@@ -557,7 +556,6 @@ body,
       }
 
       &.active {
-        background-color: white;
 
         .step-number {
           background-color: green;
@@ -610,24 +608,10 @@ body,
 
 
 .twitter-bs-wizard-tab-content {
-  padding-top: 24px;
-  min-height: 262px;
+  padding-top: 20px;
 }
 
-.nav-tabs,
-.nav-pills {
-  >li {
-    >a {
-      color: green;
-    }
-  }
-}
 
-.nav-pills {
-  >a {
-    color: yellowgreen;
-  }
-}
 
 .dropzone {
   min-height: 230px;
@@ -640,11 +624,14 @@ body,
     width: 100%;
   }
 }
-.MuiDataGrid-cell--selectable input[type="checkbox"] {
-  /* Customize checkbox color here */
-  color: green; /* Replace with your preferred color */
+
+.NavLink{
+  background-color: inherit !important;
 }
-.CircularProgress{
-  margin-right: 10px ;
-  color:green !important;
+.Card{
+  background-color: #979fff !important;
+}
+.custom-autocomplete  {
+  background-color: white;
+
 }
