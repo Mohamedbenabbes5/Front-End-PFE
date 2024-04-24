@@ -3,9 +3,10 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const SelectInfrastructure = ({ onUpdate, triggerValidation   }) => {
+const SelectInfrastructure = ({ onUpdate, triggerValidation }) => {
   const [infrastructurelist, setInfrastructurelist] = useState([]);
   const [selectedInfrastructure, setSelectedInfrastructure] = useState(null);
+  const [errors, setErrors] = useState(null);
 
   // Fonction pour récupérer les infrastructures depuis le backend
   const fetchInfrastructure = async () => {
@@ -22,6 +23,17 @@ const SelectInfrastructure = ({ onUpdate, triggerValidation   }) => {
       return [];
     }
   };
+  useEffect(() => {
+    if (selectedInfrastructure && selectedInfrastructure.id != null) {
+      onUpdate("infrastructue", selectedInfrastructure, true);
+    }
+    else {
+      const newErrors = "selecting Infrastructure is required";
+      setErrors(newErrors);     
+       onUpdate("infrastructue", selectedInfrastructure, false);
+    }
+  }, [selectedInfrastructure]);
+
 
   useEffect(() => {
     const fetchNames = async () => {
@@ -31,20 +43,13 @@ const SelectInfrastructure = ({ onUpdate, triggerValidation   }) => {
     fetchNames();
   }, []);
 
-  useEffect(() => {
-    if (selectedInfrastructure) {
-      onUpdate(selectedInfrastructure); // Passez la valeur mise à jour si non-null
-    }
-  }, [selectedInfrastructure]); // L'effet ne se déclenche que lorsque selectedInfrastructure change
-  
-  const handleInfrastructureChange = (event,value) => {
+  const handleInfrastructureChange = (event, value) => {
     if (value) {
       // Lorsque l'utilisateur sélectionne une infrastructure, enregistrer l'ID
-      setSelectedInfrastructure({"id":value.id});
-      onUpdate(selectedInfrastructure);
+      setSelectedInfrastructure({ "id": value.id });
     }
   };
-  
+
 
   return (
     <div className="text-center">
@@ -57,6 +62,8 @@ const SelectInfrastructure = ({ onUpdate, triggerValidation   }) => {
         onChange={handleInfrastructureChange} // Gérer le changement
         renderInput={(params) => <TextField {...params} label="Infrastructure Name" variant="outlined" />}
       />
+         {errors && <span className="text-danger">{errors}</span>}
+
     </div>
   );
 };

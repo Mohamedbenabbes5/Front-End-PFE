@@ -23,7 +23,7 @@ const UploadImages = ({ onUpdate }) => {
    // Mettre à jour l'état selectedFiles
     setSelectedFiles(prevSelectedFiles => {
       const updatedFiles = [...prevSelectedFiles, ...imageFiles];
-      onUpdate(updatedFiles); // Passer les nouveaux fichiers à la fonction onUpdate
+      onUpdate("images",updatedFiles,true); // Passer les nouveaux fichiers à la fonction onUpdate
       return updatedFiles;//, lorsque nous retournons updatedFiles, cela signifie que selectedFiles sera équivalent à updatedFiles après que la mise à jour de l'état ait été effectuée.
     });
   };

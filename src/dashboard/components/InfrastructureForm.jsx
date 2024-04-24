@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Col, Form, Input, Label, Row } from "reactstrap";
 
-const InfrastForm = ({  onUpdate, triggerValidation  }) => {
+const InfrastForm = ({ onUpdate }) => {
   const [formData, setFormData] = useState({
     name: null,
     type: null,
@@ -12,6 +12,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
     locationAddress: null,
     description: null,
   });
+  const [errors, setErrors] = useState({});
 
   const handleChangeInputForm = (e) => {
     const { name, value } = e.target;
@@ -22,9 +23,53 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
   };
 
   useEffect(() => {
-    // Appeler onUpdate chaque fois que formData change
-    onUpdate(formData);
-  }, [formData]); // Ajoutez formData comme dépendance
+    validateFields();
+  }, [formData]);
+
+  const validateFields = () => {
+    const newErrors = {};
+
+    if (!formData.name) {
+      newErrors.name = "Infrastructure name is required";
+    }
+
+    if (!formData.type) {
+      newErrors.type = "Type is required";
+    }
+
+    // if (!formData.constructionDate) {
+    //   newErrors.constructionDate = "Construction date is required";
+    // }
+
+    // if (!formData.span) {
+    //   newErrors.span = "Span is required";
+    // } else if (isNaN(formData.span)) {
+    //   newErrors.span = "Span must be a number";
+    // }
+
+    // if (!formData.length) {
+    //   newErrors.length = "Length is required";
+    // } else if (isNaN(formData.length)) {
+    //   newErrors.length = "Length must be a number";
+    // }
+
+    // if (!formData.country) {
+    //   newErrors.country = "Country is required";
+    // }
+
+    // if (!formData.locationAddress) {
+    //   newErrors.locationAddress = "Location address is required";
+    // }
+
+    setErrors(newErrors);
+
+    // Check if there are no errors
+    if (Object.keys(newErrors).length === 0) {
+      onUpdate("infrastructue", formData, true); // Update parent component with valid data
+    } else {
+      onUpdate("infrastructue", formData, false);
+    }
+  };
 
   return (
     <Form>
@@ -40,6 +85,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="e.g., Tacoma Narrows Bridge"
               onChange={handleChangeInputForm}
             />
+            {errors.name && <span className="text-danger">{errors.name}</span>}
           </div>
         </Col>
         <Col lg="6">
@@ -53,6 +99,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="e.g., Bridge, Dam, etc."
               onChange={handleChangeInputForm}
             />
+            {errors.type && <span className="text-danger">{errors.type}</span>}
           </div>
         </Col>
       </Row>
@@ -66,8 +113,8 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               required
               className="form-control"
               onChange={handleChangeInputForm}
-
             />
+            {errors.constructionDate && <span className="text-danger">{errors.constructionDate}</span>}
           </div>
         </Col>
         <Col lg="3">
@@ -80,6 +127,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="e.g., 853 m"
               onChange={handleChangeInputForm}
             />
+            {errors.span && <span className="text-danger">{errors.span}</span>}
           </div>
         </Col>
         <Col lg="3">
@@ -92,6 +140,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="e.g., 1,822 m"
               onChange={handleChangeInputForm}
             />
+            {errors.length && <span className="text-danger">{errors.length}</span>}
           </div>
         </Col>
       </Row>
@@ -107,6 +156,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="e.g., Canada"
               onChange={handleChangeInputForm}
             />
+            {errors.country && <span className="text-danger">{errors.country}</span>}
           </div>
         </Col>
         <Col lg="6">
@@ -114,12 +164,13 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
             <Label>Location Address</Label>
             <Input
               name="locationAddress"
-              type="text" // Remplacez le type email par text
+              type="text"
               required
               className="form-control"
               placeholder="e.g., 1 Peace Brg, Buffalo, NY 14213"
               onChange={handleChangeInputForm}
             />
+            {errors.locationAddress && <span className="text-danger">{errors.locationAddress}</span>}
           </div>
         </Col>
       </Row>
@@ -134,6 +185,7 @@ const InfrastForm = ({  onUpdate, triggerValidation  }) => {
               placeholder="Enter your description..."
               onChange={handleChangeInputForm}
             />
+            {/* Ajoutez la validation et les messages d'erreur pour le champ Description si nécessaire */}
           </div>
         </Col>
       </Row>

@@ -13,7 +13,7 @@ function DynamicTable({onUpdate}) {
         const updatedRows = [...rows];
         updatedRows[rowIndex][columnName] = event.target.files[0];
         setRows(updatedRows);
-        onUpdate(rows)
+        onUpdate("videos_Fpath",rows,true);
     };
 
     const handleAddRow = () => {
