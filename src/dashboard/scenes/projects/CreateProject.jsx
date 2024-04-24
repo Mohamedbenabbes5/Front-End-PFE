@@ -45,15 +45,13 @@ const FormWizard = () => {
   const [stepValidity, setStepValidity] = useState({
     0: false,
     1: false,
-    2:false,
-    3:false,
     // Ajoutez des étapes supplémentaires si nécessaire
   });
 
 
   const nextStep = () => {
     const tab=activeTab+1
-    if (stepValidity[activeTab]) { // Vérifier si l'étape actuelle est valide
+    if (stepValidity[activeTab]||(activeTab>=2)) { // Vérifier si l'étape actuelle est valide
       var modifiedSteps = [...passedSteps, tab];
       if (tab >= 0 && tab <= 4) {
         setactiveTab(tab);

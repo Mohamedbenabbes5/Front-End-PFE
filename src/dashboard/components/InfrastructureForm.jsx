@@ -1,7 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Col, Form, Input, Label, Row } from "reactstrap";
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
+import { styled } from '@mui/material/styles';
+import InputFileUpload from "./FileUploadButton";
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 const InfrastForm = ({ onUpdate }) => {
+
+
   const [formData, setFormData] = useState({
     name: null,
     type: null,
@@ -11,6 +28,9 @@ const InfrastForm = ({ onUpdate }) => {
     country: null,
     locationAddress: null,
     description: null,
+    image: null, // Ajout du champ photo dans le formulaire
+
+
   });
   const [errors, setErrors] = useState({});
 
@@ -19,7 +39,16 @@ const InfrastForm = ({ onUpdate }) => {
     setFormData({
       ...formData,
       [name]: value,
+
     });
+  };
+  const handleImageUpload = (file) => {
+    
+      setFormData({
+        ...formData,
+        image: file,
+      });
+ 
   };
 
   useEffect(() => {
@@ -32,34 +61,17 @@ const InfrastForm = ({ onUpdate }) => {
     if (!formData.name) {
       newErrors.name = "Infrastructure name is required";
     }
-
+    if ( formData.image) 
+    {
+      if (!formData.image.type.startsWith('image/')) {
+      newErrors.image = "Please select an image file.";
+    }
+  }
     if (!formData.type) {
       newErrors.type = "Type is required";
     }
-
-    // if (!formData.constructionDate) {
-    //   newErrors.constructionDate = "Construction date is required";
-    // }
-
-    // if (!formData.span) {
-    //   newErrors.span = "Span is required";
-    // } else if (isNaN(formData.span)) {
-    //   newErrors.span = "Span must be a number";
-    // }
-
-    // if (!formData.length) {
-    //   newErrors.length = "Length is required";
-    // } else if (isNaN(formData.length)) {
-    //   newErrors.length = "Length must be a number";
-    // }
-
-    // if (!formData.country) {
-    //   newErrors.country = "Country is required";
-    // }
-
-    // if (!formData.locationAddress) {
-    //   newErrors.locationAddress = "Location address is required";
-    // }
+  
+    //autre verification 
 
     setErrors(newErrors);
 
@@ -70,7 +82,7 @@ const InfrastForm = ({ onUpdate }) => {
       onUpdate("infrastructue", formData, false);
     }
   };
-
+  console.log('InfrastForm', formData);
   return (
     <Form>
       <Row>
@@ -176,7 +188,7 @@ const InfrastForm = ({ onUpdate }) => {
       </Row>
       <Row>
         <Col lg="12">
-          <div className="mb-3">
+          <div className="mb-4">
             <Label>Description</Label>
             <textarea
               name="description"
@@ -185,9 +197,19 @@ const InfrastForm = ({ onUpdate }) => {
               placeholder="Enter your description..."
               onChange={handleChangeInputForm}
             />
-            {/* Ajoutez la validation et les messages d'erreur pour le champ Description si nécessaire */}
           </div>
         </Col>
+      </Row>
+      <Row>
+      <Col lg="12">
+        <div className="mb-1">
+          <InputFileUpload onImageUpload={handleImageUpload}></InputFileUpload>
+
+        </div>
+        {errors.image && <span className="text-danger">{errors.image}</span>}
+
+
+      </Col> 
       </Row>
     </Form>
   );
