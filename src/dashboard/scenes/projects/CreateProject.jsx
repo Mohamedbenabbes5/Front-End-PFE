@@ -37,112 +37,85 @@ import { ThemeProvider } from "@mui/material/styles"; // Importez le ThemeProvid
 const FormWizard = () => {
   const [activeTab, setactiveTab] = useState(0);
 
-
   const [passedSteps, setPassedSteps] = useState([1]);
 
 
   const [showInfrastForm, setShowInfrastForm] = useState(false);
 
+  const [stepValidity, setStepValidity] = useState({
+    0: false,
+    1: false,
+    2:false,
+    3:false,
+    // Ajoutez des étapes supplémentaires si nécessaire
+  });
 
-  const [triggerValidation, setTriggerValidation] = useState(false);
-  const [isStepValid, setIsStepValid] = useState(false); // État de validation
 
-
-
-
-  function toggleTab(tab) {
-    console.log(`toggleTab executed, isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}     tab=${tab} activeTab=${activeTab} passedSteps=${passedSteps}  `)
-    setTriggerValidation(true); 
-    if (activeTab !== tab && isStepValid) {
+  const nextStep = () => {
+    const tab=activeTab+1
+    if (stepValidity[activeTab]) { // Vérifier si l'étape actuelle est valide
       var modifiedSteps = [...passedSteps, tab];
       if (tab >= 0 && tab <= 4) {
         setactiveTab(tab);
         setPassedSteps(modifiedSteps);
-        setIsStepValid(true);
       }
+    } else {
+      // Afficher un message d'avertissement ou prendre d'autres mesures si l'étape actuelle n'est pas valide
+      console.log(`Les données de l'étape ${activeTab} ne sont pas valides`);
     }
-    console.log(`toggleTab end execute, isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}     tab=${tab} activeTab=${activeTab} passedSteps=${passedSteps}  `)
-
-  }
-
+  };
+  const previewStep = () => {
+    const tab=activeTab-1
+      var modifiedSteps = [...passedSteps, tab];
+      if (tab >= 0 && tab <= 4) {
+        setactiveTab(tab);
+        setPassedSteps(modifiedSteps);
+      }
+   
+  };
 
   const [formData, setFormData] = useState({
     project: [],
-    infrastructure: [],
+    infrastructue: [],
     images: [],
     videos_Fpath: []
   });
 
-
   // Fonctions de mise à jour pour chaque étape
-
-  const handelChangeProject = (isValid, formData) => {
-    console.log(`handelChangeProject executed, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}  isStepValid=${isStepValid}    activeTab=${activeTab} passedSteps=${passedSteps}  `)
-
-    if (isValid == true && formData) {
-      console.log('handelChangeProject validating',isValid,formData)
-       setIsStepValid(true);
-      setFormData(prevState => ({
-        ...prevState,
-        project: formData
-      }));
-      setTriggerValidation(false); // Réinitialiser le déclenchement de validation
-    console.log(`handelChangeProject end execute, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}      activeTab=${activeTab} passedSteps=${passedSteps}  `)
-
-    }
-
-  };
-
-  const handelChangeInfrastructure = (isValid, formData) => {
-    console.log(`handelChangeInfrastructure executed, isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}       activeTab=${activeTab} passedSteps=${passedSteps}  `)
-
-
-    if (isValid == true && formData) {
-      setIsStepValid(true); // Mettre à jour l'état de validation
-      setFormData(prevState => ({
-        ...prevState,
-        project: formData
-      }));
-      setTriggerValidation(false); // Réinitialiser le déclenchement de validation
-    }
-    console.log(`end handelChangeInfrastructure ,isValid ${isValid}  formData ${formData}  isStepValid= ${isStepValid} triggerValidation= ${triggerValidation}    activeTab=${activeTab} passedSteps=${passedSteps}  `)
-
-  };
-  const handelChangeImages = (data) => {
-    console.log(data);
-    setFormData(prevState => ({
+  const handleUpdateStep = (field, data,isValid) => {
+    if (isValid) {
+       setFormData((prevState) => ({
       ...prevState,
-      images: data
+      [field]: data,
+    }));  
+  }
+    setStepValidity((prevValidity) => ({
+      ...prevValidity,
+      [activeTab]: isValid, // Mettre à jour la validité de l'étape actuelle
     }));
-  };
-
-  const handelChangeVideos = (data) => {
-    setFormData(prevState => ({
-      ...prevState,
-      videos_Fpath: data
-    }));
-
+  
+   
   };
 
   const [loading, setLoading] = useState(false);
 
   const handleSaveAndUploadAll = async () => {
     setLoading(true); // Démarrer le chargement
-    console.log("createproject formData  handleSaveAndUploadAll ", formData)
+    console.log("createproject formData  handleSaveAndUploadAll ",formData)
 
     try {
       console.log('form data', formData);
       const formDataToSend = new FormData();
-
+  
       if (formData.project) {
         formDataToSend.append('project', JSON.stringify(formData.project));
       }
-
-      // Ajouter l'objet infrastructure (détails de l'infrastructure) à FormData
-      if (formData.infrastructure) {
-        formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructure));
+  
+      // Ajouter l'objet infrastructue (détails de l'infrastructure) à FormData
+      if (formData.infrastructue) {
+        formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructue));
       }
-
+    
       // Parcours de images (tableau de fichiers)
       formData.images.forEach((file, index) => {
         formDataToSend.append(`image_${index}`, file);
@@ -178,8 +151,8 @@ const FormWizard = () => {
     } finally {
       setLoading(false); // Arrêter le chargement
     }
-  };
-  console.log("createproject formData", formData)
+  };   
+  console.log("createproject formData",formData)
 
   return (
     <>
@@ -222,7 +195,7 @@ const FormWizard = () => {
                       </NavLink>
                     </NavItem>
 
-
+                  
                     <NavItem className={classnames({ active: activeTab === 2 })}>
                       <NavLink
                         data-toggle="tab"
@@ -275,11 +248,7 @@ const FormWizard = () => {
 
                     <TabPane tabId={0}>
                       <div>
-                        <ProjectForm
-                          onUpdate={handelChangeProject}
-                          triggerValidation={triggerValidation}
-
-                        />
+                        <ProjectForm onUpdate={handleUpdateStep}/>
                       </div>
                     </TabPane>
 
@@ -287,10 +256,7 @@ const FormWizard = () => {
                     <TabPane tabId={1}>
                       {showInfrastForm ? (
                         <div>
-                          <InfrastForm onUpdate={handelChangeInfrastructure}
-                            triggerValidation={triggerValidation}
-
-                          />
+                          <InfrastForm onUpdate={handleUpdateStep} />
                           <a style={{
                             cursor: 'pointer',
                             fontSize: '20px',
@@ -302,10 +268,8 @@ const FormWizard = () => {
 
                       ) : (
                         <div >
-
-                          <SelectInfrastructure onUpdate={handelChangeInfrastructure}
-                            triggerValidation={triggerValidation}
-                          />
+                          
+                          <SelectInfrastructure onUpdate={handleUpdateStep} />
 
                           <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
                             <Fab color="secondary" aria-label="add">
@@ -321,16 +285,14 @@ const FormWizard = () => {
 
                     <TabPane tabId={2}>
                       <div>
-                        <UploadImages onUpdate={handelChangeImages}
-                        />
+                        <UploadImages onUpdate={handleUpdateStep} />
                       </div>
                     </TabPane>
 
                     <TabPane tabId={3}>
                       <div>
                         {/* <FormUpload/> */}
-                        <DynamicTable onUpdate={handelChangeVideos}
-                        />
+                        <DynamicTable onUpdate={handleUpdateStep} />
                       </div>
                     </TabPane>
 
@@ -375,7 +337,7 @@ const FormWizard = () => {
                       <Link
                         to="#"
                         onClick={() => {
-                          toggleTab(activeTab - 1);
+                          previewStep();
                         }}
                       >
                         Previous
@@ -384,7 +346,6 @@ const FormWizard = () => {
 
                     <li
                       className={activeTab === 4 ? "next disabled" : "next"}
-
                     >
                       {activeTab === 3 ?
                         (
@@ -420,7 +381,7 @@ const FormWizard = () => {
                           <div><Link
                             to="#"
                             onClick={() => {
-                              toggleTab(activeTab + 1);
+                              nextStep();
 
                             }}
                           >
