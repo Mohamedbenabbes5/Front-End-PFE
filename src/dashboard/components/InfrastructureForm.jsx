@@ -82,7 +82,6 @@ const InfrastForm = ({ onUpdate }) => {
       onUpdate("infrastructue", formData, false);
     }
   };
-  console.log('InfrastForm', formData);
   return (
     <Form>
       <Row>

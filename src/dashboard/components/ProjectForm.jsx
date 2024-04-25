@@ -21,7 +21,7 @@ const ProjectForm = ({ onUpdate }) => {
     { title: 'Pulp Fiction', year: 1994 },
   ]
   const [formData, setFormData] = useState({
-    id: null,
+    id:null,
     name: null,
     description: null,
     startdate: null,
@@ -37,11 +37,6 @@ const ProjectForm = ({ onUpdate }) => {
       [name]: value
     });
   };
-  useEffect(() => {
-    // Génération d'un entier aléatoire sur 32 bits pour id lors du premier rendu
-    const randomId = Math.round(Math.random() * Math.pow(2, 32));
-    setFormData({ ...formData, id: randomId });
-  }, []);
 
   useEffect(() => {
     validateFields();

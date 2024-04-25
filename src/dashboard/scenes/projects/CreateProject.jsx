@@ -9,14 +9,8 @@ import {
   CardBody,
   Col,
   Container,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Row,
   TabContent,
   TabPane,
-  Progress,
   NavLink,
   NavItem,
 } from "reactstrap";
@@ -30,7 +24,6 @@ import UploadImages from "../../components/UploadImages";
 import SelectInfrastructure from "../../components/SelectInfrastructure";
 import InfrastForm from "../../components/InfrastructureForm";
 import ProjectForm from "../../components/ProjectForm";
-import { ThemeProvider } from "@mui/material/styles"; // Importez le ThemeProvider
 
 //Import Breadcrumb
 
@@ -42,12 +35,14 @@ const FormWizard = () => {
 
   const [showInfrastForm, setShowInfrastForm] = useState(false);
 
+
   const [stepValidity, setStepValidity] = useState({
     0: false,
     1: false,
     // Ajoutez des étapes supplémentaires si nécessaire
   });
 
+  const [projectId, setcreatedProjectId] = useState(null);
 
   const nextStep = () => {
     const tab=activeTab+1
@@ -99,12 +94,16 @@ const FormWizard = () => {
 
   const handleSaveAndUploadAll = async () => {
     setLoading(true); // Démarrer le chargement
-    console.log("createproject formData  handleSaveAndUploadAll ",formData)
+    
+    try {  
+      // setFormData(prevState => ({
+      //   ...prevState,
+      //   project: { ...prevState.project, id: createdProjectId }
+      // }));  
+      formData.project.id=  projectId
 
-    try {
-      console.log('form data', formData);
+      console.log("createproject handleSaveAndUploadAll ",formData)
       const formDataToSend = new FormData();
-  
       if (formData.project) {
         formDataToSend.append('project', JSON.stringify(formData.project));
       }
@@ -113,27 +112,26 @@ const FormWizard = () => {
       if (formData.infrastructue) {
         formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructue));
       }
-    
+      if (formData.infrastructue.image) { 
+         formDataToSend.append(`infrastructureImage`, formData.infrastructue.image);
+      };
+
       // Parcours de images (tableau de fichiers)
       formData.images.forEach((file, index) => {
-        formDataToSend.append(`image_${index}`, file);
+        formDataToSend.append(`inspectionFile`, file);
       });
 
       // Parcours de videos_Fpath (tableau d'objets avec des fichiers)
       formData.videos_Fpath.forEach(obj => {
         for (const key in obj) {
           if (key !== 'id') { // Exclure la clé 'id'
-            formDataToSend.append(`${key}_${obj.id}`, obj[key]);
+            formDataToSend.append(`inspectionFile`, obj[key]);
           }
         }
       });
-      console.log('formDataToSend', formDataToSend);
-      // // Parcourir les entrées de formDataToSend
-      // for (const [key, value] of formDataToSend.entries()) {
-      //   console.log(`${key}: ${value}`);
-      // }
+    
       const token = localStorage.getItem('accessToken');
-      console.log("token:", token);
+
       const response = await axios.post('http://localhost:3000/project/create_project', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -141,6 +139,17 @@ const FormWizard = () => {
         }
       });
 
+    // Récupérer l'ID du projet de la réponse du backend
+      const createdProjectId = response.data?.projectId;
+     console.log("createdProjectId", createdProjectId)
+      // setFormData(prevState => ({
+      //   ...prevState,
+      //   project: { ...prevState.project, id: createdProjectId }
+      // }));   
+      setcreatedProjectId(createdProjectId);
+      
+    
+      
       console.log(response.data); // Afficher la réponse du backend
 
     } catch (error) {
@@ -150,7 +159,8 @@ const FormWizard = () => {
       setLoading(false); // Arrêter le chargement
     }
   };   
-  console.log("createproject formData",formData)
+
+  console.log("createProject formData",formData)
 
   return (
     <>
