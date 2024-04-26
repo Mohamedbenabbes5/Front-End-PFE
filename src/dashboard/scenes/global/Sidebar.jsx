@@ -97,7 +97,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/user.png`}
+                  src={`../../assets/user.jpg`}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -108,10 +108,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  John Doe
+                  username
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                   Admin or guest
+                  Admin or guest
                 </Typography>
               </Box>
             </Box>
@@ -125,8 +125,8 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-           
-           <Item
+
+            <Item
               title="ALL Projects"
               to="/allprojects"
               icon={<ViewCompactIcon />}
@@ -140,7 +140,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-               <Item
+            <Item
               title="Creacte Project"
               to="/creacteproject"
               icon={<ControlPointIcon />}

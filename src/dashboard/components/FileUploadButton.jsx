@@ -24,8 +24,8 @@ export default function InputFileUpload({ onImageUpload }) {
 
     if (file)
      {
-        setSelectedImage(file); // Sélectionnez uniquement le premier fichier image
-        onImageUpload(file); // Appelez la fonction de gestion du téléchargement avec les fichiers image
+        setSelectedImage(file); 
+        onImageUpload(file);
       } 
      
     

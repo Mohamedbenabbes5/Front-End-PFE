@@ -1,8 +1,8 @@
 import React, { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
-const LazyDashboardRoutes = lazy(() => import("./DashboardRoutes"));
-const LazyLandingPageRoutes = lazy(() => import("./LandingPageRoutes"));
+const DashboardRoutes = lazy(() => import("./DashboardRoutes"));
+const LandingPageRoutes = lazy(() => import("./LandingPageRoutes"));
 
 function App() {
   return (
@@ -10,13 +10,13 @@ function App() {
       <Route
         path="/dashboard/*"
         element={
-            <LazyDashboardRoutes />
+            <DashboardRoutes />
         }
       />
       <Route
         path="/*"
         element={
-            <LazyLandingPageRoutes />
+            <LandingPageRoutes />
         }
       />
     </Routes>

@@ -6,8 +6,7 @@ import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+
 const Company = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -134,7 +133,10 @@ const Company = () => {
 
 
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="All Companies" subtitle="List of Company account" />
+        <Header 
+        title="All Companies" 
+        subtitle="List of Company account" 
+        />
 
         <Box>
           <Link to="/dashboard/form" style={{ textDecoration: "none" }}>

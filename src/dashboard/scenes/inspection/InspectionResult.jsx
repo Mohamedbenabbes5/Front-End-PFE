@@ -8,8 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
-import { useTheme, TextField, Typography } from "@mui/material";
-import ProgressCircle from "../../components/ProgressCircle";
+import { useTheme, TextField } from "@mui/material";
 
 import {
     GridRowModes,
@@ -21,13 +20,11 @@ import {
 } from '@mui/x-data-grid';
 import {
     randomCreatedDate,
-
     randomTraderName,
-
     randomId,
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
-import PieChartBox from '../pieChartBox/PieChartBox';
+import PieChartBox from '../../components/PieChartBox';
 
 
 function Timestamp() {
@@ -45,27 +42,6 @@ const randomDefect = () => {
     return randomArrayItem(type);
 };
 
-
-function EditToolbar(props) {
-    const { setRows, setRowModesModel } = props;
-
-    const handleClick = () => {
-        const id = randomId();
-        setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
-        setRowModesModel((oldModel) => ({
-            ...oldModel,
-            [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
-        }));
-    };
-
-    return (
-        <GridToolbarContainer>
-            <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-                Add record
-            </Button>
-        </GridToolbarContainer>
-    );
-}
 
 export default function FullFeaturedCrudGrid() {
     const theme = useTheme();

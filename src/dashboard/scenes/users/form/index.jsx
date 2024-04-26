@@ -1,5 +1,5 @@
 import { Box, Button, TextField, useTheme, Avatar } from "@mui/material";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 import { useState } from 'react';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import PersonIcon from '@mui/icons-material/Person'; // Importez l'icône Person par défaut
@@ -7,7 +7,6 @@ import PersonIcon from '@mui/icons-material/Person'; // Importez l'icône Person
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../components/Header";
 
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");

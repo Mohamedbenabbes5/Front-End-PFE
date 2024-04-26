@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import { Col, Row, Container } from "reactstrap";
 import { useTheme, Avatar } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -26,23 +25,18 @@ const LineWithIcon = ({ icon, text }) => (
   </Grid>
 );
 
-const UiCards = ({ projects }) => {
+const UiCards = ({ allproject }) => {
   const theme = useTheme();
 
   return (
-    <React.Fragment>
-      <div className="page-content">
-        <Container fluid={true}>
-          <Row >
-            {projects.map(project => (
-              <Col key={project.id} md={6} xl={3}>
+ 
                 <Card className="custom-card">
                   <CardContent>
                     <Typography variant="h3" mb="10px" component="div">
-                      {project.title}
+                      {allproject.title}
                     </Typography>
                     <Typography variant="subtitle1" mb="10px" color="text.secondary">
-                      {project.subtitle}
+                      {allproject.subtitle}
                     </Typography>
 
                     <LineWithIcon
@@ -51,7 +45,7 @@ const UiCards = ({ projects }) => {
                     />
                     <LineWithIcon
                       icon={<CalendarMonthIcon />}
-                      text={`Created: 10/2/2022 ${project.creationDate}`}
+                      text={`Created: 10/2/2022 ${allproject.creationDate}`}
                     />
                     <LineWithIcon
                       icon={<Groups2Icon />}
@@ -74,16 +68,16 @@ const UiCards = ({ projects }) => {
                     height="250"
                     width="280"
                     sx={{ my: 2, mx: 0 }}
-                    image={project.image}
-                    alt={project.title}
+                    image={allproject.image}
+                    alt={allproject.title}
                   />
 
-                  <div className={`projectStatusV2 ${project.status === 'completed' ? 'completed' : 'incompleted'}`}>
-                    {project.status}
+                  <div className={`projectStatusV2 ${allproject.status === 'completed' ? 'completed' : 'incompleted'}`}>
+                    {allproject.status}
                   </div>
                   <CardContent>
                     <Typography  color="text.secondary" mb={2} >
-                      {project.description}
+                      {allproject.description}
                     </Typography>
 
 
@@ -103,12 +97,7 @@ const UiCards = ({ projects }) => {
                     </CardActions>
                   </CardContent>
                 </Card>
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </div>
-    </React.Fragment>
+      
   );
 };
 

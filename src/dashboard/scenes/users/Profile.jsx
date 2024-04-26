@@ -1,17 +1,13 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
 import { Box, Button, Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
 import { tokens } from "../../theme";
 import { useTheme } from "@mui/material";
 import Header from "../../components/Header";
-import {
-    GridRowModes,
-    DataGrid,
+import { 
+  DataGrid,
     GridToolbar,
-    GridToolbarContainer,
-    GridActionsCellItem,
-    GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 const Profile = () => {
 
@@ -97,7 +93,7 @@ const Profile = () => {
                 <Header title="All Companies" subtitle="List of Company account" />
 
                 <Box>
-                    <Link to="/form" style={{ textDecoration: "none" }}>
+                    <Link to="/dashboard/form" style={{ textDecoration: "none" }}>
                         <Button
                             sx={{
                                 backgroundColor: colors.greenAccent[700],

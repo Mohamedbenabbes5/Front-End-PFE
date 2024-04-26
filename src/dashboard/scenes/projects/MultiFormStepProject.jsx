@@ -17,13 +17,13 @@ import {
 
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import DynamicTable from "../../components/UploadVideoTable";
+import DynamicTable from "./stepForms/UploadVideoTable";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
-import UploadImages from "../../components/UploadImages";
-import SelectInfrastructure from "../../components/SelectInfrastructure";
-import InfrastForm from "../../components/InfrastructureForm";
-import ProjectForm from "../../components/ProjectForm";
+import UploadImages from "./stepForms/UploadImages";
+import SelectInfrastructure from "./stepForms/SelectInfrastructure";
+import InfrastForm from "./stepForms/InfrastructureForm";
+import ProjectForm from "./stepForms/ProjectForm";
 
 //Import Breadcrumb
 

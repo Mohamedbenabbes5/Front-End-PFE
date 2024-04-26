@@ -117,7 +117,7 @@ const Guest = () => {
     <Box m="20px">
       <Header
         title="All Guests"
-        subtitle="List of Guest for Future Reference"
+        subtitle="List of Guests "
       />
       <Box
         m="40px 0 0 0"
