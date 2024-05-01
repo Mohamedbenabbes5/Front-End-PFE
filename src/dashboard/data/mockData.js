@@ -209,7 +209,7 @@ export const mockDataGuest = [
 
 ];
 
-export const mockDataCompany = [
+export const mockDataAdmin = [
 
 
   {
@@ -220,7 +220,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "YRR",
+    adminName: "YRR",
     name: "Jon Snow",
     email: "jonsnow@gmail.com",
     age: 35,
@@ -240,7 +240,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "SGSJ",
+    adminName: "SGSJ",
     name: "Cersei Lannister",
     email: "cerseilannister@gmail.com",
     age: 42,
@@ -260,7 +260,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "SGJ",
+    adminName: "SGJ",
     name: "Jaime Lannister",
     email: "jaimelannister@gmail.com",
     age: 45,
@@ -280,7 +280,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "abSGc",
+    adminName: "abSGc",
     name: "Anya Stark",
     email: "anyastark@gmail.com",
     age: 16,
@@ -295,7 +295,7 @@ export const mockDataCompany = [
   {
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "EG",
+    adminName: "EG",
 
     country: "USA",
     id: 5,
@@ -318,7 +318,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "abZGc",
+    adminName: "abZGc",
     name: "Ever Melisandre",
     email: "evermelisandre@gmail.com",
     age: 150,
@@ -338,7 +338,7 @@ export const mockDataCompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "ZGQ",
+    adminName: "ZGQ",
     name: "Ferrara Clifford",
     email: "ferraraclifford@gmail.com",
     age: 44,

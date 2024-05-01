@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,6 +9,7 @@ import CancelIcon from '@mui/icons-material/Close';
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import { useTheme, TextField } from "@mui/material";
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
 import {
     GridRowModes,
@@ -25,6 +26,10 @@ import {
     randomArrayItem,
 } from '@mui/x-data-grid-generator';
 import PieChartBox from '../../components/PieChartBox';
+import axios from 'axios';
+import TransitionAlerts from "../../components/TransitionAlerts";
+
+
 
 
 function Timestamp() {
@@ -44,83 +49,80 @@ const randomDefect = () => {
 
 
 export default function FullFeaturedCrudGrid() {
+
+
+    const resultImagePath = 'http://localhost:3000/result/';
+    const croppedImagesPath = 'http://localhost:3000/result/cropped_images/';
+
+    const [RowsData, setRowsData] = useState([]);
+
+    const [statisticDamages, setStatisticDamages] = useState({
+        crackCount: 0,
+        spallCount: 0,
+        dangerCounts: {
+            Low: 0,
+            Medium: 0,
+            High: 0,
+        },
+    });
+
+    const { projectId } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [alertInfo, setAlertInfo] = useState(null);
+
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
-    const initialRows = [
-        {
-            id: 1,
-            name: randomTraderName(),
-            defecttype: randomDefect(),
+    const colors = tokens(theme.palette.mode); 
+    const fetchDamages = async () => {
+            if (location.state?.successProcess) {
+                setAlertInfo({ type: "success", message: "Project saved successfully!" });
+            }
+            try {
 
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT17-06zYcwH20JlxqjCFH3pF8mRyzWPNngwg&usqp=CAU",
-            videosource: 'video44.mp4',
+                const response = await axios.get(`http://localhost:3000/results/${projectId}`);
+                setRowsData(response.data);
+                updateDamageCounts(response.data)     
 
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-        {
-            id: 2,
-            name: randomTraderName(),
-            defecttype: randomDefect(),
-            videosource: 'video44.mp4',
-            image: "https://liftrightconcrete.com/wp-content/uploads/2016/12/concrete-cracks.jpg",
+            } catch (error) {
+                console.error('Erreur lors de la récupération des dommages :', error);
+                // Vous pouvez rediriger vers une page d'erreur ou afficher un message d'erreur
+                navigate('/error');
+            }
+        };
+        
+    useEffect(() => {
+        fetchDamages();
+    }, [projectId]);
 
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-        {
-            id: 3,
-            image: "https://img.freepik.com/free-photo/fisured-concrete-texture_47618-78.jpg",
-            videosource: 'video44.mp4',
-
-            name: randomTraderName(),
-            defecttype: randomDefect(),
-
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-        {
-            id: 4,
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4Wxf5hfW3z0GuLqRVm0DcYAv9JRgLsqpWWsTIK00I9_Nr8_8d3vWac7mBZj8ehITihIM&usqp=CAU",
-            name: randomTraderName(),
-            defecttype: randomDefect(),
-            videosource: 'video44.mp4',
-
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-        {
-            id: 5,
-            image: "https://liftrightconcrete.com/wp-content/uploads/2016/12/concrete-cracks.jpg",
-
-            name: randomTraderName(),
-            defecttype: randomDefect(),
-            videosource: 'video44.mp4',
-
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-        {
-            id: 6,
-            image: "https://www.turnbullmasonry.com/wp-content/uploads/2019/03/Garage-Floor-Cracks-%E2%80%93-What-Causes-Them.jpg",
-
-            name: randomTraderName(),
-            defecttype: randomDefect(),
-            videosource: 'video44.mp4',
-
-            timestamps: Timestamp(),
-            DangerDegre: randomdegre(),
-        },
-    ];
+   
 
     const columns = [
         { field: 'id', headerName: 'id', width: 80 },
         {
-            field: 'image',
-            headerName: 'Image',
+            field: 'croppedDamageImage',
+            headerName: 'croppedDamageImage',
             width: 150,
-            renderCell: (params) => (<img src={params.value} alt="User" style={{ width: 200 }} />)
-        }, {
+            renderCell: (params) => (<img src={croppedImagesPath + "/" + params.value} alt="User" style={{ width: 200 }} />)
+        },
+        {
+            field: 'DetectResultImage',
+            headerName: 'Frame',
+            width: 150,
+            renderCell: (params) => {
+                let imagePath = '';
+                // Vérifier le type de ressource
+                if (params.row.resource && params.row.resource.type.startsWith('video/')) {
+                    // Ressource de type vidéo
+                    imagePath = resultImagePath + '/' + params.value;
+                } else if (params.row.resource && params.row.resource.type.startsWith('image/')) {
+                    // Ressource de type image
+                    imagePath = resultImagePath + '/' + params.value + '/' + params.value;
+                }
+
+                return <img src={imagePath} alt="damage" style={{ width: 200 }} />;
+            },
+        },
+        {
             field: 'timestamps',
             headerName: 'Timestamps',
             type: 'Date',
@@ -128,8 +130,8 @@ export default function FullFeaturedCrudGrid() {
             editable: true,
         },
         {
-            headerName: 'Video Source',
-            field: 'videosource',
+            headerName: 'Media ressource',
+            field: 'ressource',
             flex: 1,
             editable: true,
             renderCell: (params) => {
@@ -139,22 +141,24 @@ export default function FullFeaturedCrudGrid() {
                 };
 
                 return (
-                    <a href={params.value} target="_blank" rel="noopener noreferrer" onClick={handleVideoClick}>
-                        {params.value}
+                    <a href={'/image'} target="_blank" rel="noopener noreferrer" onClick={handleVideoClick}>
+                        {params.row.resource.name}
                     </a>
                 );
             },
         },
         {
-            field: 'defecttype',
-            headerName: 'Defect type ',
+            field: 'type',
+            headerName: 'type',
             flex: 1,
-            editable: true,
+        },
+        {
+            field: 'confidence',
+            headerName: 'confidence',
+            flex: 1,
             type: 'singleSelect',
             valueOptions: ['crack', 'spall',],
-
         },
-
         {
             field: 'DangerDegre',
             headerName: 'Danger Degre',
@@ -235,7 +239,6 @@ export default function FullFeaturedCrudGrid() {
     ];
 
 
-    const [rows, setRows] = React.useState(initialRows);
     const [rowModesModel, setRowModesModel] = React.useState({});
 
     const handleRowEditStop = (params, event) => {
@@ -253,7 +256,7 @@ export default function FullFeaturedCrudGrid() {
     };
 
     const handleDeleteClick = (id) => () => {
-        setRows(rows.filter((row) => row.id !== id));
+        setRowsData(RowsData.filter((row) => row.id !== id));
     };
 
     const handleCancelClick = (id) => () => {
@@ -262,22 +265,35 @@ export default function FullFeaturedCrudGrid() {
             [id]: { mode: GridRowModes.View, ignoreModifications: true },
         });
 
-        const editedRow = rows.find((row) => row.id === id);
+        const editedRow = RowsData.find((row) => row.id === id);
         if (editedRow.isNew) {
-            setRows(rows.filter((row) => row.id !== id));
+            setRowsData(RowsData.filter((row) => row.id !== id));
         }
     };
 
     const processRowUpdate = (newRow) => {
         const updatedRow = { ...newRow, isNew: false };
-        setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+        setRowsData(RowsData.map((row) => (row.id === newRow.id ? updatedRow : row)));
         return updatedRow;
     };
 
     const handleRowModesModelChange = (newRowModesModel) => {
         setRowModesModel(newRowModesModel);
     };
-
+    const updateDamageCounts = (data) => {
+        const statisticDamages = {
+            crackCount: data.filter(row => row.type === 'crack').length,
+            spallCount: data.filter(row => row.type === 'spall').length,
+            dangerCounts: {
+                Low: data.filter(row => row.dangerDegree === 'Low').length,
+                Medium: data.filter(row => row.dangerDegree === 'Medium').length,
+                High: data.filter(row => row.dangerDegree === 'High').length,
+            },
+        };
+        setStatisticDamages(statisticDamages)
+    }
+    console.log("RowsData", RowsData)
+    console.log("rowModesModel", rowModesModel)
 
     return (
         <Box m="20px">
@@ -285,14 +301,27 @@ export default function FullFeaturedCrudGrid() {
                 title="Inspection Result"
                 subtitle="List of domage result"
             />
+            {alertInfo && (
+                <TransitionAlerts
+                    type={alertInfo.type}
+                    message={alertInfo.message}
+                    onClose={() => { }}
+                    variant={"filled"}
+                />
+            )}
             <div className="home">
 
 
                 <div className="box box-1">
-                    <PieChartBox charttype="type" />
+                    <PieChartBox charttype="type"
+                        crackCount={statisticDamages.crackCount}
+                        spallCount={statisticDamages.spallCount} />
                 </div>
                 <div className="box box-1">
-                    <PieChartBox charttype="danger" />
+                    <PieChartBox charttype="danger"
+                        dangerCounts={statisticDamages.dangerCounts} />
+
+
                 </div>
             </div>
 
@@ -330,7 +359,7 @@ export default function FullFeaturedCrudGrid() {
                 }}
             >
                 <DataGrid
-                    rows={rows}
+                    rows={RowsData}
                     columns={columns}
                     editMode="row"
                     rowHeight={150} // Modifier la taille des lignes selon vos besoins

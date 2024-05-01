@@ -38,7 +38,7 @@ export default function Signup() {
         password: '',
         confirmPassword: '',
         city: '',
-        company: '',
+        admin: '',
         country: '',
         phone: '',
 
@@ -60,7 +60,7 @@ export default function Signup() {
     const registerAdmin = async (data) => {
         try {
             console.log("registerAdmin called");
-            const response = await axios.post('http://localhost:3000/auth/register-company', data, {
+            const response = await axios.post('http://localhost:3000/auth/register-admin', data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -68,7 +68,7 @@ export default function Signup() {
 
             if (response.status === 201) {
                 // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
-                setSuccessMessage("Company registered successfully!");
+                setSuccessMessage("admin registered successfully!");
                 setTimeout(() => {
                     navigate(
                         '/login',
@@ -83,7 +83,7 @@ export default function Signup() {
                 setErrorMessage(error.response.data.error);
             } else {
                 // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-                setErrorMessage("An error occurred while registering the company.");
+                setErrorMessage("An error occurred while registering the admin.");
             }
         }
     };
@@ -117,8 +117,8 @@ export default function Signup() {
         if (!/^[a-zA-Z ]+$/.test(name) || formData.lastname.length < 3 || formData.firstname.length < 3) {
             validationErrors.name = "name is not valid";
         }
-        if (formData.company.length == 1) {
-            validationErrors.company = "organization name  is not valid";
+        if (formData.admin.length == 1) {
+            validationErrors.admin = "organization name  is not valid";
         }
 
 
@@ -198,11 +198,11 @@ export default function Signup() {
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
                                                                 {state?.userType == "Admin" ? (<Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">Company <span className="text-danger">*</span></label>
-                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="company" required />
+                                                                        <label className="form-label">admin <span className="text-danger">*</span></label>
+                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="admin" required />
                                                                     </div>
                                                                 </Col>) : null}
-                                                                {errors.company && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.company}</span>}
+                                                                {errors.admin && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.admin}</span>}
 
                                                                 <Col md={7} >
                                                                     <div className="mb-1">

@@ -147,6 +147,13 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+             <Item
+              title="Creacte infrastructure"
+              to="/creacteinfrastructure"
+              icon={<ControlPointIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Typography
               variant="h6"
               color={colors.grey[300]}

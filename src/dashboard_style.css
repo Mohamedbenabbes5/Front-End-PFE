@@ -262,12 +262,12 @@ body,
     .option {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 2px;
       align-items: center;
-
+       font-size: large;
       .title {
         display: flex;
-        gap: 10px;
+        gap: 6px;
         align-items: center;
 
         .dot {
@@ -505,10 +505,6 @@ body,
 
 }
 
-.custom-card {
-  width: 21rem;
-  margin-bottom: 40px;
-}
 
 .twitter-bs-wizard {
   .twitter-bs-wizard-nav {
@@ -629,9 +625,25 @@ body,
   background-color: inherit !important;
 }
 .Card{
-  background-color: #979fff !important;
+  background-color: silver !important;
 }
 .custom-autocomplete  {
   background-color: white;
 
+}
+.custom-button {
+  background-color: #47cd68 !important; /* Couleur de fond bleue */
+  color: #fff !important; /* Couleur du texte blanche */
+  border: none;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease !important;
+}
+
+.custom-button:hover {
+  background-color: #0056b3 !important; /* Couleur de fond plus sombre au survol */
 }

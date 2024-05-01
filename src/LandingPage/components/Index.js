@@ -15,18 +15,12 @@ export default function Index() {
     return (
         <>
 
-          
             <Navbar />
             <Section></Section>
-            <Feature />
-            <Pricing />
-            <Review />
-            <News />
+            <Feature />     
             <Contact />
             <Footer />
-            
-
-
+        
         </>
     )
 };

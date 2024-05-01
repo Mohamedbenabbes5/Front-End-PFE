@@ -1,16 +1,16 @@
 import { Box, Button } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataCompany } from "../../data/mockData"
+import { mockDataAdmin } from "../../data/mockData"
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Company = () => {
+const Admin = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [data, setData] = useState(mockDataCompany);
+  const [data, setData] = useState(mockDataAdmin);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -41,7 +41,7 @@ const Company = () => {
     { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "user",
-      headerName: "Company",
+      headerName: "admin",
       flex: 0.5,
       renderCell: (params) => {
         return (
@@ -54,8 +54,8 @@ const Company = () => {
     },
     { field: "registerId", headerName: "Registrar ID" },
     {
-      field: "companyName",
-      headerName: "Company Name",
+      field: "adminName",
+      headerName: "admin Name",
       flex: 1,
 
       cellClassName: "name-column--cell",
@@ -135,7 +135,7 @@ const Company = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header 
         title="All Companies" 
-        subtitle="List of Company account" 
+        subtitle="List of admin account" 
         />
 
         <Box>
@@ -196,4 +196,4 @@ const Company = () => {
   );
 };
 
-export default Company;
+export default Admin;

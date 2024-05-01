@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icon from '@mdi/react';
-import { mdiCheckCircle } from '@mdi/js';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -24,17 +23,34 @@ import UploadImages from "./stepForms/UploadImages";
 import SelectInfrastructure from "./stepForms/SelectInfrastructure";
 import InfrastForm from "./stepForms/InfrastructureForm";
 import ProjectForm from "./stepForms/ProjectForm";
+import Validation from "./stepForms/Validation";
+import TransitionAlerts from "../../components/TransitionAlerts";
+import LinearIndeterminate from "../../components/LinearIndeterminate";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 //Import Breadcrumb
 
 const FormWizard = () => {
+  const token = localStorage.getItem('accessToken');
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
   const [activeTab, setactiveTab] = useState(0);
 
   const [passedSteps, setPassedSteps] = useState([1]);
 
+  const [alertInfo, setAlertInfo] = useState(null); // Contient le type de message et le message lui-même sous forme d'objet {type, message}
 
   const [showInfrastForm, setShowInfrastForm] = useState(false);
 
+  const [projectId, setcreatedProjectId] = useState(null);
+
+  const [processingAllowed, setProcessingAllowed] = useState(false);
+  const [isProcessing, setProcessing] = useState(false);
+  const [oldDataProject, setoldDataProject] = useState(null);
+  const [oldDataInfrastructure, setoldDataInfrastructure] = useState(null);
+  const [oldImages, setoldImages] = useState(null);
 
   const [stepValidity, setStepValidity] = useState({
     0: false,
@@ -42,11 +58,10 @@ const FormWizard = () => {
     // Ajoutez des étapes supplémentaires si nécessaire
   });
 
-  const [projectId, setcreatedProjectId] = useState(null);
 
   const nextStep = () => {
-    const tab=activeTab+1
-    if (stepValidity[activeTab]||(activeTab>=2)) { // Vérifier si l'étape actuelle est valide
+    const tab = activeTab + 1
+    if (stepValidity[activeTab] || (activeTab >= 2)) { // Vérifier si l'étape actuelle est valide
       var modifiedSteps = [...passedSteps, tab];
       if (tab >= 0 && tab <= 4) {
         setactiveTab(tab);
@@ -58,13 +73,13 @@ const FormWizard = () => {
     }
   };
   const previewStep = () => {
-    const tab=activeTab-1
-      var modifiedSteps = [...passedSteps, tab];
-      if (tab >= 0 && tab <= 4) {
-        setactiveTab(tab);
-        setPassedSteps(modifiedSteps);
-      }
-   
+    const tab = activeTab - 1
+    var modifiedSteps = [...passedSteps, tab];
+    if (tab >= 0 && tab <= 4) {
+      setactiveTab(tab);
+      setPassedSteps(modifiedSteps);
+    }
+
   };
 
   const [formData, setFormData] = useState({
@@ -75,45 +90,54 @@ const FormWizard = () => {
   });
 
   // Fonctions de mise à jour pour chaque étape
-  const handleUpdateStep = (field, data,isValid) => {
+  const handleUpdateStep = (field, data, isValid) => {
     if (isValid) {
-       setFormData((prevState) => ({
-      ...prevState,
-      [field]: data,
-    }));  
-  }
+      setFormData((prevState) => ({
+        ...prevState,
+        [field]: data,
+      }));
+    }
     setStepValidity((prevValidity) => ({
       ...prevValidity,
       [activeTab]: isValid, // Mettre à jour la validité de l'étape actuelle
     }));
-  
-   
-  };
 
+
+  };
+  const onCheckProcessingAllowed = () => {
+    console.log("onCheckProcessingAllowed")
+    setProcessingAllowed(false);
+
+    if (formData.images.length > 0 || formData?.videos_Fpath[0]?.video) {
+
+      setProcessingAllowed(true);
+    }
+
+  }
   const [loading, setLoading] = useState(false);
 
   const handleSaveAndUploadAll = async () => {
     setLoading(true); // Démarrer le chargement
-    
-    try {  
+
+    try {
       // setFormData(prevState => ({
       //   ...prevState,
       //   project: { ...prevState.project, id: createdProjectId }
       // }));  
-      formData.project.id=  projectId
+      formData.project.id = projectId
 
-      console.log("createproject handleSaveAndUploadAll ",formData)
+      console.log("createproject handleSaveAndUploadAll ", formData)
       const formDataToSend = new FormData();
       if (formData.project) {
         formDataToSend.append('project', JSON.stringify(formData.project));
       }
-  
+
       // Ajouter l'objet infrastructue (détails de l'infrastructure) à FormData
       if (formData.infrastructue) {
         formDataToSend.append('infrastructure', JSON.stringify(formData.infrastructue));
       }
-      if (formData.infrastructue.image) { 
-         formDataToSend.append(`infrastructureImage`, formData.infrastructue.image);
+      if (formData.infrastructue.image) {
+        formDataToSend.append(`infrastructureImage`, formData.infrastructue.image);
       };
 
       // Parcours de images (tableau de fichiers)
@@ -129,8 +153,7 @@ const FormWizard = () => {
           }
         }
       });
-    
-      const token = localStorage.getItem('accessToken');
+
 
       const response = await axios.post('http://localhost:3000/project/create_project', formDataToSend, {
         headers: {
@@ -139,29 +162,100 @@ const FormWizard = () => {
         }
       });
 
-    // Récupérer l'ID du projet de la réponse du backend
+      // Récupérer l'ID du projet de la réponse du backend
       const createdProjectId = response.data?.projectId;
-     console.log("createdProjectId", createdProjectId)
-      // setFormData(prevState => ({
-      //   ...prevState,
-      //   project: { ...prevState.project, id: createdProjectId }
-      // }));   
+      console.log("createdProjectId", createdProjectId)
+
       setcreatedProjectId(createdProjectId);
-      
-    
-      
+
+      // Logique de traitement de la réponse réussie...
+      setAlertInfo({ type: "success", message: "Project saved successfully!" });
+
       console.log(response.data); // Afficher la réponse du backend
 
     } catch (error) {
-      // Gérer les erreurs d'upload
+      setAlertInfo({ type: "error", message: "Error while sending data" });
       console.error("Erreur lors de l'upload : ", error);
     } finally {
       setLoading(false); // Arrêter le chargement
     }
-  };   
 
-  console.log("createProject formData",formData)
+  };
+  const onStartProcessing = async () => {
+    setProcessing(true); // Déclencher l'affichage de LinearIndeterminate
+    try {
+      // Envoyez une requête HTTP avec Axios en utilisant projectId
+      const response = await axios.post('http://localhost:3000/project/start_process', { projectId }, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log(response);
+      navigate(`/dashboard/result/${projectId}`, { state: { successProcess: true } });
 
+    } catch (error) {
+      console.error('Erreur lors du traitement :', error);
+      setAlertInfo({ type: "error", message: "An error occurred during processing" });
+
+    } finally {
+      setProcessing(false); // Arrêter l'affichage de LinearIndeterminate à la fin de l'exécution
+    }
+  };
+
+
+  const fetchFormData = async (projectId) => {
+    console.log("fetchFormData");
+
+    if (location.state?.successProcess) {
+      setAlertInfo({ type: "success", message: "Project saved successfully!" });
+    }
+    try {
+
+      const response = await axios.get(`http://localhost:3000/project/multiFormStepData/${projectId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+
+      });
+      console.log("response.data", response.data);
+
+
+      const data = response.data[0]; // Suppose que response.data contient un seul objet de données
+      setShowInfrastForm(true);
+      // Créer un objet avec les mêmes propriétés que formData en utilisant les valeurs de oldDataProject
+      const oldDataProject = {
+        id: data.id ?? null,
+        name: data.name ?? null,
+        description: data.description ?? null,
+        startdate: data.createdAt ?? null, // Suppose que createdAt correspond à la date de début
+        enddate: data.updatedAt ?? null, // Suppose que updatedAt correspond à la date de fin
+        guests: [] // Vous pouvez initialiser les invités comme une liste vide
+      };
+      setoldDataProject(oldDataProject)
+      setoldDataInfrastructure(data.infrastructure)
+      const imageResourceNames = data.resources
+        .filter(resource => resource.type.includes('image/'))
+        .map(resource => resource.name); 
+      console.log("imageResourceNames",imageResourceNames)
+      setoldImages(imageResourceNames)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des dommages :', error);
+      // Vous pouvez rediriger vers une page d'erreur ou afficher un message d'erreur
+      navigate('/error');
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.projectId) {
+      setcreatedProjectId(location.state?.projectId)
+
+      fetchFormData(location.state?.projectId);
+    }
+
+  }, [location]);
+
+  console.log("location.state?.projectId", location.state?.projectId)
+  console.log("projectId", projectId)
   return (
     <>
       <div className="page-content">
@@ -170,7 +264,13 @@ const FormWizard = () => {
 
 
           <Col lg="12" >
-
+            {alertInfo && (
+              <TransitionAlerts
+                type={alertInfo.type}
+                message={alertInfo.message}
+                onClose={() => setAlertInfo(null)}
+              />
+            )}
             <Card className="Card">
               <CardBody>
                 <h4 className="card-title mb-4">Creaction New Inspection Project  </h4>
@@ -203,7 +303,7 @@ const FormWizard = () => {
                       </NavLink>
                     </NavItem>
 
-                  
+
                     <NavItem className={classnames({ active: activeTab === 2 })}>
                       <NavLink
                         data-toggle="tab"
@@ -256,7 +356,7 @@ const FormWizard = () => {
 
                     <TabPane tabId={0}>
                       <div>
-                        <ProjectForm onUpdate={handleUpdateStep}/>
+                        <ProjectForm onUpdate={handleUpdateStep} oldData={oldDataProject} />
                       </div>
                     </TabPane>
 
@@ -264,7 +364,7 @@ const FormWizard = () => {
                     <TabPane tabId={1}>
                       {showInfrastForm ? (
                         <div>
-                          <InfrastForm onUpdate={handleUpdateStep} />
+                          <InfrastForm onUpdate={handleUpdateStep} oldData={oldDataInfrastructure} />
                           <a style={{
                             cursor: 'pointer',
                             fontSize: '20px',
@@ -276,7 +376,7 @@ const FormWizard = () => {
 
                       ) : (
                         <div >
-                          
+
                           <SelectInfrastructure onUpdate={handleUpdateStep} />
 
                           <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
@@ -293,7 +393,7 @@ const FormWizard = () => {
 
                     <TabPane tabId={2}>
                       <div>
-                        <UploadImages onUpdate={handleUpdateStep} />
+                        <UploadImages onUpdate={handleUpdateStep}  oldData={oldImages}/>
                       </div>
                     </TabPane>
 
@@ -309,22 +409,9 @@ const FormWizard = () => {
                     <TabPane tabId={4}>
                       <div className="row justify-content-center">
                         <Col lg="6">
-                          <div className="text-center">
+                          <Validation isFormValid={processingAllowed}>
 
-                            <Icon path={mdiCheckCircle}
-                              title="User Profile"
-                              size={4}
-                              rotate={2}
-                              color="green"
-
-                            />                              <div>
-                              <h5>Confirm Detail</h5>
-                              <p className="text-muted">
-                                If several languages coalesce, the grammar
-                                of the resulting
-                              </p>
-                            </div>
-                          </div>
+                          </Validation>
                         </Col>
                       </div>
                     </TabPane>
@@ -355,57 +442,47 @@ const FormWizard = () => {
                     <li
                       className={activeTab === 4 ? "next disabled" : "next"}
                     >
-                      {activeTab === 3 ?
-                        (
-                          <div>
-                            {loading && <CircularProgress disableShrink className="CircularProgress" />}
+
+                      <div>
+                        {activeTab === 3 ? (
+                          <>
+                            {loading && <CircularProgress style={{ marginRight: "10px" }} disableShrink className="CircularProgress" />}
+
+                            <Link to="#" onClick={() => { onCheckProcessingAllowed(); nextStep(); }}>
+                              Next
+                            </Link>
                             <Link
                               to="#"
-
-                              onClick={() => {
-                                handleSaveAndUploadAll()
-
-                              }}
-
+                              onClick={() => handleSaveAndUploadAll()}
+                              style={{ marginLeft: "10px" }}
                             >
                               save and Upload All
                             </Link>
+                          </>
+                        ) : activeTab === 4 ? (
+                          <>
+                            <Link to="#" onClick={onStartProcessing}>
 
-                          </div>
-                        ) : (activeTab === 4 ? (<div>
-                          <Link
-                            to="#"
-                            onClick={() => {
-
-                            }}
-                          >
-
-                            Start Processing
-                          </Link>
-                          <Link to="/" className="btn btn-danger mx-2" style={{ background: "red" }}>Exit</Link>
-
-                        </div>
+                              Start Processing
+                            </Link>
+                            <Link
+                              to="/"
+                              className="btn  mx-2"
+                              style={{ background: "#a20404", marginLeft: "10px" }}
+                            >
+                              Exit
+                            </Link>
+                          </>
                         ) : (
-                          <div><Link
-                            to="#"
-                            onClick={() => {
-                              nextStep();
-
-                            }}
-                          >
+                          <Link to="#" onClick={() => nextStep()}>
                             Next
                           </Link>
-                          </div>
-
-
-                        )
-
-
                         )}
+                      </div>
 
                     </li>
                   </ul>
-                </div>
+                  {isProcessing && <LinearIndeterminate />}                </div>
               </CardBody>
             </Card>
           </Col>

@@ -43,7 +43,7 @@ export default function Login() {
           // Réinitialiser les messages d'erreur
           setEmailError('');
           setPasswordError('');
-        const response = await axios.post('http://localhost:3000/auth/login-company', data, {
+        const response = await axios.post('http://localhost:3000/auth/login-admin', data, {
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -69,7 +69,7 @@ export default function Login() {
             }
 
         } else {
-            setOtherError("An error occurred while registering the company.");
+            setOtherError("An error occurred while registering the admin.");
         }
     }
 };

@@ -2,15 +2,15 @@ import React from "react";
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
-const PieChartBox = ({ charttype }) => {
+const PieChartBox = ({ charttype ,spallCount,crackCount,dangerCounts}) => {
   // Définir les données en fonction de la charttype passée
   const data = charttype === "danger" ? [
-    { name: "Faible", value: 100, color:"#fff200"},
-    { name: "Moyen", value: 200, color: "#d68101" },
-    { name: "Élevé", value: 300, color: "#ff0000" }
+    { name: "Faible", value: dangerCounts.Low, color:"#fff200"},
+    { name: "Moyen", value: dangerCounts.Medium, color: "#d68101" },
+    { name: "Élevé", value: dangerCounts.High, color: "#ff0000" }
   ] : charttype === "type" ? [
-    { name: "Crack", value: 250, color: "#0088FE" },
-    { name: "Spall", value: 350, color: "#00C49F" }
+    { name: "Crack", value: crackCount, color: "#0088FE" },
+    { name: "Spall", value: spallCount, color: "#00C49F" }
   ] : [];
 
   return (

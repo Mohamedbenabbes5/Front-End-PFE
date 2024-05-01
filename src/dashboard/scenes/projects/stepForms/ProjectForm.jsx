@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-const ProjectForm = ({ onUpdate }) => {
+const ProjectForm = ({ onUpdate, oldData }) => {
   const top100Films = [
     { title: 'The Shawshank Redemption', year: 1994 },
     { title: 'The Godfather', year: 1972 },
@@ -21,7 +21,7 @@ const ProjectForm = ({ onUpdate }) => {
     { title: 'Pulp Fiction', year: 1994 },
   ]
   const [formData, setFormData] = useState({
-    id:null,
+    id: null,
     name: null,
     description: null,
     startdate: null,
@@ -38,6 +38,27 @@ const ProjectForm = ({ onUpdate }) => {
     });
   };
 
+
+  useEffect(() => {
+    console.log('useEffect:');
+
+    console.log('oldData:', oldData);
+    console.log('formdata:', formData);
+
+    if (oldData) {
+      setFormData({
+        id: oldData.id || null,
+        name: oldData.name || null,
+        description: oldData.description || null,
+        startdate: oldData.startdate || null,
+        enddate: oldData.enddate || null,
+        guests: oldData.guests || []
+      })
+    }
+    validateFields();
+  }, [oldData]);
+
+  
   useEffect(() => {
     validateFields();
   }, [formData]);
@@ -73,6 +94,7 @@ const ProjectForm = ({ onUpdate }) => {
     }
   };
 
+
   return (
     <Form>
       <Row>
@@ -82,6 +104,7 @@ const ProjectForm = ({ onUpdate }) => {
           <Input
             name="name"
             type="text"
+            value={formData.name}
             required
             invalid={!!errors.name}
             className="form-control"
@@ -100,6 +123,8 @@ const ProjectForm = ({ onUpdate }) => {
           <Input
             name="startdate"
             type="date"
+            value={formData.startdate}
+
             required
             invalid={!!errors.startdate}
             className="form-control"
@@ -113,11 +138,13 @@ const ProjectForm = ({ onUpdate }) => {
           <Input
             name="enddate"
             type="date"
+            value={formData.enddate}
+
             required
             invalid={!!errors.enddate}
             className="form-control"
             onChange={handleChangeInputForm}
-          /> 
+          />
           {errors.enddate && <span className="text-danger">{errors.enddate}</span>}
         </Col>
       </Row>
@@ -128,6 +155,8 @@ const ProjectForm = ({ onUpdate }) => {
           <Autocomplete
             className="custom-autocomplete"
             multiple
+            value={formData.guests}
+
             id="tags-outlined"
             options={top100Films}
             getOptionLabel={(option) => option.title}
@@ -147,11 +176,13 @@ const ProjectForm = ({ onUpdate }) => {
           <textarea
             name="description"
             className="form-control"
+            value={formData.description}
+
             rows="2"
             placeholder="Enter your description..."
             onChange={handleChangeInputForm}
           />
-        {errors.description && <span className="text-danger">{errors.description}</span>}
+          {errors.description && <span className="text-danger">{errors.description}</span>}
 
         </Col>
       </Row>
