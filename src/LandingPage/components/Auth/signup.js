@@ -4,9 +4,9 @@ import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import BackgroundImageAdmin from '../assets/images/bg/admin4.jpeg';
-import BackgroundImageGuest from '../assets/images/bg/guest.jpg';
-import Logo from '../assets/images/unboxing.gif';
+import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
+import BackgroundImageGuest from '../../assets/images/bg/guest.jpg';
+import Logo from '../../assets/images/unboxing.gif';
 import PhoneInput from 'react-phone-input-2'
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
@@ -18,7 +18,8 @@ export default function Signup() {
 
 
     let { state } = useLocation();
-    console.log(state?.userType)
+    const user=state?.userType
+    console.log(user)
     const [isAccepted, setIsAccepted] = useState(false);
     const handleCheckboxChange = (e) => {
         setIsAccepted(e.target.checked);
@@ -38,7 +39,7 @@ export default function Signup() {
         password: '',
         confirmPassword: '',
         city: '',
-        admin: '',
+        company: '',
         country: '',
         phone: '',
 
@@ -57,24 +58,22 @@ export default function Signup() {
     const [successMessage, setSuccessMessage] = useState("")
     const navigate = useNavigate();
 
-    const registerAdmin = async (data) => {
+    const userRegister = async (data) => {
         try {
-            console.log("registerAdmin called");
-            const response = await axios.post('http://localhost:3000/auth/register-admin', data, {
+            console.log("userRegister called");
+            const response = await axios.post(`http://localhost:3000/auth/${user}-register`, data, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
 
-            if (response.status === 201) {
+            if (response.status === 200) {
                 // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
-                setSuccessMessage("admin registered successfully!");
+                setSuccessMessage(response.data.message);
                 setTimeout(() => {
-                    navigate(
-                        '/login',
-                        { state: { userType: state?.userType } }
-                    );
-
+                    navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`,
+                    { state: { userType: user } });
+               
                 }, 2000);
             }
         } catch (error) {
@@ -83,23 +82,23 @@ export default function Signup() {
                 setErrorMessage(error.response.data.error);
             } else {
                 // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-                setErrorMessage("An error occurred while registering the admin.");
+                setErrorMessage("An error occurred while registering the company.");
             }
         }
     };
 
     const registerGuest = async (data) => {
         try {
-            const response = await axios.post('/register-guest', data);
+            const response = await axios.post('/register-employee', data);
             if (response.status === 200) {
-                console.log('Guest registered successfully');
+                console.log('Employee registered successfully');
                 // Rediriger ou effectuer d'autres actions en fonction du succès de l'enregistrement
             } else {
-                console.error('Failed to register guest');
+                console.error('Failed to register employee');
                 // Gérer les erreurs d'enregistrement
             }
         } catch (error) {
-            console.error('Error registering guest:', error);
+            console.error('Error registering employee:', error);
             // Gérer les erreurs réseau ou autres erreurs
         }
     };
@@ -117,8 +116,8 @@ export default function Signup() {
         if (!/^[a-zA-Z ]+$/.test(name) || formData.lastname.length < 3 || formData.firstname.length < 3) {
             validationErrors.name = "name is not valid";
         }
-        if (formData.admin.length == 1) {
-            validationErrors.admin = "organization name  is not valid";
+        if (formData.company.length == 1) {
+            validationErrors.company = "organization name  is not valid";
         }
 
 
@@ -138,12 +137,12 @@ export default function Signup() {
             console.log(formData);
 
             // Call different functions based on userType
-            if (state?.userType === "Admin") {
-                // Call function for registering admin
+            if (user === "company") {
+                // Call function for registering company
                 const { confirmPassword, ...newformData } = formData;
-                registerAdmin(newformData);
+                userRegister(newformData);
             } else {
-                // Call function for registering guest
+                // Call function for registering employee
                 registerGuest(formData);
             }
         }
@@ -174,7 +173,7 @@ export default function Signup() {
                                             <div className="title-heading my-lg-auto ">
                                                 <Card className="border-0 " style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0 mt-0">
-                                                        <h4 className="card-title " >{state?.userType === "Guest" ? "Guest Register" : "Admin Regiter"}</h4>
+                                                        <h4 className="card-title " >{user === "Employee" ? "Employee Register" : "company Regiter"}</h4>
 
 
 
@@ -196,13 +195,13 @@ export default function Signup() {
 
                                                                 </Col>
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
-                                                                {state?.userType == "Admin" ? (<Col md={12} >
+                                                                {user == "company" ? (<Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">admin <span className="text-danger">*</span></label>
-                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="admin" required />
+                                                                        <label className="form-label">company <span className="text-danger">*</span></label>
+                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="company" required />
                                                                     </div>
                                                                 </Col>) : null}
-                                                                {errors.admin && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.admin}</span>}
+                                                                {errors.company && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.company}</span>}
 
                                                                 <Col md={7} >
                                                                     <div className="mb-1">
@@ -270,7 +269,7 @@ export default function Signup() {
                                                                 </div>
 
                                                                 <div className="mx-auto">
-                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: state?.userType }} >  {state?.userType == "Admin" ? "Sign in" : "Join"}</Link></p>
+                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "company" ? "Sign in" : "Join"}</Link></p>
                                                                 </div>
                                                             </Row>
                                                         </form>
@@ -286,7 +285,7 @@ export default function Signup() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${state?.userType === "Admin" ? BackgroundImageAdmin : BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
                            
                             <Stack sx={{ width: '100%' }} spacing={2}>
                                 {errorMessage && (

@@ -9,8 +9,7 @@ import { useLocation ,useNavigate} from 'react-router-dom';
 
 export default function TransitionAlerts({ type, message, onClose ,variant}) {
   const [open, setOpen] = React.useState(true);
-const navigate = useNavigate();
-const location = useLocation();
+
   React.useEffect(() => {
     setOpen(true);
     
@@ -18,16 +17,14 @@ const location = useLocation();
     const timer = setTimeout(() => {
       setOpen(false);
       onClose(); // Appel de la fonction de fermeture lorsque l'alerte est cachée
-      navigate(location.pathname, { replace: true, state: undefined });
-
-    }, 5000); // Modifier le délai en fonction de vos besoins
+    }, 4000); // Modifier le délai en fonction de vos besoins
 
     // Nettoyer le timer lors du démontage du composant
     return () => clearTimeout(timer);
   }, [message]);
 
   return (
-    <Box sx={{ width: '60%' }}>
+    <Box sx={{ width: '70%' }}>
       <Collapse in={open}>
         <Alert 
          iconSize="large" // Augmentation de la taille de l'icône

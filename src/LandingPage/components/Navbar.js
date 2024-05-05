@@ -71,10 +71,10 @@ export default function NavbarPage() {
                     </Nav>
                     <ul className="lst-inline menu-social mb-0 ps-lg-4 ms-auto ">
                         <li className="list-inline-item">
-                            <Link2 to='/login' state={{ userType: 'Admin' }} className='btn  btn-primary  '>Login </Link2>
+                            <Link2 to='/login' state={{ userType: 'company' }} className='btn  btn-primary  '>Login </Link2>
                         </li>
                         <li className="list-inline-item ms-4">
-                            <Link2 to='/login' state={{ userType: 'Guest' }} className='nav-link text-uppercase hover-effect' > Join As Guest</Link2>
+                            <Link2 to='/login' state={{ userType: 'Employee' }} className='nav-link text-uppercase hover-effect' > Join As Employee</Link2>
                         </li>
                     </ul>
 

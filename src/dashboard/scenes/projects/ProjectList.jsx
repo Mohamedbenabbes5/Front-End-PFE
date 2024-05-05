@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SearchBar from "../../components/SearchProjectsBar";
-import UiCards from "../../components/UiCards";
 import { Col, Row, Container } from "reactstrap";
 import axios from 'axios';
-import InputFileUpload from '../../components/FileUploadButton';
+import ProjectCard from './ProjectCard';
 
 
 
@@ -46,7 +45,7 @@ const Projects = () => {
             <Row>
               {projects.map((project) => (
                 <Col key={project?.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                  <UiCards allproject={project} />
+                  <ProjectCard data={project} />
                 </Col>
               ))}
             </Row>

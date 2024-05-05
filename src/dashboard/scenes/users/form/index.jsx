@@ -127,13 +127,13 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="admin name"
+                label="company name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.admin}
-                name="admin"
-                error={!!touched.admin && !!errors.admin}
-                helperText={touched.admin && errors.admin}
+                value={values.company}
+                name="company"
+                error={!!touched.company && !!errors.company}
+                helperText={touched.company && errors.company}
                 sx={{ gridColumn: "span 4" }}
               />
               <TextField
@@ -201,7 +201,7 @@ const checkoutSchema = yup.object().shape({
     .matches(phoneRegExp, "Phone number is not valid")
     .required("required").trim(),
   address: yup.string().required("required").trim(),
-  admin: yup.string().required("required").trim(),
+  company: yup.string().required("required").trim(),
   image: yup
   .mixed()
   .test("fileType", "Seules les images sont autorisées", (value) => {
@@ -217,7 +217,7 @@ const checkoutSchema = yup.object().shape({
 const initialValues = {
   firstName: "",
   lastName: "",
-  admin: "",
+  company: "",
   email: "",
   contact: "",
   address: "",

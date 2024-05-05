@@ -1,16 +1,16 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataAdmin } from "../../data/mockData"
+import {mockDataGuest} from "../../data/mockData"
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Admin = () => {
+const Employee = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [data, setData] = useState(mockDataAdmin);
+  const [data, setData] = useState(mockDataGuest);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -19,7 +19,7 @@ const Admin = () => {
     {
       field: "action",
       headerName: "Action",
-      flex: 1.5,
+    flex: 1.5,    
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -41,79 +41,63 @@ const Admin = () => {
     { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "user",
-      headerName: "admin",
+      headerName: "User",
       flex: 0.5,
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
             <img className="cellImg" src={params.row.img} alt="avatar" />
-            {params.row.username}
           </div>
         );
       },
     },
     { field: "registerId", headerName: "Registrar ID" },
     {
-      field: "adminName",
-      headerName: "admin Name",
-      flex: 1,
-
-      cellClassName: "name-column--cell",
-
-    },
-    {
       field: "name",
       headerName: "Username",
       flex: 1,
-
+      cellClassName: "name-column--cell",
     },
-
-
+   
     {
       field: "phone",
       headerName: "Phone Number",
       flex: 1,
-
-
     },
     {
       field: "email",
       headerName: "Email",
       flex: 1,
-
     },
     {
-      field: "country",
-      headerName: "country",
-      flex: 1,
-
-    },
-    {
-      field: "city",
+        field: "country",
+        headerName: "country",
+        flex: 1,
+      }, 
+     {  field: "city",
       headerName: "City",
       flex: 1,
-
-    },
+    }, 
     {
+
       field: "address",
       headerName: "Address",
       flex: 1,
-
     },
-
+   
     {
-      field: "projects",
-      headerName: "projects",
-      flex: 1,
 
-    },
-    {
-      field: "guests",
-      headerName: "guests",
-      flex: 1,
+        field: "hosts",
+        headerName: "Hosts",
+        flex: 1,
+      },
+      {
 
-    },
-    {
+        field: "authorizedProjects",
+        headerName: "Authorized Projects",
+        flex: 1,
+      },
+     {
       field: "status",
       headerName: "Status",
       flex: 1,
@@ -125,35 +109,16 @@ const Admin = () => {
         );
       },
     },
-    
+   
+  
   ];
 
   return (
     <Box m="20px">
-
-
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header 
-        title="All Companies" 
-        subtitle="List of admin account" 
-        />
-
-        <Box>
-          <Link to="/dashboard/form" style={{ textDecoration: "none" }}>
-            <Button
-              sx={{
-                backgroundColor: colors.blueAccent[700],
-                color: colors.grey[100],
-                fontSize: "14px",
-                fontWeight: "bold",
-                padding: "10px 20px",
-              }}
-            >
-              Create new user
-            </Button>
-          </Link>
-        </Box>
-      </Box>
+      <Header
+        title="All Guests"
+        subtitle="List of Guests "
+      />
       <Box
         m="40px 0 0 0"
         height="100vh"
@@ -194,6 +159,8 @@ const Admin = () => {
       </Box>
     </Box>
   );
+
+  
 };
 
-export default Admin;
+export default Employee;

@@ -209,7 +209,7 @@ export const mockDataGuest = [
 
 ];
 
-export const mockDataAdmin = [
+export const mockDatacompany = [
 
 
   {
@@ -220,7 +220,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "YRR",
+    companyName: "YRR",
     name: "Jon Snow",
     email: "jonsnow@gmail.com",
     age: 35,
@@ -240,7 +240,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "SGSJ",
+    companyName: "SGSJ",
     name: "Cersei Lannister",
     email: "cerseilannister@gmail.com",
     age: 42,
@@ -260,7 +260,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "SGJ",
+    companyName: "SGJ",
     name: "Jaime Lannister",
     email: "jaimelannister@gmail.com",
     age: 45,
@@ -280,7 +280,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "abSGc",
+    companyName: "abSGc",
     name: "Anya Stark",
     email: "anyastark@gmail.com",
     age: 16,
@@ -295,7 +295,7 @@ export const mockDataAdmin = [
   {
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "EG",
+    companyName: "EG",
 
     country: "USA",
     id: 5,
@@ -318,7 +318,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "abZGc",
+    companyName: "abZGc",
     name: "Ever Melisandre",
     email: "evermelisandre@gmail.com",
     age: 150,
@@ -338,7 +338,7 @@ export const mockDataAdmin = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    adminName: "ZGQ",
+    companyName: "ZGQ",
     name: "Ferrara Clifford",
     email: "ferraraclifford@gmail.com",
     age: 44,

@@ -255,7 +255,8 @@ const FormWizard = () => {
   }, [location]);
 
   console.log("location.state?.projectId", location.state?.projectId)
-  console.log("projectId", projectId)
+
+
   return (
     <>
       <div className="page-content">

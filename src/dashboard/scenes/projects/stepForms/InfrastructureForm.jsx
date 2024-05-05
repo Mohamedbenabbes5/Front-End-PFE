@@ -23,12 +23,7 @@ const InfrastForm = ({ onUpdate,oldData }) => {
   const [errors, setErrors] = useState({});
 
   const handleChangeInputForm = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-
-    });
+   
   };
   const handleImageUpload = (file) => {
     

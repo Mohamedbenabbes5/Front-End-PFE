@@ -18,15 +18,18 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-const Item = ({ title, to, icon, selected, setSelected }) => {
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+const Item = ({ title, to, icon, selected, setSelected, style }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
     <MenuItem
       active={selected === title}
       style={{
-        color: colors.grey[100],
+        color: colors.grey[100], // Couleur fixe définie ici
+        ...style, // Fusionner avec d'autres styles passés
       }}
+     
       onClick={() => setSelected(title)}
       icon={icon}
     >
@@ -81,7 +84,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  companyIS
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -111,7 +114,7 @@ const Sidebar = () => {
                   username
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Admin or guest
+                  company or employee
                 </Typography>
               </Box>
             </Box>
@@ -127,13 +130,6 @@ const Sidebar = () => {
             />
 
             <Item
-              title="ALL Projects"
-              to="/allprojects"
-              icon={<ViewCompactIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
               title="Profile"
               to="/profile"
               icon={<PersonOutlinedIcon />}
@@ -141,18 +137,43 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             <Item
+              title="ALL Projects"
+              to="/allprojects"
+              icon={<ViewCompactIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+
+            <Item
+
+
               title="Creacte Project"
               to="/creacteproject"
               icon={<ControlPointIcon />}
               selected={selected}
               setSelected={setSelected}
+              style={!isCollapsed ? { marginLeft: "8px" } : {}}
+
             />
-             <Item
-              title="Creacte infrastructure"
+
+
+            <Item
+              title="infrastructures"
+              to="/allinfrastructures"
+              icon={<AccountBalanceIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+
+
+              title="Creacte Infrastructure"
               to="/creacteinfrastructure"
               icon={<ControlPointIcon />}
               selected={selected}
               setSelected={setSelected}
+              style={!isCollapsed ? { marginLeft: "8px" } : {}}
+
             />
             <Typography
               variant="h6"
