@@ -26,7 +26,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
     description: null,
     startdate: null,
     enddate: null,
-    guests: []
+    employees: []
   });
   const [errors, setErrors] = useState({});
 
@@ -52,7 +52,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
         description: oldData.description || null,
         startdate: oldData.startdate || null,
         enddate: oldData.enddate || null,
-        guests: oldData.guests || []
+        employees: oldData.employees || []
       })
     }
     validateFields();
@@ -155,7 +155,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
           <Autocomplete
             className="custom-autocomplete"
             multiple
-            value={formData.guests}
+            value={formData.employees}
 
             id="tags-outlined"
             options={top100Films}
@@ -163,7 +163,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Add guests"
+                placeholder="Add employees"
               />
             )}
           />

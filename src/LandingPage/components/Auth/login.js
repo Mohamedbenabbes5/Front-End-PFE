@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
-import BackgroundImageGuest from '../../assets/images/bg/guest.jpg';
+import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
 import Stack from '@mui/material/Stack';
 import Logo from '../../assets/images/unboxing.gif';
 import TransitionAlerts from "../TransitionAlerts";
@@ -86,15 +86,8 @@ export default function Login() {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log("Handle submit function called");
-
-        // Call different functions based on userType
-        if (user === "company") {
-            // Call function for registering company
             userLogin(formData);
-        } else {
-            // Call function for registering employee
-            //loginGuest();
-        }
+      
     }
     return (
         <>
@@ -116,7 +109,7 @@ export default function Login() {
                                             <div className="title-heading my-lg-auto">
                                                 <Card className="login-page border-0" style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0">
-                                                        <h4 className="card-title">{user === "Employee" ? "Employee Login" : "company Login"}</h4>
+                                                        <h4 className="card-title">{user === "employee" ? "Employee Login" : "company Login"}</h4>
                                                         <form className="login-form mt-4" onSubmit={handleSubmit}>
                                                             <Row>
                                                                 <Col lg={12} >
@@ -166,7 +159,7 @@ export default function Login() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
                             <Stack sx={{ width: '100%' }} spacing={2}>
                                 {LoginError && (
                                     <TransitionAlerts type={"error"}

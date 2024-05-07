@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import {mockDataGuest} from "../../data/mockData"
+import {mockDataEmployee} from "../../data/mockData"
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const Employee = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [data, setData] = useState(mockDataGuest);
+  const [data, setData] = useState(mockDataEmployee);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -116,8 +116,8 @@ const Employee = () => {
   return (
     <Box m="20px">
       <Header
-        title="All Guests"
-        subtitle="List of Guests "
+        title="All Employees"
+        subtitle="List of Employees "
       />
       <Box
         m="40px 0 0 0"

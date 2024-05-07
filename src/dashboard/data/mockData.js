@@ -1,6 +1,6 @@
 import { tokens } from "../theme";
 
-export const mockDataGuest = [
+export const mockDataEmployee = [
 
 
   {
@@ -227,7 +227,7 @@ export const mockDatacompany = [
     phone: "(665)121-5454",
     address: "0912 Won Street, Alabama, SY 10001",
     city: "New York",
-    guests: "2",
+    employees: "2",
     zipCode: "10001",
     registerId: 123512,
     projects: "3"
@@ -247,7 +247,7 @@ export const mockDatacompany = [
     phone: "(421)314-2288",
     address: "1234 Main Street, New York, NY 10001",
     city: "New York",
-    guests: "2",
+    employees: "2",
     zipCode: "13151",
     registerId: 123512,
     projects: "3"
@@ -267,7 +267,7 @@ export const mockDatacompany = [
     phone: "(422)982-6739",
     address: "3333 Want Blvd, Estanza, NAY 42125",
     city: "New York",
-    guests: "2",
+    employees: "2",
     zipCode: "87281",
     registerId: 4132513,
   },
@@ -287,7 +287,7 @@ export const mockDatacompany = [
     phone: "(921)425-6742",
     address: "1514 Main Street, New York, NY 22298",
     city: "New York",
-    guests: "2",
+    employees: "2",
     zipCode: "15551",
     registerId: 123512,
     projects: "30"
@@ -305,7 +305,7 @@ export const mockDatacompany = [
     phone: "(421)445-1189",
     address: "11122 Welping Ave, Tenting, CD 21321",
     city: "Tenting",
-    guests: "2",
+    employees: "2",
     zipCode: "14215",
     registerId: 123512,
     projects: "13"
@@ -325,7 +325,7 @@ export const mockDatacompany = [
     phone: "(232)545-6483",
     address: "1234 Canvile Street, Esvazark, NY 10001",
     city: "Esvazark",
-    guests: "2",
+    employees: "2",
     zipCode: "10001",
     registerId: 123512,
     projects: "2"
@@ -345,7 +345,7 @@ export const mockDatacompany = [
     phone: "(543)124-0123",
     address: "22215 Super Street, Everting, ZO 515234",
     city: "Evertin",
-    guests: "2",
+    employees: "2",
     zipCode: "51523",
     registerId: 123512,
     projects: "0"
@@ -359,7 +359,7 @@ export const mockDatacompany = [
     age: 36,
     phone: "(222)444-5555",
     address: "4123 Ever Blvd, Wentington, AD 142213",
-    guests: "2", city: "Esteras"
+    employees: "2", city: "Esteras"
     ,
 
     zipCode: "44215",
@@ -376,7 +376,7 @@ export const mockDatacompany = [
     phone: "(444)555-6239",
     address: "51234 Avery Street, Cantory, ND 212412",
     city: "Colunza",
-    guests: "2",
+    employees: "2",
     zipCode: "111234",
     registerId: 928397,
   },
@@ -390,8 +390,8 @@ export const mockDatacompany = [
     phone: "(222)444-5555",
     address: "4123 Easer Blvd, Wentington, AD 142213",
     city: "Esteras",
-    guests: "2",
-    guests: "2",
+    employees: "2",
+    employees: "2",
     zipCode: "44215",
     registerId: 533215,
   },
@@ -405,7 +405,7 @@ export const mockDatacompany = [
     phone: "(444)555-6239",
     address: "51234 Fiveton Street, CunFory, ND 212412",
     city: "Colunza",
-    guests: "2",
+    employees: "2",
     zipCode: "1234",
     registerId: 92197,
   },

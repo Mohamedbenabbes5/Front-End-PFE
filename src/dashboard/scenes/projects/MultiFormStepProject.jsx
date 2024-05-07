@@ -21,7 +21,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import UploadImages from "./stepForms/UploadImages";
 import SelectInfrastructure from "./stepForms/SelectInfrastructure";
-import InfrastForm from "./stepForms/InfrastructureForm";
 import ProjectForm from "./stepForms/ProjectForm";
 import Validation from "./stepForms/Validation";
 import TransitionAlerts from "../../components/TransitionAlerts";
@@ -42,7 +41,6 @@ const FormWizard = () => {
 
   const [alertInfo, setAlertInfo] = useState(null); // Contient le type de message et le message lui-même sous forme d'objet {type, message}
 
-  const [showInfrastForm, setShowInfrastForm] = useState(false);
 
   const [projectId, setcreatedProjectId] = useState(null);
 
@@ -221,7 +219,6 @@ const FormWizard = () => {
 
 
       const data = response.data[0]; // Suppose que response.data contient un seul objet de données
-      setShowInfrastForm(true);
       // Créer un objet avec les mêmes propriétés que formData en utilisant les valeurs de oldDataProject
       const oldDataProject = {
         id: data.id ?? null,
@@ -229,14 +226,14 @@ const FormWizard = () => {
         description: data.description ?? null,
         startdate: data.createdAt ?? null, // Suppose que createdAt correspond à la date de début
         enddate: data.updatedAt ?? null, // Suppose que updatedAt correspond à la date de fin
-        guests: [] // Vous pouvez initialiser les invités comme une liste vide
+        employees: [] // Vous pouvez initialiser les invités comme une liste vide
       };
       setoldDataProject(oldDataProject)
       setoldDataInfrastructure(data.infrastructure)
       const imageResourceNames = data.resources
         .filter(resource => resource.type.includes('image/'))
-        .map(resource => resource.name); 
-      console.log("imageResourceNames",imageResourceNames)
+        .map(resource => resource.name);
+      console.log("imageResourceNames", imageResourceNames)
       setoldImages(imageResourceNames)
     } catch (error) {
       console.error('Erreur lors de la récupération des dommages :', error);
@@ -278,7 +275,7 @@ const FormWizard = () => {
                 <div id="basic-pills-wizard" className="twitter-bs-wizard">
                   <ul className="twitter-bs-wizard-nav nav nav-pills nav-justified">
 
-                    <NavItem className={classnames({ active: activeTab === 0 })}>
+                    {/* <NavItem className={classnames({ active: activeTab === 0 })}>
                       <NavLink
                         data-toggle="tab"
                         className={classnames({ active: activeTab === 0, NavLink })}
@@ -302,7 +299,7 @@ const FormWizard = () => {
                         <span className="step-number">1</span>
                         <span className="step-title" style={{ paddingLeft: "10px" }}>Infrastructure Details</span>
                       </NavLink>
-                    </NavItem>
+                    </NavItem> */}
 
 
                     <NavItem className={classnames({ active: activeTab === 2 })}>
@@ -363,38 +360,31 @@ const FormWizard = () => {
 
 
                     <TabPane tabId={1}>
-                      {showInfrastForm ? (
-                        <div>
-                          <InfrastForm onUpdate={handleUpdateStep} oldData={oldDataInfrastructure} />
-                          <a style={{
-                            cursor: 'pointer',
-                            fontSize: '20px',
-                            display: 'inline-block',
-                            marginTop: '10px',
-                            transition: 'red 0.5s',
-                          }} onClick={() => setShowInfrastForm(false)}>Select existing Infrastructure</a>
-                        </div>
 
-                      ) : (
-                        <div >
 
-                          <SelectInfrastructure onUpdate={handleUpdateStep} />
 
-                          <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
-                            <Fab color="secondary" aria-label="add">
-                              <AddIcon onClick={() => setShowInfrastForm(true)} />
-                            </Fab><a onClick={() => setShowInfrastForm(true)}>Create New Infrastructure</a>
-                          </Box>
-                        </div>
-                      )}
-                      <div>
+
+                      <div >
+
+                        <SelectInfrastructure onUpdate={handleUpdateStep} />
+                        <Box sx={{ '& > :not(style)': { m: 1 }, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '20px', mt: "20px", cursor: 'pointer' }}>
+                          <Link to="/dashboard/creacteinfrastructure" >
+                            <Fab color="secondary" aria-label="add" sx={{ mr: 2 }}>
+                              <AddIcon />
+                            </Fab>
+                            Create New Infrastructure
+                          </Link>
+                        </Box>
+
                       </div>
+
+
                     </TabPane>
 
 
                     <TabPane tabId={2}>
                       <div>
-                        <UploadImages onUpdate={handleUpdateStep}  oldData={oldImages}/>
+                        <UploadImages onUpdate={handleUpdateStep} oldData={oldImages} />
                       </div>
                     </TabPane>
 

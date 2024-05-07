@@ -44,7 +44,7 @@ function DashboardRoutes() {
                   {/* Autres routes */}
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/companies" element={<Company />} />
-                  <Route path="/guests" element={< Employee/>} />
+                  <Route path="/employees" element={< Employee/>} />
                   <Route path="/calendar" element={<Calendar />} />
                   <Route path="/geography" element={<Geography />} />
                   <Route path="/result/:projectId" element={<FullFeaturedCrudGrid/>} />

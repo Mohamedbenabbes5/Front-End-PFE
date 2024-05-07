@@ -562,3 +562,60 @@ button:not(:disabled) {
 .alert.show {
     opacity: 10;
 }
+
+
+/* Style pour le conteneur des résultats de recherche */
+.results-list {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 8px #ddd;
+    border-radius: 10px;
+    margin-top: 1rem;
+    max-height: 140px;
+    overflow-y: auto; /* Ajoute une barre de défilement vertical si nécessaire */
+}
+
+/* Style pour chaque élément de résultat de recherche */
+.search-result {
+    padding: 10px 20px;
+}
+
+/* Style au survol de chaque élément de résultat de recherche */
+.search-result:hover {
+    background-color: #efefef;
+}
+
+/* Style pour le conteneur de l'entrée de recherche */
+.input-wrapper {
+    width: 100%;
+    height: 2.5rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    box-shadow: 0px 0px 8px #ddd;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+/* Supprime la bordure au focus de l'entrée de recherche */
+input:focus {
+    outline: none;
+}
+
+/* Style pour l'icône de recherche */
+#search-icon {
+    color: royalblue;
+}
+
+  .absolute-position {
+    position: absolute;
+    top: 100%; /* Positionne le conteneur au-dessous de l'élément parent */
+    left: 0;
+    z-index: 999; /* Assure que le conteneur est au-dessus du contenu en dessous */
+    background-color: #fff; /* Fond blanc ou couleur souhaitée */
+    border: 1px solid #ccc; /* Bordure ou style souhaité */
+    /* Autres styles CSS selon vos besoins */
+}

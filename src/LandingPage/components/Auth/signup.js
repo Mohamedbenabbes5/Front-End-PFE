@@ -1,37 +1,65 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import { Col, Row, Card, CardBody } from "reactstrap";
 import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
-import BackgroundImageGuest from '../../assets/images/bg/guest.jpg';
+import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
 import Logo from '../../assets/images/unboxing.gif';
 import PhoneInput from 'react-phone-input-2'
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import { SearchBar } from "../SearchBar";
+import Select from 'react-select';
+
 /**
  * Signup component
  */
 export default function Signup() {
+    const [selectedCompany, setSelectedCompany] = useState(null);
+    const [allCompany, setAllCompany] = useState([]);
+    const [selectedRole, setSelectedRole] = useState(null);
+
+    // Fonction de gestion pour mettre à jour le rôle sélectionné
+    const handleRoleChange = (selectedRole) => {
+        setSelectedRole(selectedRole);
+        setFormData({
+            ...formData, ["role"]: selectedRole.value
+        })
+    };
+
+    const loadUsers = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/users/get-allcompany`);
+            setAllCompany(response.data.AllCompany);
+        } catch (error) {
+            console.error('Erreur lors du chargement des utilisateurs :', error);
+        }
+    };
 
 
     let { state } = useLocation();
-    const user=state?.userType
+    const user = state?.userType
     console.log(user)
     const [isAccepted, setIsAccepted] = useState(false);
     const handleCheckboxChange = (e) => {
         setIsAccepted(e.target.checked);
     };
-    const [phone, setPhone] = useState('');
-    const handlePhoneChange = (value) => {
-        setPhone(value); // Met à jour l'état local du numéro de téléphone
+
+    const handleChangee = selectedCompany => {
+        setSelectedCompany(selectedCompany);
         setFormData({
-            ...formData,
-            phone: value // Met à jour formData avec le nouveau numéro de téléphone
-        });
+            ...formData, ["companyId"]: selectedCompany.value
+        })
     };
+
+
+
+
     const [formData, setFormData] = useState({
         firstname: '',
         lastname: '',
@@ -41,7 +69,7 @@ export default function Signup() {
         city: '',
         company: '',
         country: '',
-        phone: '',
+        // phone: '',
 
     })
 
@@ -58,9 +86,9 @@ export default function Signup() {
     const [successMessage, setSuccessMessage] = useState("")
     const navigate = useNavigate();
 
-    const userRegister = async (data) => {
+    const UserRegister = async (data) => {
         try {
-            console.log("userRegister called");
+            console.log("UserRegister called");
             const response = await axios.post(`http://localhost:3000/auth/${user}-register`, data, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -72,8 +100,8 @@ export default function Signup() {
                 setSuccessMessage(response.data.message);
                 setTimeout(() => {
                     navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`,
-                    { state: { userType: user } });
-               
+                        { state: { userType: user } });
+
                 }, 2000);
             }
         } catch (error) {
@@ -82,26 +110,53 @@ export default function Signup() {
                 setErrorMessage(error.response.data.error);
             } else {
                 // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-                setErrorMessage("An error occurred while registering the company.");
+                setErrorMessage("An error occurred while registering account.");
             }
         }
     };
+    // const EmployeeRegister = async (data) => {
+    //     try {
+    //         console.log("UserRegister called");
+    //         const response = await axios.post(`http://localhost:3000/auth/${user}-register`, data, {
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
 
-    const registerGuest = async (data) => {
-        try {
-            const response = await axios.post('/register-employee', data);
-            if (response.status === 200) {
-                console.log('Employee registered successfully');
-                // Rediriger ou effectuer d'autres actions en fonction du succès de l'enregistrement
-            } else {
-                console.error('Failed to register employee');
-                // Gérer les erreurs d'enregistrement
-            }
-        } catch (error) {
-            console.error('Error registering employee:', error);
-            // Gérer les erreurs réseau ou autres erreurs
-        }
-    };
+    //         if (response.status === 200) {
+    //             // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
+    //             setSuccessMessage(response.data.message);
+    //             setTimeout(() => {
+    //                 navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`,
+    //                     { state: { userType: user } });
+
+    //             }, 2000);
+    //         }
+    //     } catch (error) {
+    //         if (error.response && error.response.data.error) {
+    //             // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
+    //             setErrorMessage(error.response.data.error);
+    //         } else {
+    //             // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
+    //             setErrorMessage("An error occurred while registering account .");
+    //         }
+    //     }
+    // };
+    // const registerEmployee = async (data) => {
+    //     try {
+    //         const response = await axios.post('/register-employee', data);
+    //         if (response.status === 200) {
+    //             console.log('Employee registered successfully');
+    //             // Rediriger ou effectuer d'autres actions en fonction du succès de l'enregistrement
+    //         } else {
+    //             console.error('Failed to register employee');
+    //             // Gérer les erreurs d'enregistrement
+    //         }
+    //     } catch (error) {
+    //         console.error('Error registering employee:', error);
+    //         // Gérer les erreurs réseau ou autres erreurs
+    //     }
+    // };
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log("Handle submit function called");
@@ -137,17 +192,23 @@ export default function Signup() {
             console.log(formData);
 
             // Call different functions based on userType
-            if (user === "company") {
-                // Call function for registering company
+
+            // Call function for registering company
+            if (user === "employee") {
+                const { confirmPassword, city, country, company, ...newformData } = formData;
+                UserRegister(newformData);
+            }
+            else if (user === "company") {
                 const { confirmPassword, ...newformData } = formData;
-                userRegister(newformData);
-            } else {
-                // Call function for registering employee
-                registerGuest(formData);
+                UserRegister(newformData);
+
             }
         }
 
     }
+    console.log({ selectedCompany });
+    console.log({ formData });
+
     return (
         < >
             <div className="back-to-home">
@@ -160,7 +221,7 @@ export default function Signup() {
 
                     <Row className="g-0 position-relative">
                         <Col lg={4} className="cover-my-30 order-2 ">
-                            <div className="mt-md-0   mb-4 text-center">
+                            <div className="mt-md-0  text-center">
                                 <Link to="/"><img src={Logo} alt="" width="100px" /></Link>
                             </div>
 
@@ -173,7 +234,7 @@ export default function Signup() {
                                             <div className="title-heading my-lg-auto ">
                                                 <Card className="border-0 " style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0 mt-0">
-                                                        <h4 className="card-title " >{user === "Employee" ? "Employee Register" : "company Regiter"}</h4>
+                                                        <h4 className="card-title " >{user === "employee" ? "Employee Register" : "company Regiter"}</h4>
 
 
 
@@ -195,26 +256,58 @@ export default function Signup() {
 
                                                                 </Col>
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
-                                                                {user == "company" ? (<Col md={12} >
+                                                                <Col md={12} >
                                                                     <div className="mb-1">
                                                                         <label className="form-label">company <span className="text-danger">*</span></label>
-                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="company" required />
-                                                                    </div>
-                                                                </Col>) : null}
-                                                                {errors.company && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.company}</span>}
+                                                                        {user === "company" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="company" required />)}
+                                                                        {user === "employee" && (<div className="search-bar-container">
+                                                                            <Select
+                                                                                value={selectedCompany}
+                                                                                onChange={handleChangee}
+                                                                                options={allCompany.map(company => ({ value: company.id, label: company.company }))}
+                                                                                isSearchable // Permet la recherche dans le menu
+                                                                                placeholder="Select your company name"
+                                                                                onFocus={loadUsers} // Appel de loadUsers lors du focus sur le champ de recherche
 
-                                                                <Col md={7} >
-                                                                    <div className="mb-1">
-                                                                        <label className="form-label">Country <span className="text-danger">*</span></label>
-                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="United States" name="country" required />
+                                                                            />
+                                                                        </div>)}
                                                                     </div>
                                                                 </Col>
-                                                                <Col md={5} >
+                                                                {errors.company && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.company}</span>}
+                                                                {user === "employee" && (<Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">City</label>
-                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="New York City" name="city" />
+                                                                        <label className="form-label">Role<span className="text-danger">*</span></label>
+                                                                        <Select
+                                                                            value={selectedRole} // Utilisez selectedRole et non selectedCompany car il s'agit d'une autre sélection
+                                                                            onChange={handleRoleChange} // Assurez-vous de définir la fonction de gestion du changement
+                                                                            options={[
+                                                                                { value: 1, label: "Guest" },
+                                                                                { value: 2, label: "Inspecteur" },
+                                                                                { value: 3, label: "Expert" },
+                                                                                { value: 4, label: "Project Manager" }
+                                                                            ]}
+                                                                            isSearchable // Permet la recherche dans le menu
+                                                                            placeholder="Select employee role" // Placeholder en anglais
+                                                                        />
                                                                     </div>
-                                                                </Col>
+                                                                </Col>)}
+
+                                                                {user === "company" && (
+                                                                    <div>
+                                                                        <Col md={7}>
+                                                                            <div className="mb-1">
+                                                                                <label className="form-label">Country <span className="text-danger">*</span></label>
+                                                                                <input onChange={handleChange} type="text" className="form-control" placeholder="United States" name="country" required />
+                                                                            </div>
+                                                                        </Col>
+                                                                        <Col md={5}>
+                                                                            <div className="mb-1">
+                                                                                <label className="form-label">City</label>
+                                                                                <input onChange={handleChange} type="text" className="form-control" placeholder="New York City" name="city" />
+                                                                            </div>
+                                                                        </Col>
+                                                                    </div>
+                                                                )}
 
                                                                 <Col md={12} >
                                                                     <div className="mb-1">
@@ -225,15 +318,7 @@ export default function Signup() {
                                                                 </Col>
 
 
-                                                                <Col md={12} >
-                                                                    <div className="mb-1">
-                                                                        <label className="form-label">Phone</label>
-                                                                        <PhoneInput
-                                                                            country={'usa'}
-                                                                            value={phone}
-                                                                            onChange={handlePhoneChange}
-                                                                        />                                                                  </div>
-                                                                </Col>
+
 
 
                                                                 <Col md={12}>
@@ -285,8 +370,8 @@ export default function Signup() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageGuest})` }} data-jarallax='{"speed": 0.5}'>
-                           
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
+
                             <Stack sx={{ width: '100%' }} spacing={2}>
                                 {errorMessage && (
                                     <Alert variant="filled" severity="error" className="mt-2">

@@ -108,8 +108,8 @@ const Company = () => {
 
     },
     {
-      field: "guests",
-      headerName: "guests",
+      field: "employees",
+      headerName: "employees",
       flex: 1,
 
     },

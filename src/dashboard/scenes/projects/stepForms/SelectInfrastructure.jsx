@@ -12,7 +12,7 @@ const SelectInfrastructure = ({ onUpdate, triggerValidation }) => {
   const fetchInfrastructure = async () => {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await axios.get("http://localhost:3000/get/all-infrastructures", {
+      const response = await axios.get("http://localhost:3000/infrastructure/getall", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
