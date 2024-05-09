@@ -34,6 +34,7 @@ export default function InputFileUpload({ onImageUpload }) {
 
   return (
     <Button
+    className='MuiButton'
       component="label"
       role={undefined}
       variant="contained"

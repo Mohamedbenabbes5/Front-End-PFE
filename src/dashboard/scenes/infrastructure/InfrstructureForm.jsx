@@ -35,6 +35,8 @@ console.log({infrastrId});
         
         
     });
+    const [imagePreview, setImagePreview] = useState(null); // Nouvel état pour stocker l'URL de l'image prévisualisée
+
     const [errors, setErrors] = useState({});
     const handleChangeInputForm = (e) => {
         const { name, value } = e.target;
@@ -51,6 +53,8 @@ console.log({infrastrId});
             ...formData,
             image: file,
         });
+        setImagePreview(URL.createObjectURL(file));
+
 
     };
     const fetchFormData = async (infrastrId) => {
@@ -321,7 +325,7 @@ console.log({infrastrId});
                                     </Row>
                                     <Row>
                                         <Col lg="12">
-                                            <div className="mb-4">
+                                            <div className="mb-3">
                                                 <Label>Description</Label>
                                                 <textarea
                                                     name="description"
@@ -342,7 +346,7 @@ console.log({infrastrId});
 
                                             </div>
                                             {errors.image && <span className="text-danger">{errors.image}</span>}
-
+                                            {imagePreview && <img src={imagePreview} alt="Uploaded" style={{ width: '100px', height: 'auto', marginTop: '10px' }} />}
 
                                         </Col>
 

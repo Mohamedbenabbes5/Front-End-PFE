@@ -281,10 +281,10 @@ export default function Signup() {
                                                                             value={selectedRole} // Utilisez selectedRole et non selectedCompany car il s'agit d'une autre sélection
                                                                             onChange={handleRoleChange} // Assurez-vous de définir la fonction de gestion du changement
                                                                             options={[
-                                                                                { value: 1, label: "Guest" },
-                                                                                { value: 2, label: "Inspecteur" },
-                                                                                { value: 3, label: "Expert" },
-                                                                                { value: 4, label: "Project Manager" }
+                                                                                { value: 0, label: "Guest" },
+                                                                                { value: 1, label: "Inspecteur" },
+                                                                                { value: 2, label: "Expert" },
+                                                                                { value: 3, label: "Project Manager" }
                                                                             ]}
                                                                             isSearchable // Permet la recherche dans le menu
                                                                             placeholder="Select employee role" // Placeholder en anglais

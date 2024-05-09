@@ -4,16 +4,22 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import RouteOutlinedIcon from '@mui/icons-material/RouteOutlined';
 import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-function DynamicTable({onUpdate}) {
+
+function DynamicTable({ projectId, onSuccessMessage, onErrorMessage }) {
     const [rows, setRows] = useState([{ id: 1, video: null, flightpath: null }]);
+  
+    const [loading, setLoading] = useState(false);
+    const token = localStorage.getItem('accessToken');
 
     const handleFileChange = (event, rowIndex, columnName) => {
 
         const updatedRows = [...rows];
         updatedRows[rowIndex][columnName] = event.target.files[0];
         setRows(updatedRows);
-        onUpdate("videos_Fpath",rows,true);
     };
 
     const handleAddRow = () => {
@@ -27,6 +33,53 @@ function DynamicTable({onUpdate}) {
     const handleDeleteAll = () => {
         setRows([{ id: 1, video: null, flightpath: null }]);
     };
+    const handleUploadAll = async () => {
+        setLoading(true);
+        try {
+            const formData = new FormData(); // Créez une instance de FormData
+            rows.forEach(row => {
+                const videoName = row.video.name.split('.').slice(0, -1).join('.'); // Supprimez l'extension de la vidéo
+                // Utilisez le nom de la vidéo (sans extension) pour créer un nom commun pour le fichier            
+                formData.append(`${videoName}.txt`, row.flightpath);
+                formData.append(`${videoName}.mp4`, row.video);
+            });
+
+
+            formData.append(`projectId`, projectId);
+            console.log("createproject handleSaveAndUploadAll ", formData)
+
+
+
+            const response = await axios.post('http://localhost:3000/project/add-videos-flightpaths', formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            // Récupérer l'ID du projet de la réponse du backend
+
+            if (response.status === 200) {
+                // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
+                onSuccessMessage(response.data.message);
+
+            }
+
+
+        } catch (error) {
+            if (error.response?.data.error) {
+                // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
+                onErrorMessage(error.response.data.error);
+            } else {
+                // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
+                onErrorMessage("An error occurred while uploading videos.");
+            }
+        } finally {
+            setLoading(false); // Arrêter le chargement
+        }
+    }
+
+
 
     const columns = [
         { field: 'id', headerName: 'Num', width: 70 },
@@ -85,7 +138,8 @@ function DynamicTable({onUpdate}) {
 
     return (
         <div style={{ height: 'auto', width: '50%', margin: 'auto', overflow: 'auto' }}>
-            <Grid container spacing={2} justifyContent="center" alignItems="center" mt='75px'>  
+       
+            <Grid container spacing={2} justifyContent="center" alignItems="center" mt='75px'>
                 <Grid item xs={12}>
                     <DataGrid
                         rows={rows}
@@ -124,7 +178,22 @@ function DynamicTable({onUpdate}) {
                         <Button variant="contained" color="error" onClick={handleDeleteAll}>
                             Delete All
                         </Button>
+                        <Button
+                            onClick={handleUploadAll}
+                            className='MuiButton'
+                            component="label"
+                            role={undefined}
+                            variant="contained"
+                            tabIndex={-1}
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload All
+                            {/* Utilisez l'élément VisuallyHiddenInput pour permettre le téléchargement de fichier */}
+                        </Button>
+                        {loading && <CircularProgress style={{ marginRight: "10px" }} disableShrink className="CircularProgress" />}
+
                     </Stack>
+
                 </Grid>
             </Grid>
         </div>

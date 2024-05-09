@@ -3,9 +3,8 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
-const SelectInfrastructure = ({ onUpdate, triggerValidation }) => {
+const SelectInfrastructure = ({ onUpdate }) => {
   const [infrastructurelist, setInfrastructurelist] = useState([]);
-  const [selectedInfrastructure, setSelectedInfrastructure] = useState(null);
   const [errors, setErrors] = useState(null);
 
   // Fonction pour récupérer les infrastructures depuis le backend
@@ -17,44 +16,41 @@ const SelectInfrastructure = ({ onUpdate, triggerValidation }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data;
+      return response.data.infrastructures;
     } catch (error) {
       console.error("Error fetching infrastructure names:", error);
       return [];
     }
   };
-  useEffect(() => {
-    if (selectedInfrastructure && selectedInfrastructure.id != null) {
-      onUpdate("infrastructue", selectedInfrastructure, true);
-    }
-    else {
-      const newErrors = "selecting Infrastructure is required";
-      setErrors(newErrors);     
-       onUpdate("infrastructue", selectedInfrastructure, false);
-    }
-  }, [selectedInfrastructure]);
 
 
   useEffect(() => {
     const fetchNames = async () => {
       const infrastructures = await fetchInfrastructure();
       setInfrastructurelist(infrastructures); // Mettre à jour le tableau des infrastructures
+      console.log(infrastructures);
     };
     fetchNames();
   }, []);
 
   const handleInfrastructureChange = (event, value) => {
     if (value) {
-      // Lorsque l'utilisateur sélectionne une infrastructure, enregistrer l'ID
-      setSelectedInfrastructure({ "id": value.id });
+      setErrors(null);   
+      onUpdate("infrastructureID", value.id, true);
+
+    }
+    else {
+      const newErrors = "selecting Infrastructure is required";
+      onUpdate("infrastructureID", null, false);
+      setErrors(newErrors);   
     }
   };
 
 
   return (
-    <div className="text-center">
-      <h5>Select Infrastructure</h5>
-      <p className="text-muted">Search and select the name of the infrastructure.</p>
+    <div >
+      <h5 className="text-center"> Select Infrastructure</h5>
+      <p className="text-muted text-center">Search and select the name of the infrastructure.</p>
       <Autocomplete
         className="custom-autocomplete"
         options={infrastructurelist} // Les infrastructures à afficher

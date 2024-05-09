@@ -3,62 +3,51 @@ import {
   Col,
   Form,
   Input,
-  FormFeedback,
   Label,
   Row,
 
 } from "reactstrap";
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+
 const ProjectForm = ({ onUpdate, oldData }) => {
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 },
-    { title: '12 Angry Men', year: 1957 },
-    { title: "Schindler's List", year: 1993 },
-    { title: 'Pulp Fiction', year: 1994 },
-  ]
+
   const [formData, setFormData] = useState({
-    id: null,
     name: null,
     description: null,
     startdate: null,
     enddate: null,
-    employees: []
   });
   const [errors, setErrors] = useState({});
 
-  const handleChangeInputForm = (e) => {
+
+  const handleChangeInputForm = (e, v) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
 
-  useEffect(() => {
-    console.log('useEffect:');
+  // useEffect(() => {
+  //   console.log('useEffect:');
 
-    console.log('oldData:', oldData);
-    console.log('formdata:', formData);
+  //   console.log('oldData:', oldData);
+  //   console.log('formdata:', formData);
 
-    if (oldData) {
-      setFormData({
-        id: oldData.id || null,
-        name: oldData.name || null,
-        description: oldData.description || null,
-        startdate: oldData.startdate || null,
-        enddate: oldData.enddate || null,
-        employees: oldData.employees || []
-      })
-    }
-    validateFields();
-  }, [oldData]);
+  //   if (oldData) {
+  //     setFormData({
+  //       id: oldData.id || null,
+  //       name: oldData.name || null,
+  //       description: oldData.description || null,
+  //       startdate: oldData.startdate || null,
+  //       enddate: oldData.enddate || null,
+  //       employees: oldData.employees || []
+  //     })
+  //   }
+  //   validateFields();
+  // }, [oldData]);
 
-  
+
   useEffect(() => {
     validateFields();
   }, [formData]);
@@ -87,23 +76,24 @@ const ProjectForm = ({ onUpdate, oldData }) => {
       console.log(" errors", newErrors);
       console.log(" data prj", formData);
 
-      onUpdate("project", formData, true); // Update parent component with valid data
+      onUpdate("projectForm", formData, true); // Update parent component with valid data
     }
     else {
-      onUpdate("project", formData, false);
+      onUpdate("projectForm", formData, false);
     }
   };
 
-
+  console.log("frm data project form ", formData);
   return (
     <Form>
-      <Row>
+      <Row className="form-row">
         <Col lg="12">
 
           <Label>Project Name</Label>
           <Input
             name="name"
             type="text"
+            style={{ marginBottom: '2px' }}
             value={formData.name}
             required
             invalid={!!errors.name}
@@ -116,15 +106,15 @@ const ProjectForm = ({ onUpdate, oldData }) => {
 
         </Col>
       </Row>
-      <Row>
+      <Row className="form-row">
         <Col lg="6">
 
           <Label>Start Date</Label>
           <Input
             name="startdate"
+            style={{ marginBottom: '2px' }}
             type="date"
             value={formData.startdate}
-
             required
             invalid={!!errors.startdate}
             className="form-control"
@@ -136,10 +126,10 @@ const ProjectForm = ({ onUpdate, oldData }) => {
 
           <Label>End Date</Label>
           <Input
+            style={{ marginBottom: '2px' }}
             name="enddate"
             type="date"
             value={formData.enddate}
-
             required
             invalid={!!errors.enddate}
             className="form-control"
@@ -148,36 +138,16 @@ const ProjectForm = ({ onUpdate, oldData }) => {
           {errors.enddate && <span className="text-danger">{errors.enddate}</span>}
         </Col>
       </Row>
-      <Row>
-        <Col lg="12">
 
-          <Label>Shared With</Label>
-          <Autocomplete
-            className="custom-autocomplete"
-            multiple
-            value={formData.employees}
-
-            id="tags-outlined"
-            options={top100Films}
-            getOptionLabel={(option) => option.title}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Add employees"
-              />
-            )}
-          />
-        </Col>
-      </Row>
-      <Row>
+      <Row className="form-row">
         <Col lg="12">
 
           <Label>Description</Label>
           <textarea
+            style={{ marginBottom: '2px' }}
             name="description"
             className="form-control"
             value={formData.description}
-
             rows="2"
             placeholder="Enter your description..."
             onChange={handleChangeInputForm}

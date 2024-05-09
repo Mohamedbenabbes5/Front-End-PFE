@@ -9,21 +9,28 @@ import {
 import Dropzone from "react-dropzone";
 import { mdiCloudUpload } from '@mdi/js';
 import Icon from '@mdi/react';
-import { Link } from "react-router-dom";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-const UploadImages = ({ onUpdate }) => {
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
   // State pour stocker les fichiers sélectionnés
+
   const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem('accessToken');
 
   // Gestionnaire d'événement pour les fichiers acceptés
   const handleAcceptedFiles = (files) => {
     // Filtrer les fichiers pour accepter uniquement les images
     const imageFiles = files.filter(file => file.type.includes("image"));
 
-   // Mettre à jour l'état selectedFiles
+    // Mettre à jour l'état selectedFiles
     setSelectedFiles(prevSelectedFiles => {
       const updatedFiles = [...prevSelectedFiles, ...imageFiles];
-      onUpdate("images",updatedFiles,true); // Passer les nouveaux fichiers à la fonction onUpdate
       return updatedFiles;//, lorsque nous retournons updatedFiles, cela signifie que selectedFiles sera équivalent à updatedFiles après que la mise à jour de l'état ait été effectuée.
     });
   };
@@ -44,10 +51,56 @@ const UploadImages = ({ onUpdate }) => {
     newFiles.splice(index, 1);
     setSelectedFiles(newFiles);
   };
+  const handleUploadAll = async () => {
+    setLoading(true);
+    try {
+      const formData = new FormData(); // Créez une instance de FormData
+
+      // Ajoutez chaque fichier sélectionné à FormData
+      selectedFiles.forEach((file, index) => {
+        formData.append(`${file.name}`, file);
+      });
+      formData.append(`projectId`, projectId);
+
+      console.log("createproject handleSaveAndUploadAll ", formData)
+
+
+      const response = await axios.post('http://localhost:3000/project/add-images', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+
+        }
+      });
+
+      // Récupérer l'ID du projet de la réponse du backend
+
+      if (response.status === 200) {
+        // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
+        onSuccessMessage(response.data.message);
+
+      }
+
+
+    } catch (error) {
+      if (error.response?.data.error) {
+        // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
+        onErrorMessage(error.response.data.error);
+
+      } else {
+        // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
+        onErrorMessage("An error occurred while uploading images.");
+
+      }
+    } finally {
+      setLoading(false); // Arrêter le chargement
+    }
+  }
 
   return (
     <div className="page-content">
       <Row>
+        
         <Col className="col-12">
           <Card>
             <CardBody>
@@ -104,10 +157,29 @@ const UploadImages = ({ onUpdate }) => {
 
 
               </Form>
+
             </CardBody>
           </Card>
         </Col>
       </Row>
+      <div style={{ marginTop: "20px" }}>
+         <Button
+        onClick={handleUploadAll}
+        className='MuiButton'
+        component="label"
+        role={undefined}
+        variant="contained"
+        tabIndex={-1}
+        startIcon={<CloudUploadIcon />}
+
+      >
+        Upload All
+        {/* Utilisez l'élément VisuallyHiddenInput pour permettre le téléchargement de fichier */}
+      </Button>
+      {loading && <CircularProgress  style={{ marginLeft: "10px" }} disableShrink className="CircularProgress" />}
+
+      </div>
+     
     </div>
   );
 };

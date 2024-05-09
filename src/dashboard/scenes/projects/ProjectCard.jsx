@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link ,useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 import { useTheme, Avatar } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -30,9 +32,14 @@ const ProjectCard = ({ data }) => {
   const ImagePath = 'http://localhost:3000/uploads/';
   const navigate = useNavigate();
 
-  const onMultiFormNavigate = (id) => {
-    navigate(`/dashboard/creacteproject`, { state: { projectId: id } });
+  const onMultiFormNavigate = (id, status) => {
+    console.log('onMultiFormNavigate status: ' + status);
+    console.log('navigate function:', navigate); // Ajout d'un console.log pour vérifier si navigate est défini
+    navigate(`/dashboard/addmedia`, {
+      state: { projectId: id, step: (status === 1) ? 5 : undefined }
+    });
   };
+
   return (
 
     <Card >
@@ -78,9 +85,13 @@ const ProjectCard = ({ data }) => {
         alt={data?.title}
       />
 
-      <div className={`projectStatusV2 ${data?.status ? 'completed' : 'incompleted'}`}>
-        {data?.status ? 'completed' : 'incompleted'}
+      <div className={`projectStatus v${data?.status}`}>
+        {data?.status === 0 && 'Data collection in progress'}
+        {data?.status === 1 && 'Awaiting processing launch'}
+        {data?.status === 2 && 'Under inspection'}
+        {data?.status === 3 && 'Completed'}
       </div>
+
       <CardContent>
         <Typography color="text.secondary" mb={2} >
           {data.description}
@@ -94,17 +105,26 @@ const ProjectCard = ({ data }) => {
         />
 
         <CardActions>
-          {data?.status ?
-           (<Button component={Link} size="small" className="custom-button"  to={`/dashboard/result/${data?.id}`}
-           >
-            show results
-          </Button>) 
-          : (<Button component={Link} size="small" className="custom-button"        onClick={onMultiFormNavigate(data?.id)}
-          >
-            complete
-          </Button>)}
-
-
+          {(data?.status === 2 || data?.status === 3) ? (
+            <Button
+              component={Link}
+              size="small"
+              className="custom-button"
+              to={`/dashboard/result/${data?.id}`}
+            >
+              show results
+            </Button>
+          ) : (
+            <Button
+              size="small"
+              className="custom-button" 
+              onClick={() => onMultiFormNavigate(data?.id, data?.status)}
+            >
+              complete
+            </Button>
+            
+          )}
+         
         </CardActions>
       </CardContent>
     </Card>

@@ -15,12 +15,13 @@ import FullFeaturedCrudGrid from "./dashboard/scenes/inspection/InspectionResult
 import Profile from "./dashboard/scenes/users/Profile";
 import Projects from "./dashboard/scenes/projects/ProjectList";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FormWizard from "./dashboard/scenes/projects/MultiFormStepProject";
 import "./dashboard_style.css";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import InfrastForm from "./dashboard/scenes/infrastructure/InfrstructureForm";
 import Infrastructures from "./dashboard/scenes/infrastructure/allInfrastructure";
+import ProjectInfoSteps from "./dashboard/scenes/projects/ProjectInfoSteps";
+import UploadMediaSteps from "./dashboard/scenes/projects/UploadMediaSteps";
 
 // Définissez le thème spécifique pour FormWizard
 const formWizardTheme = createTheme({
@@ -58,10 +59,14 @@ function DashboardRoutes() {
                    {/* Route FormWizard avec thème spécifique */}
                    <Route path="/creacteproject" element={
                     <ThemeProvider theme={formWizardTheme}>
-                      <FormWizard />
+                      <ProjectInfoSteps />
                     </ThemeProvider>
                   } />
-               
+               <Route path="/addmedia" element={
+                    <ThemeProvider theme={formWizardTheme}>
+                      <UploadMediaSteps />
+                    </ThemeProvider>
+                  } />
                 </Routes>
                
               </main>

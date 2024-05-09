@@ -11,7 +11,7 @@ import ProjectCard from './ProjectCard';
 const Projects = () => {
   const token = localStorage.getItem('accessToken');
   const [projects, setProjects] = useState([]);
-  const fetchDamages = async () => {
+  const fetchData = async () => {
 
     try {
 
@@ -29,7 +29,7 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    fetchDamages();
+    fetchData();
   }, []);
 
   console.log("data", projects);
