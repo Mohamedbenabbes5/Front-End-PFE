@@ -52,6 +52,7 @@ const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
     setSelectedFiles(newFiles);
   };
   const handleUploadAll = async () => {
+    if(selectedFiles.length > 0) {
     setLoading(true);
     try {
       const formData = new FormData(); // Créez une instance de FormData
@@ -87,7 +88,11 @@ const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
         // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
         onErrorMessage(error.response.data.error);
 
-      } else {
+      } 
+      else if(error.response.status==401){
+        onErrorMessage("Unauthorized ,only inspector admin can upload data.");
+
+      }else {
         // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
         onErrorMessage("An error occurred while uploading images.");
 
@@ -95,6 +100,7 @@ const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
     } finally {
       setLoading(false); // Arrêter le chargement
     }
+  }
   }
 
   return (

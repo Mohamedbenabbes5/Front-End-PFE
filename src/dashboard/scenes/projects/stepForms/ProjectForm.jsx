@@ -89,7 +89,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
       <Row className="form-row">
         <Col lg="12">
 
-          <Label>Project Name</Label>
+          <Label className="label-form">Project Name</Label>
           <Input
             name="name"
             type="text"
@@ -109,7 +109,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
       <Row className="form-row">
         <Col lg="6">
 
-          <Label>Start Date</Label>
+          <Label className="label-form">Start Date</Label>
           <Input
             name="startdate"
             style={{ marginBottom: '2px' }}
@@ -124,7 +124,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
         </Col>
         <Col lg="6">
 
-          <Label>End Date</Label>
+          <Label className="label-form">End Date</Label>
           <Input
             style={{ marginBottom: '2px' }}
             name="enddate"
@@ -142,7 +142,7 @@ const ProjectForm = ({ onUpdate, oldData }) => {
       <Row className="form-row">
         <Col lg="12">
 
-          <Label>Description</Label>
+          <Label className="label-form">Description</Label>
           <textarea
             style={{ marginBottom: '2px' }}
             name="description"

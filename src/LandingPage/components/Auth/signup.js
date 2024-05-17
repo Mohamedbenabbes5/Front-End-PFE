@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
 import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
-import Logo from '../../assets/images/unboxing.gif';
+import Logo from "../../assets/images/logo.png";
 import PhoneInput from 'react-phone-input-2'
 import axios from 'axios';
 import Alert from '@mui/material/Alert';
@@ -34,7 +34,7 @@ export default function Signup() {
 
     const loadUsers = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/users/get-allcompany`);
+            const response = await axios.get(`http://localhost:3000/auth/get-allcompany`);
             setAllCompany(response.data.AllCompany);
         } catch (error) {
             console.error('Erreur lors du chargement des utilisateurs :', error);
@@ -50,7 +50,7 @@ export default function Signup() {
         setIsAccepted(e.target.checked);
     };
 
-    const handleChangee = selectedCompany => {
+    const handleCompanyChange = selectedCompany => {
         setSelectedCompany(selectedCompany);
         setFormData({
             ...formData, ["companyId"]: selectedCompany.value
@@ -66,9 +66,8 @@ export default function Signup() {
         email: '',
         password: '',
         confirmPassword: '',
-        city: '',
-        company: '',
-        country: '',
+        address: '',
+        companyname: '',
         // phone: '',
 
     })
@@ -88,7 +87,7 @@ export default function Signup() {
 
     const UserRegister = async (data) => {
         try {
-            console.log("UserRegister called");
+            console.log("UserRegister called",data);
             const response = await axios.post(`http://localhost:3000/auth/${user}-register`, data, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -171,14 +170,18 @@ export default function Signup() {
         if (!/^[a-zA-Z ]+$/.test(name) || formData.lastname.length < 3 || formData.firstname.length < 3) {
             validationErrors.name = "name is not valid";
         }
-        if (formData.company.length == 1) {
-            validationErrors.company = "organization name  is not valid";
+        if (user === "company" && formData.companyname.length == 1) {
+            validationErrors.companyname = "company name  is not valid";
         }
-
-
+        console.log("formData.companyId?.length", formData.companyId?.length);
+        if (user === "employee" && (!formData.companyId || formData.companyId === "")) {
+            validationErrors.companyname = "please select your company";
+        }
+       
         if (formData.password.length < 6) {
             validationErrors.password = "password should be at least 6 char"
         }
+
 
         if (formData.confirmPassword !== formData.password) {
             validationErrors.confirmPassword = "password not matched"
@@ -195,7 +198,7 @@ export default function Signup() {
 
             // Call function for registering company
             if (user === "employee") {
-                const { confirmPassword, city, country, company, ...newformData } = formData;
+                const { confirmPassword, companyname, ...newformData } = formData;
                 UserRegister(newformData);
             }
             else if (user === "company") {
@@ -222,7 +225,7 @@ export default function Signup() {
                     <Row className="g-0 position-relative">
                         <Col lg={4} className="cover-my-30 order-2 ">
                             <div className="mt-md-0  text-center">
-                                <Link to="/"><img src={Logo} alt="" width="100px" /></Link>
+                                <Link to="/"><img src={Logo} alt="" width="200px" /></Link>
                             </div>
 
                             <div className="cover-user-img d-flex align-items-center  ">
@@ -258,22 +261,21 @@ export default function Signup() {
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
                                                                 <Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">company <span className="text-danger">*</span></label>
-                                                                        {user === "company" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="company" required />)}
+                                                                        <label className="form-label">company name <span className="text-danger">*</span></label>
+                                                                        {user === "company" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="companyname" required />)}
                                                                         {user === "employee" && (<div className="search-bar-container">
                                                                             <Select
                                                                                 value={selectedCompany}
-                                                                                onChange={handleChangee}
-                                                                                options={allCompany.map(company => ({ value: company.id, label: company.company }))}
+                                                                                onChange={handleCompanyChange}
+                                                                                options={allCompany.map(company => ({ value: company.id, label: company.companyname }))}
                                                                                 isSearchable // Permet la recherche dans le menu
                                                                                 placeholder="Select your company name"
                                                                                 onFocus={loadUsers} // Appel de loadUsers lors du focus sur le champ de recherche
-
                                                                             />
                                                                         </div>)}
                                                                     </div>
                                                                 </Col>
-                                                                {errors.company && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.company}</span>}
+                                                                {errors.companyname && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.companyname}</span>}
                                                                 {user === "employee" && (<Col md={12} >
                                                                     <div className="mb-1">
                                                                         <label className="form-label">Role<span className="text-danger">*</span></label>
@@ -292,22 +294,14 @@ export default function Signup() {
                                                                     </div>
                                                                 </Col>)}
 
-                                                                {user === "company" && (
-                                                                    <div>
-                                                                        <Col md={7}>
-                                                                            <div className="mb-1">
-                                                                                <label className="form-label">Country <span className="text-danger">*</span></label>
-                                                                                <input onChange={handleChange} type="text" className="form-control" placeholder="United States" name="country" required />
-                                                                            </div>
-                                                                        </Col>
-                                                                        <Col md={5}>
-                                                                            <div className="mb-1">
-                                                                                <label className="form-label">City</label>
-                                                                                <input onChange={handleChange} type="text" className="form-control" placeholder="New York City" name="city" />
-                                                                            </div>
-                                                                        </Col>
+                                                                <Col md={12} >
+                                                                    <div className="mb-1">
+                                                                        <label className="form-label">Location Adresse <span className="text-danger">*</span></label>
+                                                                        <input onChange={handleChange} type="text" className="form-control" placeholder="Location Adresse" name="address" required />
                                                                     </div>
-                                                                )}
+                                                                </Col>
+
+
 
                                                                 <Col md={12} >
                                                                     <div className="mb-1">

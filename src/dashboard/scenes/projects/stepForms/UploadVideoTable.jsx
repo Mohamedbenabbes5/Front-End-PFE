@@ -10,7 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 function DynamicTable({ projectId, onSuccessMessage, onErrorMessage }) {
-    const [rows, setRows] = useState([{ id: 1, video: null, flightpath: null }]);
+    const [rows, setRows] = useState([]);
   
     const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('accessToken');
@@ -34,6 +34,8 @@ function DynamicTable({ projectId, onSuccessMessage, onErrorMessage }) {
         setRows([{ id: 1, video: null, flightpath: null }]);
     };
     const handleUploadAll = async () => {
+        if(rows.length > 0) {
+
         setLoading(true);
         try {
             const formData = new FormData(); // Créez une instance de FormData
@@ -62,24 +64,29 @@ function DynamicTable({ projectId, onSuccessMessage, onErrorMessage }) {
             if (response.status === 200) {
                 // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
                 onSuccessMessage(response.data.message);
-
-            }
-
-
-        } catch (error) {
-            if (error.response?.data.error) {
+        
+              }
+        
+        
+            } catch (error) {
+              if (error.response?.data.error) {
                 // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
                 onErrorMessage(error.response.data.error);
-            } else {
+        
+              } 
+              else if(error.response.status==401){
+                onErrorMessage("Unauthorized ,only inspector admin can upload data.");
+        
+              }else {
                 // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-                onErrorMessage("An error occurred while uploading videos.");
+                onErrorMessage("An error occurred while uploading images.");
+        
+              }
+            } finally {
+              setLoading(false); // Arrêter le chargement
             }
-        } finally {
-            setLoading(false); // Arrêter le chargement
+          }
         }
-    }
-
-
 
     const columns = [
         { field: 'id', headerName: 'Num', width: 70 },

@@ -658,7 +658,7 @@ body,
 .custom-button:hover {
   background-color: #12722a !important; /* Couleur de fond plus sombre au survol */
 }
-Label{
+.label-form{
   color: rgb(56 54 54) !important;
   font-size: 18px;
   font-weight: 500;

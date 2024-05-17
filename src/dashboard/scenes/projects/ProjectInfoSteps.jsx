@@ -28,11 +28,14 @@ import TransitionAlerts from "../../components/TransitionAlerts";
 import LinearIndeterminate from "../../components/LinearIndeterminate";
 import { useNavigate, useLocation } from 'react-router-dom';
 import TeamAssignment from "./stepForms/TeamAssignment";
+import { jwtDecode } from 'jwt-decode';
 
 //Import Breadcrumb
 
 const ProjectInfoSteps = () => {
   const token = localStorage.getItem('accessToken');
+  const decodedToken = jwtDecode(token).user;
+
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -129,9 +132,11 @@ const ProjectInfoSteps = () => {
         if (error.response?.data.error) {
           // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
           setErrorMessage(error.response.data.error);
-        } else {
+        } 
+       
+        else {
           // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-          setErrorMessage("An error occurred while registering account.");
+          setErrorMessage("An error occurred while creating project.");
         }
       } finally {
         setLoading(false); // Arrêter le chargement

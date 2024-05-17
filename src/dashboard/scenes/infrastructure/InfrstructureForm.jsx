@@ -39,6 +39,7 @@ console.log({infrastrId});
 
     const [errors, setErrors] = useState({});
     const handleChangeInputForm = (e) => {
+        console.log('handleChangeInputForm infra form',formData);
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -85,7 +86,7 @@ console.log({infrastrId});
 
     const onCreateInfrast = async (e) => {
         e.preventDefault(); // Empêcher le comportement par défaut de soumission du formulaire
-        if (validateFields(infrastrId)) {
+        if (validateFields()) {
             try {
                 console.log("Données du formulaire:", formData); // Journaliser formData pour le débogage
     
@@ -211,7 +212,7 @@ console.log({infrastrId});
                                     <Row>
                                         <Col lg="6">
                                             <div className="mb-3">
-                                                <Label>Infrastructure Name</Label>
+                                                <Label className="label-form">Infrastructure Name</Label>
                                                 <Input
                                                     name="name"
                                                     value={formData.name}
@@ -227,7 +228,7 @@ console.log({infrastrId});
                                         </Col>
                                         <Col lg="6">
                                             <div className="mb-3">
-                                                <Label>Type</Label>
+                                                <Label className="label-form">Type</Label>
                                                 <Input
                                                     type="text"
                                                     name="type"
@@ -245,7 +246,7 @@ console.log({infrastrId});
                                     <Row>
                                         <Col lg="6">
                                             <div className="mb-3">
-                                                <Label>Construction Date</Label>
+                                                <Label className="label-form">Construction Date</Label>
                                                 <Input
                                                     name="constructionDate"
                                                     type="date"
@@ -260,7 +261,7 @@ console.log({infrastrId});
                                         </Col>
                                         <Col lg="3">
                                             <div className="mb-3">
-                                                <Label>Span</Label>
+                                                <Label className="label-form">Span</Label>
                                                 <Input
                                                     name="span"
                                                     value={formData.span}
@@ -275,7 +276,7 @@ console.log({infrastrId});
                                         </Col>
                                         <Col lg="3">
                                             <div className="mb-3">
-                                                <Label>Height</Label>
+                                                <Label className="label-form">Height</Label>
                                                 <Input
                                                     name="length"
                                                     type="number"
@@ -292,7 +293,7 @@ console.log({infrastrId});
                                     <Row>
                                         <Col lg="6">
                                             <div className="mb-3">
-                                                <Label>Country</Label>
+                                                <Label className="label-form">Country</Label>
                                                 <Input
                                                     name="country"
                                                     required
@@ -308,7 +309,7 @@ console.log({infrastrId});
                                         </Col>
                                         <Col lg="6">
                                             <div className="mb-3">
-                                                <Label>Location Address</Label>
+                                                <Label className="label-form">Location Address</Label>
                                                 <Input
                                                     name="locationAddress"
                                                     type="text"
@@ -326,7 +327,7 @@ console.log({infrastrId});
                                     <Row>
                                         <Col lg="12">
                                             <div className="mb-3">
-                                                <Label>Description</Label>
+                                                <Label className="label-form">Description</Label>
                                                 <textarea
                                                     name="description"
                                                     className="form-control"

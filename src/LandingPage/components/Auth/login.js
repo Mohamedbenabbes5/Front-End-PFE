@@ -8,16 +8,19 @@ import { useNavigate } from 'react-router-dom';
 import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
 import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
 import Stack from '@mui/material/Stack';
-import Logo from '../../assets/images/unboxing.gif';
+import Logo from "../../assets/images/logo.png";
 import TransitionAlerts from "../TransitionAlerts";
+import { jwtDecode } from 'jwt-decode';
 
 
 /**
  * Login component
  */
 export default function Login() {
-    const state = useLocation(); // Utilisation du hook useLocation pour obtenir l'objet location
-    const user = state.state?.userType; // Récupérer la valeur de user depuis location.state
+    const location = useLocation(); // Utilisation du hook useLocation pour obtenir l'objet location
+       const queryParams = new URLSearchParams(location.search);
+ const user = location.state?.userType || queryParams.get('user');; // Récupérer la valeur de user depuis location.state ou depuis lurl
+    const token = queryParams.get('token');
 
     const navigate = useNavigate();
 
@@ -26,6 +29,7 @@ export default function Login() {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        ...(token && { token: token })
     });
     // Fonction pour mettre à jour l'état local lorsque les champs du formulaire changent
     const handleChange = (e) => {
@@ -55,6 +59,16 @@ export default function Login() {
             if (response.status === 200) {
                 // Enregistrement réussi, afficher un message de succès et rediriger vers la dashboard
                 const token = response.data.accessToken;
+                // Supposez que token soit votre token JWT
+                const decodedToken = jwtDecode(token);
+
+                // Convertissez les données décodées en chaîne JSON
+                const decodedTokenData = JSON.stringify(decodedToken);
+
+                // Enregistrez les données décodées dans le localStorage
+                localStorage.setItem('decodedToken', decodedTokenData);
+
+                // Utilisez les données de l'utilisateur comme vous le souhaitez
                 localStorage.setItem('accessToken', token);
                 navigate(
                     '/dashboard',
@@ -65,10 +79,10 @@ export default function Login() {
 
 
         } catch (error) {
-            console.log("erreurrrr,",error.response.data?.error);
+            console.log("erreurrrr,", error.response.data?.error);
             if (error.response?.data?.error) {
                 // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
-                
+
                 setLoginError(error.response.data?.error);
                 if (error.response.status === 401) {
                     // Enregistrement réussi, afficher un message de succès et rediriger vers la dashboard
@@ -86,8 +100,8 @@ export default function Login() {
     const handleSubmit = (e) => {
         e.preventDefault()
         console.log("Handle submit function called");
-            userLogin(formData);
-      
+        userLogin(formData);
+
     }
     return (
         <>
@@ -104,7 +118,7 @@ export default function Login() {
                                     <div className="col-12">
                                         <div className="d-flex flex-column auth-hero">
                                             <div className="mt-md-5 text-center">
-                                                <Link to="/"><img src={Logo} alt="" width="100px" /></Link>
+                                                <Link to="/"><img src={Logo} alt="" width="200px" /></Link>
                                             </div>
                                             <div className="title-heading my-lg-auto">
                                                 <Card className="login-page border-0" style={{ zIndex: 1 }}>
@@ -114,7 +128,7 @@ export default function Login() {
                                                             <Row>
                                                                 <Col lg={12} >
                                                                     <div className="mb-3">
-                                                                        <label className="form-label">Email or Phone <span className="text-danger">*</span></label>
+                                                                        <label className="form-label">Email <span className="text-danger">*</span></label>
                                                                         <input onChange={handleChange} type="email" className="form-control" placeholder="Email" name="email" required />
                                                                     </div>
                                                                 </Col>
@@ -132,7 +146,7 @@ export default function Login() {
                                                                                 <input type="checkbox" className="form-check-input ms-2" />
                                                                             </label>
                                                                         </div>
-                                                                        <p className="forgot-pass mb-0"><Link to="/forgotpassword"  state={{ userType: user }} className="text-dark fw-semibold">Forgot password ?</Link></p>
+                                                                        <p className="forgot-pass mb-0"><Link to="/forgotpassword" state={{ userType: user }} className="text-dark fw-semibold">Forgot password ?</Link></p>
                                                                     </div>
                                                                 </Col>
 

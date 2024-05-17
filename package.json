@@ -39,6 +39,7 @@
     "crypto-browserify": "^3.12.0",
     "formik": "^2.2.9",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^7.2.0",
     "mdbreact": "^5.2.0",
     "mdi-react": "^9.4.0",
@@ -79,7 +80,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "set PORT=3001 && react-scripts start",
+    "start": "set PORT=3002 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

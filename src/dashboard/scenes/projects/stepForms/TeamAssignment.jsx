@@ -88,7 +88,7 @@ console.log('emplouee assog',employeeAssignment);
   return (
     <Form>
         <Col lg="12" className="form-row">
-          <Label className="labelForms">Visual Resource Manager assignment <span className="text-danger">*</span></Label>
+          <Label className="label-form">Visual Resource Manager assignment <span className="text-danger">*</span></Label>
           <CheckboxesTags
             Role={1}
             EmployeeList={allEmployee}
@@ -97,7 +97,7 @@ console.log('emplouee assog',employeeAssignment);
           {errors.inspectorId && <div className="text-danger">{errors.inspectorId}</div>}
         </Col>
         <Col lg="12" className="form-row">
-          <Label>ExpertId assignment<span className="text-danger">*</span> </Label>
+          <Label className="label-form">Expert assignment <span className="text-danger">*</span> </Label>
           <CheckboxesTags
             Role={2}
             EmployeeList={allEmployee}
@@ -108,7 +108,7 @@ console.log('emplouee assog',employeeAssignment);
       
       
         <Col lg="12" className="form-row">
-          <Label>Shared Project With (these users have privileges to read only)</Label>
+          <Label className="label-form">Shared Project With (these users have privileges to read only)</Label>
           <CheckboxesTags
             Role={0}
             EmployeeList={allEmployee}

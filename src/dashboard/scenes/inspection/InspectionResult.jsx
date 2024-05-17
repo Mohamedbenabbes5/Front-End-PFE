@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import { tokens } from "../../theme";
 import { useTheme, TextField } from "@mui/material";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import MenuItem from '@mui/material/MenuItem';
 
 import {
     GridRowModes,
@@ -28,6 +29,7 @@ import {
 import PieChartBox from '../../components/PieChartBox';
 import axios from 'axios';
 import TransitionAlerts from "../../components/TransitionAlerts";
+import { jwtDecode } from 'jwt-decode';
 
 
 
@@ -39,18 +41,17 @@ function Timestamp() {
 
 const degre = ['Low', 'Medium', 'High'];
 const type = ['crack', 'spall'];
+const mapIntToLabel = (labels,value) => {
+    return labels[value];
+  };
 
-const randomdegre = () => {
-    return randomArrayItem(degre);
-};
-const randomDefect = () => {
-    return randomArrayItem(type);
-};
 
 
 export default function FullFeaturedCrudGrid() {
 
-
+    const token = localStorage.getItem('accessToken');
+    const decodedToken = jwtDecode(token);
+console.log(decodedToken);
     const resultImagePath = 'http://localhost:3000/result/';
     const croppedImagesPath = 'http://localhost:3000/result/cropped_images/';
 
@@ -72,29 +73,103 @@ export default function FullFeaturedCrudGrid() {
     const [alertInfo, setAlertInfo] = useState(null);
 
     const theme = useTheme();
-    const colors = tokens(theme.palette.mode); 
+    const colors = tokens(theme.palette.mode);
     const fetchDamages = async () => {
-            if (location.state?.successProcess) {
-                setAlertInfo({ type: "success", message: "Project saved successfully!" });
-            }
-            try {
+        if (location.state?.successProcess) {
+            setAlertInfo({ type: "success", message: "Project saved successfully!" });
+        }
+        try {
 
-                const response = await axios.get(`http://localhost:3000/results/${projectId}`);
-                setRowsData(response.data);
-                updateDamageCounts(response.data)     
+            const response = await axios.get(`http://localhost:3000/results/${projectId}`,{
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+            setRowsData(response.data);
+            updateDamageCounts(response.data)
+            console.log("response.data", response.data);
+        } catch (error) {
+            console.error('Erreur lors de la récupération des dommages :', error);
+            // Vous pouvez rediriger vers une page d'erreur ou afficher un message d'erreur
+        }
+    };
 
-            } catch (error) {
-                console.error('Erreur lors de la récupération des dommages :', error);
-                // Vous pouvez rediriger vers une page d'erreur ou afficher un message d'erreur
-                navigate('/error');
-            }
-        };
-        
     useEffect(() => {
         fetchDamages();
     }, [projectId]);
 
-   
+    
+    const handleSaveClick = async (id) => {
+        const editedRow = RowsData.find(row => row.id === id);
+        try {
+            const response = await axios.post(`http://localhost:3000/results`, { editedRow },{
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+
+            // Mettre à jour l'état local des données avec les nouvelles valeurs
+            const updatedRowsData = RowsData.map(row => {
+                if (row.id === id) {
+                    return editedRow;
+                }
+                return row;
+            });
+            setRowsData(updatedRowsData);
+            // Mettre à jour le modèle de mode de ligne pour changer le mode en mode de vue
+            setRowModesModel({
+                ...rowModesModel,
+                [id]: { mode: GridRowModes.View , ignoreModifications: true}
+            });
+            // Gérer la réponse de votre backend (par exemple, afficher une alerte de succès)
+
+        } catch (error) {
+            // Gérer les erreurs (par exemple, afficher une alerte d'erreur)
+            setAlertInfo({ type: "error", message:error.response.data.error });
+            console.error('Erreur lors de la sauvegarde des modifications :', error);
+        }
+    };
+    
+
+        
+    const handleDeleteClick = async (damageId) =>  {
+        try {
+            const response = await axios.delete(`http://localhost:3000/results/${damageId}`,{
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+
+            // Mettre à jour l'état local des données avec les nouvelles valeurs
+          
+            setRowsData(RowsData.filter((row) => row.id !== damageId));
+            setRowModesModel({
+                ...rowModesModel,
+                [damageId]: { mode: GridRowModes.View , ignoreModifications: true}
+            });
+            setAlertInfo({ type: "success", message: "row deleted successfully!" });
+
+        } catch (error) {
+            // Gérer les erreurs (par exemple, afficher une alerte d'erreur)
+            console.error('Erreur lors de la sauvegarde des modifications :', error);
+            setAlertInfo({ type: "error", message:error.response.data.error });
+
+        } 
+       };
+
+    // Fonction pour mettre à jour les données modifiées dans l'état local
+    const handleCellEdit = (id, field, value) => {
+        const updatedRowsData = RowsData.map(row => {
+            if (row.id === id) {
+                return { ...row, [field]: value };
+            }
+            return row;
+        });
+        setRowsData(updatedRowsData);
+    };
+    // Fonction pour mettre à jour les données modifiées dans l'état local
+
+    // Fonction pour envoyer les modifications à la base de données
 
     const columns = [
         { field: 'id', headerName: 'id', width: 80 },
@@ -159,6 +234,7 @@ export default function FullFeaturedCrudGrid() {
             type: 'singleSelect',
             valueOptions: ['crack', 'spall',],
         },
+       
         {
             field: 'DangerDegre',
             headerName: 'Danger Degre',
@@ -167,26 +243,40 @@ export default function FullFeaturedCrudGrid() {
             type: 'singleSelect',
             renderCell: (params) => {
                 return (
-                    <div className={`cellWithDangerDegre ${params.row.DangerDegre}`}>
-                        {params.row.DangerDegre}
+                    <div className={`cellWithDangerDegre ${mapIntToLabel(degre,params.row.dangerDegree)}`}>
+                        {mapIntToLabel(degre,params.row.dangerDegree)} {/* Utiliser la fonction de mappage ici */}
                     </div>
                 );
+                
             },
-            valueOptions: ['Low', 'Medium', 'High'],
+            renderEditCell: (params) => (
+                <TextField
+                    select
+                    value={params.value}
+                    onChange={(e) => handleCellEdit(params.id, 'dangerDegree', e.target.value)}
+                    fullWidth
+                >
+                    {degre.map((label, index) => (
+                        <MenuItem key={label} value={index}>{label}</MenuItem>
+                    ))}
+                </TextField>
+            ),
+    
         },
         {
             field: 'comment',
             headerName: 'Comment',
             flex: 2,
             editable: true,
-
             renderEditCell: (params) => {
                 return (
                     <TextField
                         multiline
                         fullWidth
                         value={params.value}
-                        onChange={(event) => params.api.setEditCellValue({ id: params.id, field: 'comment', value: event.target.value })}
+                        onChange={(e) => {
+                            handleCellEdit(params.id, 'comment',  e.target.value);
+                        }}
                     />
                 );
             },
@@ -199,15 +289,14 @@ export default function FullFeaturedCrudGrid() {
             cellClassName: 'actions',
             getActions: ({ id }) => {
                 const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
-
+        
                 if (isInEditMode) {
                     return [
                         <GridActionsCellItem
                             icon={<SaveIcon />}
                             label="Save"
                             color="inherit"
-
-                            onClick={handleSaveClick(id)}
+                            onClick={() => handleSaveClick(id)} // Utilisez une fonction fléchée ici
                         />,
                         <GridActionsCellItem
                             icon={<CancelIcon />}
@@ -218,19 +307,19 @@ export default function FullFeaturedCrudGrid() {
                         />,
                     ];
                 }
-
+        
                 return [
                     <GridActionsCellItem
                         icon={<EditIcon />}
                         label="Edit"
                         className="textPrimary"
-                        onClick={handleEditClick(id)}
+                        onClick={ handleEditClick(id)}
                         color="inherit"
                     />,
                     <GridActionsCellItem
                         icon={<DeleteIcon />}
                         label="Delete"
-                        onClick={handleDeleteClick(id)}
+                        onClick={() => handleDeleteClick(id)} // Wrap in arrow function
                         color="inherit"
                     />,
                 ];
@@ -251,13 +340,9 @@ export default function FullFeaturedCrudGrid() {
         setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
     };
 
-    const handleSaveClick = (id) => () => {
-        setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    };
+ 
 
-    const handleDeleteClick = (id) => () => {
-        setRowsData(RowsData.filter((row) => row.id !== id));
-    };
+    
 
     const handleCancelClick = (id) => () => {
         setRowModesModel({
@@ -285,9 +370,9 @@ export default function FullFeaturedCrudGrid() {
             crackCount: data.filter(row => row.type === 'crack').length,
             spallCount: data.filter(row => row.type === 'spall').length,
             dangerCounts: {
-                Low: data.filter(row => row.dangerDegree === 'Low').length,
-                Medium: data.filter(row => row.dangerDegree === 'Medium').length,
-                High: data.filter(row => row.dangerDegree === 'High').length,
+                Low: data.filter(row => row.dangerDegree === 0).length,
+                Medium: data.filter(row => row.dangerDegree === 1).length,
+                High: data.filter(row => row.dangerDegree === 2).length,
             },
         };
         setStatisticDamages(statisticDamages)

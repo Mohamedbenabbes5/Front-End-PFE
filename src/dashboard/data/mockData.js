@@ -5,7 +5,7 @@ export const mockDataEmployee = [
 
   {
     id: 1,
-      status: "active",
+      role: "guest",
 
     registerId: "REG123",
     name: "John Doe",
@@ -22,7 +22,7 @@ export const mockDataEmployee = [
   ,
   {
     id: 2,
-      status: "active",
+      role: "guest",
 
     registerId: "REG456",
     name: "Jane Smith",
@@ -39,7 +39,7 @@ export const mockDataEmployee = [
   ,
   {
     id: 3,
-      status: "suspended",
+      role: "expert",
 
     registerId: "REG789",
     name: "Michael Johnson",
@@ -56,7 +56,7 @@ export const mockDataEmployee = [
   ,
   {
     id: 4,
-      status: "active",
+      role: "expert",
 
     registerId: "REG321",
     name: "Sarah Lee",
@@ -70,142 +70,8 @@ export const mockDataEmployee = [
 
     authorizedProjects: 2
   }
-  ,
-  {
-    id: 5,
-      status: "suspended",
+  
 
-    registerId: "REG654",
-    name: "David Brown",
-    phone: "+3344556677",
-    email: "david.b@example.com",
-    country: "France",
-    city: "Paris",
-    address: "654 Maple Avenue",
-    hosts: 2,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 4
-  }
-  ,
-  {
-    id: 6,
-      status: "active",
-
-    registerId: "REG987",
-    name: "Emily Taylor",
-    phone: "+7788990011",
-    email: "emily.t@example.com",
-    country: "Germany",
-    city: "Berlin",
-    address: "987 Cedar Street",
-    hosts: 1,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 6
-  }
-  ,
-  {
-    id: 7,
-      status: "suspended",
-
-    registerId: "REG234",
-    name: "Christopher Clark",
-    phone: "+6677889900",
-    email: "chris.c@example.com",
-    country: "Spain",
-    city: "Madrid",
-    address: "234 Birch Avenue",
-    hosts: 2,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 1
-  }
-  ,
-  {
-    id: 8,
-      status: "active",
-
-    registerId: "REG567",
-    name: "Emma Wilson",
-    phone: "+9988776655",
-    email: "emma.w@example.com",
-    country: "Italy",
-    city: "Rome",
-    address: "567 Walnut Street",
-    hosts: 4,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 8
-  }
-  ,
-  {
-    id: 9,
-      status: "pending",
-
-    registerId: "REG890",
-    name: "Andrew Martinez",
-    phone: "+1122334455",
-    email: "andrew.m@example.com",
-    country: "Brazil",
-    city: "Rio de Janeiro",
-    address: "890 Pine Street",
-    hosts: 2,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 3
-  }
-  ,
-  {
-    id: 10,
-      status: "pending",
-
-    registerId: "REG098",
-    name: "Olivia Garcia",
-    phone: "+3344556677",
-    email: "olivia.g@example.com",
-    country: "China",
-    city: "Beijing",
-    address: "098 Maple Avenue",
-    hosts: 3,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 5
-  }
-  ,
-  {
-    id: 11,
-      status: "pending",
-
-    registerId: "REG765",
-    name: "William Brown",
-    phone: "+4455667788",
-    email: "william.b@example.com",
-    country: "Japan",
-    city: "Tokyo",
-    address: "765 Oak Road",
-    hosts: 1,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 2
-  }
-  ,
-  {
-    id: 12,
-      status: "active",
-
-    registerId: "REG432",
-    name: "Sophia Anderson",
-    phone: "+1234567890",
-    email: "sophia.a@example.com",
-    country: "South Korea",
-    city: "Seoul",
-    address: "432 Main Street",
-    hosts: 2,
-    img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-
-    authorizedProjects: 4
-  }
 
 ];
 

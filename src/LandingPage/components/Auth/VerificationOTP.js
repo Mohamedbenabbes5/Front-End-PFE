@@ -6,7 +6,7 @@ import axios from 'axios';
 import TransitionAlerts from "../TransitionAlerts";
 
 import BackgroundImage from '../../assets/images/bg/1.jpg';
-import Logo from '../../assets/images/unboxing.gif';
+import Logo from "../../assets/images/logo.png";
 
 /**
  * Reset-password component
@@ -111,7 +111,7 @@ export default function VerificationOTP() {
                                     <div className="col-12">
                                         <div className="d-flex flex-column auth-hero">
                                             <div className="mt-md-5 text-center">
-                                                <Link to="/"><img src={Logo} alt="" style={{ width: '100px' }} /></Link>
+                                                <Link to="/"><img src={Logo} alt="" style={{ width: '200px' }} /></Link>
                                             </div>
                                             <div className="title-heading my-lg-auto">
                                                 <Card className="login-page border-0" style={{ zIndex: 1 }}>
