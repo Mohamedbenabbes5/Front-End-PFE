@@ -19,8 +19,9 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import ViewCompactIcon from '@mui/icons-material/ViewCompact';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import defaultuserImage from "../../../public/assets/user.jpg"
-import defaultadminImage from "../../../public/assets/admin.png";
+import defaultadminImage from "../../../public/assets/admin.png"
+import defaultmanagerImage from "../../../public/assets/manager.png";
+import defaultemployeeImage from "../../../public/assets/employee.jpg";
 
 const Item = ({ title, to, icon, selected, setSelected, style }) => {
   const theme = useTheme();
@@ -56,7 +57,7 @@ const Sidebar = () => {
   // Fonction pour gérer l'erreur de chargement de l'image
 
   // Déterminer la source de l'image par défaut en cas d'échec de chargement en fonction du type d'utilisateur
-  const fallbackSrc = userData.user === 'superAdmin' ? defaultadminImage : defaultuserImage;
+  const fallbackSrc = userData.user === 'superAdmin' ? defaultadminImage :( userData.user === 'manager' ? defaultmanagerImage:defaultemployeeImage) ;
 
 
   return (
@@ -114,7 +115,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={profileImagesPath + '/' + userData.image}
+                  src={profileImagesPath + '/' + userData.profileImage}
                   onError={(e) => { e.target.src = fallbackSrc }}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
 
@@ -194,7 +195,7 @@ const Sidebar = () => {
 
                 />
               }
-          
+          {userData.user !== 'employee' && 
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -202,6 +203,7 @@ const Sidebar = () => {
             >
               User Management
             </Typography>
+            }
             {userData.user === 'superAdmin' && <Item
               title="Companies"
               to="/companies"
@@ -209,6 +211,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />}
+            {userData.user !== 'employee' && 
             <Item
               title="Employees"
               to="/employees"
@@ -216,7 +219,8 @@ const Sidebar = () => {
 
               selected={selected}
               setSelected={setSelected}
-            />
+          
+            />}
 
 
             {userData.user !== 'superAdmin' &&
