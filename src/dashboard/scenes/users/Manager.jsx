@@ -33,7 +33,13 @@ import TransitionAlerts from "../../components/TransitionAlerts";
 import { jwtDecode } from 'jwt-decode';
 
 
-const Company = () => {
+const Manager = () => {
+
+  const location = useLocation();
+
+  // Vérifiez si le message de succès est passé en tant que state lors de la navigation
+  const successCreation = location.state?.successCreation;
+
   const token = localStorage.getItem('accessToken');
   const decodedToken = jwtDecode(token);
   const [alertInfo, setAlertInfo] = useState(null);
@@ -76,23 +82,23 @@ const Company = () => {
       setRowsData(RowsData.filter((row) => row.id !== id));
     }
   };
-  const fetchCompany = async () => {
+  const fetchManager = async () => {
     try {
 
-      const response = await axios.get(`http://localhost:3000/users/get-allcompany`, {
+      const response = await axios.get(`http://localhost:3000/users/get-allmanager`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      const AllCompany = response.data.AllCompany
-      AllCompany.forEach(company => {
-        company.projectCount = company.projects?.length;
-        company.employeeCount = company.employee?.length;
-        delete company.projects;
-        delete company.employee;
+      const AllManager = response.data.AllManager
+      AllManager.forEach(manager => {
+        manager.projectCount = manager.projects?.length;
+        manager.employeeCount = manager.employee?.length;
+        delete manager.projects;
+        delete manager.employee;
       });
-      console.log(AllCompany);
-      setRowsData(AllCompany);
+      console.log(AllManager);
+      setRowsData(AllManager);
       console.log("response.data", response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des dommages :', error);
@@ -101,7 +107,7 @@ const Company = () => {
   };
 
   useEffect(() => {
-    fetchCompany();
+    fetchManager();
   }, []);
 
 
@@ -109,7 +115,7 @@ const Company = () => {
     const editedRow = RowsData.find(row => row.id === id);
     try {
       console.log(RowsData);
-      const response = await axios.post(`http://localhost:3000/users/update-company`, { editedRow }, {
+      const response = await axios.post(`http://localhost:3000/users/update-manager`, { editedRow }, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -140,9 +146,9 @@ const Company = () => {
 
 
 
-  const handleDeleteClick = async (companyId) => {
+  const handleDeleteClick = async (managerId) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/users/delete-company/${companyId}`, {
+      const response = await axios.delete(`http://localhost:3000/users/delete-manager/${managerId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -150,10 +156,10 @@ const Company = () => {
 
       // Mettre à jour l'état local des données avec les nouvelles valeurs
 
-      setRowsData(RowsData.filter((row) => row.id !== companyId));
+      setRowsData(RowsData.filter((row) => row.id !== managerId));
       setRowModesModel({
         ...rowModesModel,
-        [companyId]: { mode: GridRowModes.View, ignoreModifications: true }
+        [managerId]: { mode: GridRowModes.View, ignoreModifications: true }
       });
       setAlertInfo({ type: "success", message: "Manager account deleted successfully!" });
 
@@ -215,7 +221,7 @@ const Company = () => {
 
     {
       field: "companyname",
-      headerName: "Company name",
+      headerName: "Manager name",
       renderCell: (params) => {
         return (
           <div>
@@ -338,36 +344,40 @@ const Company = () => {
 
   return (
     <Box m="20px">
-      {alertInfo && (
-        <TransitionAlerts
-          type={alertInfo.type}
-          message={alertInfo.message}
-          onClose={() => { }}
-          variant={"filled"}
-        />
-      )}
-     <Box display="flex" justifyContent="space-between" alignItems="center" mt="50px">
+      <div style={{ marginLeft: "20px" }}>
+        {successCreation && (
 
-<Header
-  title="All Manager"
-  subtitle="List of Managers "
-/>
-<Box>
-  <Link  to="/dashboard/form" state={{actionType: "create"}} style={{ textDecoration: "none" }}>
-    <Button
-      sx={{
-        backgroundColor: colors.greenAccent[700],
-        color: colors.grey[100],
-        fontSize: "14px",
-        fontWeight: "bold",
-        padding: "10px 20px",
-      }}
-    >
-      Create new Manager Account
-    </Button>
-  </Link>
-</Box>
-</Box>
+          <TransitionAlerts
+            sx={{}}
+            type={"success"}
+            message={successCreation}
+            onClose={() => { }}
+            variant={"filled"}
+          />
+        )}
+      </div>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt="50px">
+
+        <Header
+          title="All Manager"
+          subtitle="List of Managers "
+        />
+        <Box>
+          <Link to="/dashboard/form" state={{ actionType: "create" }} style={{ textDecoration: "none" }}>
+            <Button
+              sx={{
+                backgroundColor: colors.greenAccent[700],
+                color: colors.grey[100],
+                fontSize: "14px",
+                fontWeight: "bold",
+                padding: "10px 20px",
+              }}
+            >
+              Create new Manager Account
+            </Button>
+          </Link>
+        </Box>
+      </Box>
       <Box
         m="40px 0 0 0"
         height="100vh"
@@ -422,4 +432,4 @@ const Company = () => {
 
 };
 
-export default Company;
+export default Manager;

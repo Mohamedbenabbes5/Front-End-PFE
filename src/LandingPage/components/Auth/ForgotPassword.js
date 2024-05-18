@@ -85,7 +85,7 @@ export default function ForgotPassword() {
                                                                 </Col>
 
                                                                 <div className="mx-auto">
-                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "company" ? "Sign in" : "Join"}</Link></p>
+                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "manager" ? "Sign in" : "Join"}</Link></p>
                                                                 </div>
                                                             </Row>
                                                         </form>

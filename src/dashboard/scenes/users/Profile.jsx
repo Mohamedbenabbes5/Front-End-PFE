@@ -19,7 +19,7 @@ const Profile = () => {
         name: "John Doe",
         contact: "john.doe@example.com",
         about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        company: "ABC Inc.",
+        manager: "ABC Inc.",
         projectNumber: 5
     };
 
@@ -80,8 +80,8 @@ const Profile = () => {
                         <p>Bio: {user.bio}</p>
                     </div>
                     <div className="info-section">
-                        <p><strong>company:</strong></p>
-                        <p>Name: q2ii {user.companyName}</p>
+                        <p><strong>manager:</strong></p>
+                        <p>Name: q2ii {user.managerName}</p>
                         <p>Creation Date : 20/10/2022 {user.creationDate}</p>
                         <p>Usage : 80% {user.usage}</p>
                         <p>Expiration Date:20/10/2025 {user.expirationDate}</p>
@@ -90,7 +90,7 @@ const Profile = () => {
             </Box>
 
             <Box display="flex" justifyContent="space-between" alignItems="center" mt="50px">
-                <Header title="All Companies" subtitle="List of company account" />
+                <Header title="All Companies" subtitle="List of manager account" />
 
                 <Box>
                     <Link to="/dashboard/form" style={{ textDecoration: "none" }}>

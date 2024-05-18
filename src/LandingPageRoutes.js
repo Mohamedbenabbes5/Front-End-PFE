@@ -8,6 +8,7 @@ import Error from "./LandingPage/components/error";
 import reportWebVitals from './LandingPage/reportWebVitals';
 import VerificationOTP from "./LandingPage/components/Auth/VerificationOTP";
 import ForgotPassword from "./LandingPage/components/Auth/ForgotPassword";
+import AminAuth from "./LandingPage/components/Auth/admin_auth";
 
 function LandingPageRoutes() {
 
@@ -25,6 +26,8 @@ function LandingPageRoutes() {
 
       <Route path="/" element={<Index />} />
       <Route path="/home" element={<Index />} />
+      <Route path="/adminlogin" element={<AminAuth />} />
+
       <Route path="*" element={<Error />} />
 
 

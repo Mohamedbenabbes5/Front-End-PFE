@@ -1,6 +1,6 @@
-# React Company Dashboard
+# React Manager Dashboard
 
-Build a COMPLETE React Company Dashboard App | React, Material UI, Data Grid, Light & Dark Mode
+Build a COMPLETE React Manager Dashboard App | React, Material UI, Data Grid, Light & Dark Mode
 
 Video: https://www.youtube.com/watch?v=wYpCWwD1oz0
 

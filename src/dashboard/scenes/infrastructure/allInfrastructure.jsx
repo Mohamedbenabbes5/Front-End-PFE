@@ -4,7 +4,7 @@ import UiCards from "../projects/ProjectCard";
 import { Col, Row, Container } from "reactstrap";
 import axios from 'axios';
 import InputFileUpload from '../../components/FileUploadButton';
-import { useLocation ,useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import TransitionAlerts from '../../components/TransitionAlerts';
 import InfrastrauctureCard from './InfrastrauctureCard';
 
@@ -24,7 +24,7 @@ const Infrastructures = () => {
   const fetchInfrastructures = async () => {
 
     try {
-
+      console.log("fetching infrast");
       const response = await axios.get(`http://localhost:3000/infrastructure/getall`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -41,7 +41,7 @@ const Infrastructures = () => {
   useEffect(() => {
     // Lors du premier rendu, si successCreation est présent, afficher l'alerte de succès
     fetchInfrastructures()
-  // Nettoyer le timer lors du démontage du composant
+    // Nettoyer le timer lors du démontage du composant
   }, []);
 
   console.log("STATE data ", dataInfrastructures);
@@ -50,23 +50,24 @@ const Infrastructures = () => {
     <div>
 
       <SearchBar></SearchBar>
-      <div style={{marginLeft:"20px"}}>
+      <div style={{ marginLeft: "20px" }}>
         {successCreation && (
-        
-                <TransitionAlerts
-                sx={{}}
-                    type={"success"}
-                    message={successCreation}
-                    onClose={() => { }}
-                    variant={"filled"}
-                />
-            )}</div> 
+
+          <TransitionAlerts
+            sx={{}}
+            type={"success"}
+            message={successCreation}
+            onClose={() => { }}
+            variant={"filled"}
+          />
+        )}
+        </div>
       <React.Fragment>
         <div className="page-content">
-         
+
           <Container fluid={true}>
             <Row>
-              
+
               {dataInfrastructures.map((infrastructure) => (
                 <Col key={infrastructure?.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <InfrastrauctureCard data={infrastructure} />
@@ -77,7 +78,7 @@ const Infrastructures = () => {
         </div>
       </React.Fragment>
 
-     
+
     </div>
   )
 

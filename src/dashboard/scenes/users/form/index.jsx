@@ -4,19 +4,24 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import CountrySelect from "../../../components/CountrySelect";
 import MenuItem from '@mui/material/MenuItem';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import PersonIcon from '@mui/icons-material/Person';
 import React, { useState, useEffect } from "react";
+import TransitionAlerts from "../../../../LandingPage/components/TransitionAlerts";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Form = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const actionType = location.state?.actionType;
   console.log("action", actionType);
   const decodedToken = localStorage.getItem('decodedToken');
   const token = localStorage.getItem('accessToken');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [alertInfo, setAlertInfo] = useState(null); // Contient le type de message et le message lui-même sous forme d'objet {type, message}
+  const [loading, setLoading] = useState(false);
 
 
   let userData;
@@ -32,17 +37,17 @@ const Form = () => {
     email: '',
     phone: '',
     address: '',
-    company: '',
+    manager: '',
     status: '',
     image: null,
-    ...(userData?.user === "superadmin" && { companyname: '' }),
-    ...(userData?.user === "company" && { role: '' }),
+    ...(userData?.user === "superAdmin" && { companyname: '' }),
+    ...(userData?.user === "manager" && { role: '' }),
   }
   const checkoutSchema = yup.object().shape({
     firstname: yup.string().required("required").trim(),
     lastname: yup.string().required("required").trim(),
     email: yup.string().email("invalid email").required("required").trim(),
-    ...(userData?.user === "superadmin" && { companyname: yup.string().required("required").trim() }),
+    ...(userData?.user === "superAdmin" && { companyname: yup.string().required("required").trim() }),
     image: yup
       .mixed()
       .test("fileType", "Seules les images sont autorisées", (value) => {
@@ -54,41 +59,60 @@ const Form = () => {
 
   const handleFormSubmit = async (values) => {
     console.log("handleFormSubmit exec", values);
-    try {
-      var formDataToSend = new FormData();
-      for (const key in values) {
-        if (values[key] !== null && values[key] !== undefined && values[key] !== '') {
-          formDataToSend.append(key, values[key]);
-        }
+    setAlertInfo('')
+    setLoading(true);
+    var formDataToSend = new FormData();
+    for (const key in values) {
+      if (values[key] !== null && values[key] !== undefined && values[key] !== '') {
+        formDataToSend.append(key, values[key]);
       }
-
-      let response;
-      if (actionType === 'create') {
-        if (userData.user === "company") {
-          formDataToSend.append("companyId", userData.companyId);
-
-          response = await axios.post('http://localhost:3000/users/create-employee', formDataToSend, {
-            headers: {
-              'Authorization': `Bearer ${token}`    ,
-                'Content-Type': 'multipart/form-data'
-
-            }
-          });
-        } else if (userData.user === "superadmin") {
-          response = await axios.post(`http://localhost:3000/...`, values, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-        }
-      } else if (actionType === 'update') {
-        response = await axios.put(`/api/users/`, values);
-      }
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error:', error);
     }
+
+    let response;
+    if (actionType === 'create') {
+      if (userData.user === 'manager') {
+        try {
+          formDataToSend.append("managerId", userData.managerId);
+          response = await axios.post(`http://localhost:3000/users/create-employee`, formDataToSend, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          navigate(`/dashboard/employees`, { state: { successCreation: "Project created successfully" } });
+        }
+
+        catch (error) {
+          setAlertInfo(error.response.data.error)
+        }
+        finally {
+          setLoading(false); // Arrêter le chargement
+        }
+      }
+      else if (userData.user === 'superAdmin') {
+        try {
+          response = await axios.post(`http://localhost:3000/users/create-manager`, formDataToSend, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          navigate(`/dashboard/companies`, { state: { successCreation: "Project created successfully" } });
+        }
+
+        catch (error) {
+          setAlertInfo(error.response.data.error)
+        }
+        finally {
+          setLoading(false); // Arrêter le chargement
+        }
+      }
+    }
+
+    else if (actionType === 'update') {
+      response = await axios.put(`/api/users/`, values);
+    }
+
   };
 
   const handleImageChange = (event, setFieldValue) => {
@@ -103,7 +127,7 @@ const Form = () => {
       '&.Mui-focused': {
         color: 'secondary.main',
         fontWeight: 'bold',
-        fontSize: '16px',
+        fontSize: '20px',
       },
     },
   };
@@ -138,11 +162,13 @@ const Form = () => {
   ];
 
   return (
-    <Box width="900px" mx="auto">
+    <Box width="900px" mx="auto" > {/* Ajout de mb={4} pour une marge en bas */}
       <Formik
         initialValues={initialValues}
         validationSchema={checkoutSchema}
         onSubmit={handleFormSubmit}
+        // Ajout de marginBottom directement sur le formulaire
+
       >
         {({
           values,
@@ -153,6 +179,7 @@ const Form = () => {
           handleSubmit,
           setFieldValue
         }) => (
+          <Box mt={4}> 
           <form onSubmit={handleSubmit}>
             <Box
               display="flex"
@@ -193,6 +220,18 @@ const Form = () => {
                 </div>
               </label>
             </Box>
+            {alertInfo && (
+              <div >
+                <TransitionAlerts
+                  type={"error"}
+                  message={alertInfo}
+                  onClose={() => { }}
+                  variant={"filled"}
+
+                />
+              </div>
+
+            )}
             <Box
               display="grid"
               gap="30px"
@@ -235,8 +274,24 @@ const Form = () => {
 
                 }}
               />
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="text"
+                label="Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.email}
+                name="email"
+                error={!!touched.email && !!errors.email}
+                helperText={touched.email && errors.email}
+                sx={{
+                  gridColumn: "span 4",
+                  ...labelStyles, // Appliquer les styles pour les labels ici
 
-              {userData.user === "superadmin" &&
+                }}
+              />
+              {userData.user === "superAdmin" &&
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -255,7 +310,7 @@ const Form = () => {
                   }}
                 />
               }
-              {userData.user === "company" && <TextField
+              {userData.user === "manager" && <TextField
                 id="outlined-select-currency"
                 variant="outlined"
                 select
@@ -264,7 +319,7 @@ const Form = () => {
                 onChange={handleChange}
                 name="role"
                 defaultValue="0"
-               value="0"
+                value="0"
                 sx={{
                   gridColumn: "span 4",
                   ...labelStyles, // Appliquer les styles pour les labels ici
@@ -285,7 +340,7 @@ const Form = () => {
                 select
                 label="Status"
                 onChange={handleChange}
-                name="status" 
+                name="status"
                 defaultValue="0"
                 value="0"
                 helperText="Please select the status of account "
@@ -304,41 +359,8 @@ const Form = () => {
 
 
 
-              {userData.user === "superadmin" && <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="company name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.company}
-                name="company"
-                error={!!touched.company && !!errors.company}
-                helperText={touched.company && errors.company}
-                sx={{
-                  gridColumn: "span 4",
-                  ...labelStyles, // Appliquer les styles pour les labels ici
 
-                }}
 
-              />}
-              <TextField
-                fullWidth
-                variant="outlined"
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{
-                  gridColumn: "span 4",
-                  ...labelStyles, // Appliquer les styles pour les labels ici
-
-                }}
-              />
               <TextField
                 fullWidth
                 variant="outlined"
@@ -372,14 +394,25 @@ const Form = () => {
               />
 
             </Box>
-            <Box display="flex" justifyContent="end" mt="20px">
+            <Box mt={4} textAlign="right"> {/* Ajout de marge en haut pour espacer du formulaire */}
+              {loading && (
+                <CircularProgress
+                  style={{ marginRight: "10px", color: 'green' }}
+                  disableShrink
+                  className="CircularProgress"
+                />
+              )}
               <Button type="submit" color="secondary" variant="contained">
                 Create New User
               </Button>
             </Box>
           </form>
+          </Box>
+
         )}
+      
       </Formik>
+      
     </Box>
   );
 };

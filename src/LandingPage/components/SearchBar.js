@@ -9,8 +9,8 @@ export const SearchBar = ({ setResults }) => {
 
   const fetchData = async (value) => {
     try {
-      const response = await axios.get("http://localhost:3000/users/get-allcompany");
-      const results = response.data.AllCompany
+      const response = await axios.get("http://localhost:3000/users/get-allmanager");
+      const results = response.data.AllManager
     console.log("results", results);
       setResults(results);
     } catch (error) {
@@ -27,7 +27,7 @@ export const SearchBar = ({ setResults }) => {
   return (
     
       <input
-        placeholder="select company name "
+        placeholder="select manager name "
         value={input}
         className="form-control"
         onChange={(e) => handleChange(e.target.value)}

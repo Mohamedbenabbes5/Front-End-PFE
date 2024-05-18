@@ -101,7 +101,7 @@ const ProjectCard = ({ data }) => {
         <LineWithIcon
 
           icon={<Avatar src="https://maphotoportrait.fr/1775-thickbox_default/face-ou-profil-quel-est-le-meilleur-angle-pour-la-photo-linkedin-.jpg" aria-label="recipe" />}
-          text={`Created By: ${data?.company?.company}`}
+          text={`Created By: ${data?.manager?.manager}`}
         />
 
         <CardActions>

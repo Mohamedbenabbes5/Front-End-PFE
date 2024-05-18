@@ -9,7 +9,7 @@ import Geography from "./dashboard/scenes/geography";
 import { CssBaseline, ThemeProvider, createTheme  } from "@mui/material";
 import {ColorModeContext, useMode } from "./dashboard/theme";
 import Calendar from "./dashboard/scenes/calendar/calendar";
-import Company from "./dashboard/scenes/users/Company";
+import Manager from "./dashboard/scenes/users/Manager";
 import Employee from "./dashboard/scenes/users/Employee";
 import FullFeaturedCrudGrid from "./dashboard/scenes/inspection/InspectionResult";
 import Profile from "./dashboard/scenes/users/Profile";
@@ -44,7 +44,7 @@ function DashboardRoutes() {
                 <Routes >
                   {/* Autres routes */}
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/companies" element={<Company />} />
+                  <Route path="/companies" element={<Manager />} />
                   <Route path="/employees" element={< Employee/>} />
                   <Route path="/calendar" element={<Calendar />} />
                   <Route path="/geography" element={<Geography />} />

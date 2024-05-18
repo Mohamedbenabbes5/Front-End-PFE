@@ -75,7 +75,7 @@ export const mockDataEmployee = [
 
 ];
 
-export const mockDatacompany = [
+export const mockDatamanager = [
 
 
   {
@@ -86,7 +86,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "YRR",
+    managerName: "YRR",
     name: "Jon Snow",
     email: "jonsnow@gmail.com",
     age: 35,
@@ -106,7 +106,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "SGSJ",
+    managerName: "SGSJ",
     name: "Cersei Lannister",
     email: "cerseilannister@gmail.com",
     age: 42,
@@ -126,7 +126,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "SGJ",
+    managerName: "SGJ",
     name: "Jaime Lannister",
     email: "jaimelannister@gmail.com",
     age: 45,
@@ -146,7 +146,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "abSGc",
+    managerName: "abSGc",
     name: "Anya Stark",
     email: "anyastark@gmail.com",
     age: 16,
@@ -161,7 +161,7 @@ export const mockDatacompany = [
   {
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "EG",
+    managerName: "EG",
 
     country: "USA",
     id: 5,
@@ -184,7 +184,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "abZGc",
+    managerName: "abZGc",
     name: "Ever Melisandre",
     email: "evermelisandre@gmail.com",
     age: 150,
@@ -204,7 +204,7 @@ export const mockDatacompany = [
     country: "USA",
     img: "https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 
-    companyName: "ZGQ",
+    managerName: "ZGQ",
     name: "Ferrara Clifford",
     email: "ferraraclifford@gmail.com",
     age: 44,

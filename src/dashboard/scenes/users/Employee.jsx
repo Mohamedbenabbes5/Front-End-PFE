@@ -34,17 +34,27 @@ import { jwtDecode } from 'jwt-decode';
 
 
 const Employee = () => {
+
+  const location = useLocation();
+
+  // Vérifiez si le message de succès est passé en tant que state lors de la navigation
+  const successCreation = location.state?.successCreation;
+
   const profileImagePath = 'http://localhost:3000/uploads/profileImages/';
 
   const token = localStorage.getItem('accessToken');
-  const decodedToken = jwtDecode(token);
+
   const [alertInfo, setAlertInfo] = useState(null);
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const roles = ['guest', 'project manager', 'expert', 'inspector'];
   const status = ['pending', 'active', 'suspended'];
-
+  const decodedToken = localStorage.getItem('decodedToken');
+  let userData;
+  if (decodedToken) {
+    userData = JSON.parse(decodedToken).user;
+  }
   const mapIntToLabel = (labels, value) => {
     return labels[value];
   };
@@ -191,10 +201,10 @@ const Employee = () => {
       headerName: "employee",
       flex: 0.5,
       renderCell: (params) => {
-        console.log('params.row.profileImage',params.row);
+        console.log('params.row.profileImage', params.row);
         return (
           <div className="cellWithImg">
-            <img className="cellImg" src={profileImagePath+'/'+params.row.profileImage} alt="avatar" />
+            <img className="cellImg" src={profileImagePath + '/' + params.row.profileImage} alt="avatar" />
           </div>
         );
       },
@@ -224,11 +234,11 @@ const Employee = () => {
 
     {
       field: "companyname",
-      headerName: "company",
+      headerName: "manager",
       renderCell: (params) => {
         return (
           <div>
-            {params.row.company.companyname}
+            {params.row.manager.companyname}
           </div>
         );
       },
@@ -360,14 +370,17 @@ const Employee = () => {
 
   return (
     <Box m="20px">
-      {alertInfo && (
-        <TransitionAlerts
-          type={alertInfo.type}
-          message={alertInfo.message}
-          onClose={() => { }}
-          variant={"filled"}
-        />
-      )}
+      <div style={{ marginLeft: "20px" }}>
+        {successCreation && (
+
+          <TransitionAlerts
+            sx={{}}
+            type={"success"}
+            message={successCreation}
+            onClose={() => { }}
+            variant={"filled"}
+          />
+        )}</div>
       <Box display="flex" justifyContent="space-between" alignItems="center" mt="50px">
 
         <Header
@@ -375,20 +388,22 @@ const Employee = () => {
           subtitle="List of Employees "
         />
         <Box>
-          <Link to="/dashboard/form" state={{actionType: "create"}  } style={{ textDecoration: "none" }}>
-            <Button
-               
-              sx={{
-                backgroundColor: colors.greenAccent[700],
-                color: colors.grey[100],
-                fontSize: "14px",
-                fontWeight: "bold",
-                padding: "10px 20px",
-              }}
-            >
-              Create new Employee Account
-            </Button>
-          </Link>
+          {userData.user === "manager" &&
+            <Link to="/dashboard/form" state={{ actionType: "create" }} style={{ textDecoration: "none" }}>
+              <Button
+
+                sx={{
+                  backgroundColor: colors.greenAccent[700],
+                  color: colors.grey[100],
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  padding: "10px 20px",
+                }}
+              >
+                Create new Employee Account
+              </Button>
+            </Link>
+          }
         </Box>
       </Box>
 

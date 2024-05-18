@@ -5,7 +5,7 @@ import * as Icon from 'react-feather';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
+import BackgroundImagemanager from '../../assets/images/bg/admin4.jpeg';
 import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
 import Stack from '@mui/material/Stack';
 import Logo from "../../assets/images/logo.png";
@@ -92,7 +92,7 @@ export default function Login() {
                     }, 2000);
                 }
             } else {
-                setLoginError("An error occurred while login the company.");
+                setLoginError("An error occurred while login the manager.");
             }
         }
     };
@@ -123,7 +123,7 @@ export default function Login() {
                                             <div className="title-heading my-lg-auto">
                                                 <Card className="login-page border-0" style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0">
-                                                        <h4 className="card-title">{user === "employee" ? "Employee Login" : "company Login"}</h4>
+                                                        <h4 className="card-title">{user === "employee" ? "Employee Login" : "manager Login"}</h4>
                                                         <form className="login-form mt-4" onSubmit={handleSubmit}>
                                                             <Row>
                                                                 <Col lg={12} >
@@ -152,7 +152,7 @@ export default function Login() {
 
                                                                 <div className="col-lg-12 mb-0">
                                                                     <div className="d-grid">
-                                                                        <button className="btn btn-primary ">{user === "company" ? "Login" : "Join"}</button>
+                                                                        <button className="btn btn-primary ">{user === "manager" ? "Login" : "Join"}</button>
                                                                     </div>
                                                                 </div>
 
@@ -173,7 +173,7 @@ export default function Login() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "manager" ? BackgroundImagemanager : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
                             <Stack sx={{ width: '100%' }} spacing={2}>
                                 {LoginError && (
                                     <TransitionAlerts type={"error"}

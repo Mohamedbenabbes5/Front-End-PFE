@@ -4,7 +4,7 @@ import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import BackgroundImagecompany from '../../assets/images/bg/admin4.jpeg';
+import BackgroundImagemanager from '../../assets/images/bg/admin4.jpeg';
 import BackgroundImageEmployee from '../../assets/images/bg/guest.jpg';
 import Logo from "../../assets/images/logo.png";
 import PhoneInput from 'react-phone-input-2'
@@ -20,8 +20,8 @@ import Select from 'react-select';
  * Signup component
  */
 export default function Signup() {
-    const [selectedCompany, setSelectedCompany] = useState(null);
-    const [allCompany, setAllCompany] = useState([]);
+    const [selectedManager, setSelectedManager] = useState(null);
+    const [allManager, setAllManager] = useState([]);
     const [selectedRole, setSelectedRole] = useState(null);
 
     // Fonction de gestion pour mettre à jour le rôle sélectionné
@@ -34,8 +34,8 @@ export default function Signup() {
 
     const loadUsers = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/auth/get-allcompany`);
-            setAllCompany(response.data.AllCompany);
+            const response = await axios.get(`http://localhost:3000/auth/get-allmanager`);
+            setAllManager(response.data.AllManager);
         } catch (error) {
             console.error('Erreur lors du chargement des utilisateurs :', error);
         }
@@ -50,10 +50,10 @@ export default function Signup() {
         setIsAccepted(e.target.checked);
     };
 
-    const handleCompanyChange = selectedCompany => {
-        setSelectedCompany(selectedCompany);
+    const handleManagerChange = selectedManager => {
+        setSelectedManager(selectedManager);
         setFormData({
-            ...formData, ["companyId"]: selectedCompany.value
+            ...formData, ["managerId"]: selectedManager.value
         })
     };
 
@@ -170,12 +170,12 @@ export default function Signup() {
         if (!/^[a-zA-Z ]+$/.test(name) || formData.lastname.length < 3 || formData.firstname.length < 3) {
             validationErrors.name = "name is not valid";
         }
-        if (user === "company" && formData.companyname.length == 1) {
-            validationErrors.companyname = "company name  is not valid";
+        if (user === "manager" && formData.companyname.length == 1) {
+            validationErrors.companyname = "manager name  is not valid";
         }
-        console.log("formData.companyId?.length", formData.companyId?.length);
-        if (user === "employee" && (!formData.companyId || formData.companyId === "")) {
-            validationErrors.companyname = "please select your company";
+        console.log("formData.managerId?.length", formData.managerId?.length);
+        if (user === "employee" && (!formData.managerId || formData.managerId === "")) {
+            validationErrors.companyname = "please select your manager";
         }
        
         if (formData.password.length < 6) {
@@ -196,12 +196,12 @@ export default function Signup() {
 
             // Call different functions based on userType
 
-            // Call function for registering company
+            // Call function for registering manager
             if (user === "employee") {
                 const { confirmPassword, companyname, ...newformData } = formData;
                 UserRegister(newformData);
             }
-            else if (user === "company") {
+            else if (user === "manager") {
                 const { confirmPassword, ...newformData } = formData;
                 UserRegister(newformData);
 
@@ -209,7 +209,7 @@ export default function Signup() {
         }
 
     }
-    console.log({ selectedCompany });
+    console.log({ selectedManager });
     console.log({ formData });
 
     return (
@@ -237,7 +237,7 @@ export default function Signup() {
                                             <div className="title-heading my-lg-auto ">
                                                 <Card className="border-0 " style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0 mt-0">
-                                                        <h4 className="card-title " >{user === "employee" ? "Employee Register" : "company Regiter"}</h4>
+                                                        <h4 className="card-title " >{user === "employee" ? "Employee Register" : "Manager Register"}</h4>
 
 
 
@@ -261,15 +261,15 @@ export default function Signup() {
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
                                                                 <Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">company name <span className="text-danger">*</span></label>
-                                                                        {user === "company" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="companyname" required />)}
+                                                                        <label className="form-label">manager name <span className="text-danger">*</span></label>
+                                                                        {user === "manager" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="companyname" required />)}
                                                                         {user === "employee" && (<div className="search-bar-container">
                                                                             <Select
-                                                                                value={selectedCompany}
-                                                                                onChange={handleCompanyChange}
-                                                                                options={allCompany.map(company => ({ value: company.id, label: company.companyname }))}
+                                                                                value={selectedManager}
+                                                                                onChange={handleManagerChange}
+                                                                                options={allManager.map(manager => ({ value: manager.id, label: manager.companyname }))}
                                                                                 isSearchable // Permet la recherche dans le menu
-                                                                                placeholder="Select your company name"
+                                                                                placeholder="Select your manager name"
                                                                                 onFocus={loadUsers} // Appel de loadUsers lors du focus sur le champ de recherche
                                                                             />
                                                                         </div>)}
@@ -280,7 +280,7 @@ export default function Signup() {
                                                                     <div className="mb-1">
                                                                         <label className="form-label">Role<span className="text-danger">*</span></label>
                                                                         <Select
-                                                                            value={selectedRole} // Utilisez selectedRole et non selectedCompany car il s'agit d'une autre sélection
+                                                                            value={selectedRole} // Utilisez selectedRole et non selectedManager car il s'agit d'une autre sélection
                                                                             onChange={handleRoleChange} // Assurez-vous de définir la fonction de gestion du changement
                                                                             options={[
                                                                                 { value: 0, label: "Guest" },
@@ -348,7 +348,7 @@ export default function Signup() {
                                                                 </div>
 
                                                                 <div className="mx-auto">
-                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "company" ? "Sign in" : "Join"}</Link></p>
+                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "manager" ? "Sign in" : "Join"}</Link></p>
                                                                 </div>
                                                             </Row>
                                                         </form>
@@ -364,7 +364,7 @@ export default function Signup() {
                             </div>
                         </Col>
 
-                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "company" ? BackgroundImagecompany : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
+                        <div className="col-lg-8 offset-lg-4 padding-less img order-1" style={{ backgroundImage: `url(${user === "manager" ? BackgroundImagemanager : BackgroundImageEmployee})` }} data-jarallax='{"speed": 0.5}'>
 
                             <Stack sx={{ width: '100%' }} spacing={2}>
                                 {errorMessage && (
