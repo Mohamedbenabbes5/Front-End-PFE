@@ -1,19 +1,29 @@
+import React, { useContext, startTransition } from 'react';
+
 import { Box, IconButton, useTheme } from "@mui/material";
-import { useContext } from "react";
 import { ColorModeContext, tokens } from "../../theme";
 import InputBase from "@mui/material/InputBase";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import { useNavigate } from 'react-router-dom';
+
 import SearchIcon from "@mui/icons-material/Search";
+import Logout from '@mui/icons-material/Logout';
 
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const navigate= useNavigate()
 
+const handleLogout = () => {
+  startTransition(() => {
+    console.log('handleLogout');
+    localStorage.removeItem('accessToken'); // Supprime le token du localStorage
+    navigate('/'); // Redirige l'utilisateur vers la page d'accueil ou une autre page appropriée
+  });
+};
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}
@@ -27,7 +37,7 @@ const Topbar = () => {
           <SearchIcon />
         </IconButton>
       </Box>
-
+  
       {/* ICONS */}
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>
@@ -37,15 +47,19 @@ const Topbar = () => {
             <LightModeOutlinedIcon />
           )}
         </IconButton>
+
+
+
+
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <SettingsOutlinedIcon />
+      
+          {/* Logout Button */}
+          <IconButton onClick={handleLogout} >
+          <Logout color="error" />
         </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
+      
       </Box>
     </Box>
   );

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,startTransition  } from 'react';
 import { Link } from 'react-scroll';
 import { Link as Link2, useNavigate } from 'react-router-dom';
 import * as Icon from 'react-feather';
-import { NavbarBrand, NavbarToggler, NavItem, Nav, Collapse } from "reactstrap";
+import { NavbarBrand, NavbarToggler, NavItem, Nav, Collapse, Button } from "reactstrap";
 // Import Logo
 import logo from "../assets/images/logo.png";
 
 export default function NavbarPage() {
     const [isOpen, setMenu] = useState(true);
-
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate= useNavigate()
     useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        setIsAuthenticated(!!token); //!!token retourne true or false
         function windowScroll() {
             const navbar = document.getElementById("navbar");
             if (navbar) {
@@ -33,6 +36,11 @@ export default function NavbarPage() {
 
     const toggleMenu = () => {
         setMenu(!isOpen)
+    };
+    const handleDashboardClick = () => {
+        startTransition(() => {
+            navigate('/dashboard');
+        });
     };
 
     return (
@@ -70,12 +78,21 @@ export default function NavbarPage() {
                         </NavItem>
                     </Nav>
                     <ul className="lst-inline menu-social mb-0 ps-lg-4 ms-auto ">
-                        <li className="list-inline-item">
-                            <Link2 to='/login' state={{ userType: 'manager' }} className='btn  btn-primary  '>Login </Link2>
-                        </li>
-                        <li className="list-inline-item ms-4">
-                            <Link2 to='/login' state={{ userType: 'employee' }} className='nav-link text-uppercase hover-effect' > Join As Employee</Link2>
-                        </li>
+                        {!isAuthenticated ? (
+                            <>
+                                <li className="list-inline-item">
+                                    <Link2 to='/auth/login' state={{ userType: 'manager' }} className='btn btn-primary'>Login</Link2>
+                                </li>
+                                <li className="list-inline-item ms-4">
+                                    <Link2 to='/auth/login' state={{ userType: 'employee' }} className='nav-link text-uppercase hover-effect'>Join As Employee</Link2>
+                                </li>
+                            </>
+                        ) : (
+                            <li className="list-inline-item ms-4">
+                      <Button onClick={handleDashboardClick} className='btn btn-primary'>Dashboard</Button>
+
+                            </li>
+                        )}
                     </ul>
 
                 </Collapse>

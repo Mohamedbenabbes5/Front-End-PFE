@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, startTransition } from "react";
 import { Col, Row, Card, CardBody } from "reactstrap";
 import { Link, useLocation } from 'react-router-dom';
 import * as Icon from 'react-feather';
@@ -70,11 +70,10 @@ export default function Login() {
 
                 // Utilisez les données de l'utilisateur comme vous le souhaitez
                 localStorage.setItem('accessToken', token);
-                navigate(
-                    '/dashboard',
-                    { state: { userType: user } }
-                );
-
+             
+                startTransition(() => {
+                    navigate('/dashboard', { state: { userType: user } });
+                });
             }
 
 
@@ -87,7 +86,7 @@ export default function Login() {
                 if (error.response.status === 401) {
                     // Enregistrement réussi, afficher un message de succès et rediriger vers la dashboard
                     setTimeout(() => {
-                        navigate(`/verify-otp?email=${encodeURIComponent(data.email)}`,
+                        navigate(`/auth/verify-otp?email=${encodeURIComponent(data.email)}`,
                             { state: { userType: user } });
                     }, 2000);
                 }
@@ -123,7 +122,7 @@ export default function Login() {
                                             <div className="title-heading my-lg-auto">
                                                 <Card className="login-page border-0" style={{ zIndex: 1 }}>
                                                     <CardBody className="p-0">
-                                                        <h4 className="card-title">{user === "employee" ? "Employee Login" : "manager Login"}</h4>
+                                                        <h4 className="card-title">{user === "employee" ? "Employee Login" : "Manager Login"}</h4>
                                                         <form className="login-form mt-4" onSubmit={handleSubmit}>
                                                             <Row>
                                                                 <Col lg={12} >
@@ -146,7 +145,7 @@ export default function Login() {
                                                                                 <input type="checkbox" className="form-check-input ms-2" />
                                                                             </label>
                                                                         </div>
-                                                                        <p className="forgot-pass mb-0"><Link to="/forgotpassword" state={{ userType: user }} className="text-dark fw-semibold">Forgot password ?</Link></p>
+                                                                        <p className="forgot-pass mb-0"><Link to="/auth/forgotpassword" state={{ userType: user }} className="text-dark fw-semibold">Forgot password ?</Link></p>
                                                                     </div>
                                                                 </Col>
 
@@ -157,7 +156,7 @@ export default function Login() {
                                                                 </div>
 
                                                                 <div className="col-12">
-                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Don't have an account ?</small> <Link to="/signup" state={{ userType: user }} className="text-dark fw-semibold">Register</Link></p>
+                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Don't have an account ?</small> <Link to="/auth/signup" state={{ userType: user }} className="text-dark fw-semibold">Register</Link></p>
                                                                 </div>
                                                             </Row>
                                                         </form>

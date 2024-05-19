@@ -98,7 +98,7 @@ export default function Signup() {
                 // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
                 setSuccessMessage(response.data.message);
                 setTimeout(() => {
-                    navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`,
+                    navigate(`/auth/verify-otp?email=${encodeURIComponent(formData.email)}`,
                         { state: { userType: user } });
 
                 }, 2000);
@@ -126,7 +126,7 @@ export default function Signup() {
     //             // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
     //             setSuccessMessage(response.data.message);
     //             setTimeout(() => {
-    //                 navigate(`/verify-otp?email=${encodeURIComponent(formData.email)}`,
+    //                 navigate(`/auth/verify-otp?email=${encodeURIComponent(formData.email)}`,
     //                     { state: { userType: user } });
 
     //             }, 2000);
@@ -348,7 +348,7 @@ export default function Signup() {
                                                                 </div>
 
                                                                 <div className="mx-auto">
-                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "manager" ? "Sign in" : "Join"}</Link></p>
+                                                                    <p className="mb-0 mt-3"><small className="text-dark me-2">Already have an account ?</small> <Link to="/auth/login" className="text-dark fw-bold" state={{ userType: user }} >  {user == "manager" ? "Sign in" : "Join"}</Link></p>
                                                                 </div>
                                                             </Row>
                                                         </form>

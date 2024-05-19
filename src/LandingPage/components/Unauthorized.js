@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ErrorImage from '../assets/images/error.png';
 import Image from '../assets/images/logo2.png';
 
-export default function Error() {
+export default function Unauthorized() {
 
     return (
         <>
@@ -19,14 +19,14 @@ export default function Error() {
                                 </div>
                                 <div className="title-heading text-center my-auto">
                                     <img src={ErrorImage} className="img-fluid" alt="" />
-                                    <h1 className="mb-3 mt-5 text-dark">Page Not Found?</h1>
+                                    <h1 className="mb-3 mt-5 text-dark">Unauthorized</h1>
                                     <p className="text-muted">Whoops, this is embarassing. <br /> Looks like the page you were looking for wasn't found.</p>
 
                                     <div className="mt-4">
                                         <Link to="/" className="back-button btn btn-primary">Back to Home</Link>
                                     </div>
                                 </div>
-                            
+                              
                             </div>
                         </div>
                     </Row>

@@ -80,7 +80,7 @@ export default function VerificationOTP() {
                 // Rediriger l'utilisateur vers une page de confirmation
                 setSuccessMessage(response.data.message)
                 setTimeout(() => {
-                    navigate('/login',
+                    navigate('/auth/login',
                         { state: { userType: user } });
                 }, 2000);
 
