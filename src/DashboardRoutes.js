@@ -63,14 +63,8 @@ function DashboardRoutes() {
                   </ProtectedDashboardRoute>
                 }
               />
-              <Route
-                path="/allinfrastructures"
-                element={
-                  <ProtectedDashboardRoute allowedUsers={['manager', 'employee']}>
-                    <Infrastructures />
-                  </ProtectedDashboardRoute>
-                }
-              />
+              <Route path="/allinfrastructures"element={ <Infrastructures /> } />
+              
               <Route
                 path="/creacteinfrastructure"
                 element={

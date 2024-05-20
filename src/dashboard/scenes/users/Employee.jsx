@@ -31,6 +31,7 @@ import PieChartBox from '../../components/PieChartBox';
 import axios from 'axios';
 import TransitionAlerts from "../../components/TransitionAlerts";
 import { jwtDecode } from 'jwt-decode';
+import defaultemployeeImage from "../../../public/assets/employee.jpg";
 
 
 const Employee = () => {
@@ -45,11 +46,12 @@ const Employee = () => {
   const token = localStorage.getItem('accessToken');
 
   const [alertInfo, setAlertInfo] = useState(null);
+  const fallbackSrc = defaultemployeeImage;
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const roles = ['guest', 'project manager', 'expert', 'inspector'];
-  const status = ['pending', 'active', 'suspended'];
+  const status = ['pending', 'suspended', 'active'];
   const decodedToken = localStorage.getItem('decodedToken');
   let userData;
   if (decodedToken) {
@@ -119,8 +121,9 @@ const Employee = () => {
 
   const handleSaveClick = async (id) => {
     const editedRow = RowsData.find(row => row.id === id);
+    const editedData = editedRow ? { role: editedRow.role, status: editedRow.status, id: editedRow.id } : {};
     try {
-      const response = await axios.post(`http://localhost:3000/users/update-employee`, { editedRow }, {
+      const response = await axios.post(`http://localhost:3000/users/update-employee`,  editedData , {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -204,7 +207,14 @@ const Employee = () => {
         console.log('params.row.profileImage', params.row);
         return (
           <div className="cellWithImg">
-            <img className="cellImg" src={profileImagePath + '/' + params.row.profileImage} alt="avatar" />
+            <img
+              width="100px"
+              height="100px"
+              src={profileImagePath + '/' + params.row.profileImage}
+              onError={(e) => { e.target.src = fallbackSrc }}
+              style={{ cursor: "pointer", borderRadius: "50%" }}
+              className="cellImg"
+            />
           </div>
         );
       },

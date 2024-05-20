@@ -27,7 +27,7 @@ const location = useLocation();
   }, [message]);
 
   return (
-    <Box sx={{ width: '60%' }}>
+    <Box sx={{ width: '70%' }}>
       <Collapse in={open}>
         <Alert 
          iconSize="large" // Augmentation de la taille de l'icône

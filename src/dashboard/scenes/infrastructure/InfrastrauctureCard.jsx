@@ -45,7 +45,7 @@ const InfrastrauctureCard = ({ data }) => {
 
     } catch (error) {
       // Gérer les erreurs
-      console.error('Erreur:', error.response.data.message);
+      console.error('Erreur:', error.response.data.error);
       // Définir alertInfo
     }
   }

@@ -108,8 +108,8 @@ console.log({infrastrId});
     
             } catch (error) {
                 // Gérer les erreurs
-                setAlertInfo(error.response.data.message)
-                console.error('Erreur:', error.response.data.message);
+                setAlertInfo(error.response.data.error)
+                console.error('Erreur:', error.response.data.error);
                 // Définir alertInfo
             }
         }
@@ -140,8 +140,8 @@ console.log({infrastrId});
     
             } catch (error) {
                 // Gérer les erreurs
-                setAlertInfo(error.response.data.message)
-                console.error('Erreur:', error.response.data.message);
+                setAlertInfo(error.response.data.error)
+                console.error('Erreur:', error.response.data.error);
                 // Définir alertInfo
             }
         }

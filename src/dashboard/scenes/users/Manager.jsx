@@ -12,6 +12,7 @@ import { useTheme, TextField } from "@mui/material";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from "react-router-dom";
+import defaultmanagerImage from "../../../public/assets/manager.png";
 
 import {
   GridRowModes,
@@ -36,18 +37,24 @@ import { jwtDecode } from 'jwt-decode';
 const Manager = () => {
 
   const location = useLocation();
+  const profileImagePath = 'http://localhost:3000/uploads/profileImages/';
 
   // Vérifiez si le message de succès est passé en tant que state lors de la navigation
   const successCreation = location.state?.successCreation;
 
   const token = localStorage.getItem('accessToken');
-  const decodedToken = jwtDecode(token);
   const [alertInfo, setAlertInfo] = useState(null);
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const status = ['pending', 'active', 'suspended'];
-
+  const decodedToken = localStorage.getItem('decodedToken');
+  let userData;
+  if (decodedToken) {
+    userData = JSON.parse(decodedToken).user;
+  } 
+   const fallbackSrc =  defaultmanagerImage ;
+console.log(userData.user);
   const mapIntToLabel = (labels, value) => {
     return labels[value];
   };
@@ -113,9 +120,10 @@ const Manager = () => {
 
   const handleSaveClick = async (id) => {
     const editedRow = RowsData.find(row => row.id === id);
+    const editedData = editedRow ? { status: editedRow.status, id: editedRow.id } : {};
     try {
       console.log(RowsData);
-      const response = await axios.post(`http://localhost:3000/users/update-manager`, { editedRow }, {
+      const response = await axios.post(`http://localhost:3000/users/update-manager`, editedData , {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -198,8 +206,15 @@ const Manager = () => {
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
-            <img className="cellImg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkfoEX97d292BsiNpL9jQY2w4lUZPzs2J6MfeWVpwe6Q&s" alt="avatar" />
-          </div>
+            <img
+              width="100px"
+              height="100px"
+              src={profileImagePath + '/' + params.row.profileImage}
+              onError={(e) => { e.target.src = fallbackSrc }}
+              style={{ cursor: "pointer", borderRadius: "50%" }}
+              className="cellImg"
+            />         
+             </div>
         );
       },
     },
