@@ -36,7 +36,7 @@ const ProjectCard = ({ data }) => {
     console.log('onMultiFormNavigate status: ' + status);
     console.log('navigate function:', navigate); // Ajout d'un console.log pour vérifier si navigate est défini
     navigate(`/dashboard/addmedia`, {
-      state: { projectId: id, step: (status === 1) ? 5 : undefined }
+      state: { projectId: id, step: (status === 1) ? 5 : 3 }
     });
   };
 

@@ -30,14 +30,10 @@ const Form = () => {
   const profileImagesPath = 'http://localhost:3000/uploads/profileImages/';
 
 
-  let userData;
-  if (decodedToken) {
-    userData = JSON.parse(decodedToken).user;
-    console.log('Données de l\'utilisateur :', userData);
-  } else {
-    console.error('Données de l\'utilisateur non trouvées dans le localStorage.');
-  } 
-   const fallbackSrc = userData.user === 'employee' ? defaultemployeeImage : (userData.user === 'manager' ? defaultmanagerImage : null);
+
+  let userData = JSON.parse(decodedToken).user;
+
+  const fallbackSrc = userData.user === 'employee' ? defaultemployeeImage : (userData.user === 'manager' ? defaultmanagerImage : null);
 
   useEffect(() => {
     // Vérifiez si location.state est défini
@@ -77,13 +73,13 @@ const Form = () => {
     email: yup.string().email("invalid email").required("required").trim(),
     ...(userData?.user === "superAdmin" && { companyname: yup.string().required("required").trim() }),
     image: yup
-    .mixed()
-    .test("fileType", "Seules les images sont autorisées", (value) => {
-      if (!value) return true;
-      return value.type && value.type.startsWith("image/");
-    })
-    .nullable(),
-  
+      .mixed()
+      .test("fileType", "Seules les images sont autorisées", (value) => {
+        if (!value) return true;
+        return value.type && value.type.startsWith("image/");
+      })
+      .nullable(),
+
   });
 
   const handleFormSubmit = async (values) => {
@@ -190,7 +186,7 @@ const Form = () => {
       setFieldValue("image", imageFile); // Mettez à jour la valeur de l'image avec setFieldValue
     }
   };
-  
+
   const labelStyles = {
     '& .MuiInputLabel-outlined': {
       '&.Mui-focused': {
@@ -278,28 +274,28 @@ const Form = () => {
                       variant="filled"
 
                     />
-               <div className="avatar-preview">
-                    <div className="edit-overlay">
-                      <PhotoCameraIcon className="edit-icon" />
+                    <div className="avatar-preview">
+                      <div className="edit-overlay">
+                        <PhotoCameraIcon className="edit-icon" />
+                      </div>
+                      {selectedImage ? (
+                        <div className="image-container">
+                          <img src={URL.createObjectURL(selectedImage)} alt="Profile" />
+                        </div>
+                      ) : actionType === "update" ? (
+                        <div className="image-container">
+                          <img src={profileImagesPath + "/" + userData.profileImage} alt="Profile"
+
+                            onError={(e) => { e.target.src = fallbackSrc }}
+
+                          />
+                        </div>
+                      ) : <Avatar sx={{ width: 150, height: 150 }}>
+                        <PersonIcon sx={{ fontSize: 80 }} />
+                      </Avatar>
+
+                      }
                     </div>
-                    {selectedImage ? (
-                      <div className="image-container">
-                        <img src={URL.createObjectURL(selectedImage)} alt="Profile" />
-                      </div>
-                    ) :  actionType==="update" ? (
-                      <div className="image-container">
-                          <img src={profileImagesPath+"/"+userData.profileImage} alt="Profile"
-
-                          onError={(e) => { e.target.src = fallbackSrc }}
-
-                           />
-                      </div>
-                    ): <Avatar sx={{ width: 150, height: 150 }}>
-                    <PersonIcon sx={{ fontSize: 80 }} />
-                  </Avatar>
-
-                  }
-                  </div>
                   </label>
                 </Box>
                 {alertInfo && (
@@ -356,23 +352,46 @@ const Form = () => {
 
                     }}
                   />
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="text"
-                    label="Email"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.email}
-                    name="email"
-                    error={!!touched.email && !!errors.email}
-                    helperText={touched.email && errors.email}
-                    sx={{
-                      gridColumn: "span 4",
-                      ...labelStyles, // Appliquer les styles pour les labels ici
+                  {actionType === "update" &&
 
-                    }}
-                  />
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      disabled
+                      label="Email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.email}
+                      name="email"
+                      error={!!touched.email && !!errors.email}
+                      helperText={touched.email && errors.email}
+                      sx={{
+                        gridColumn: "span 4",
+                        ...labelStyles, // Appliquer les styles pour les labels ici
+
+                      }}
+
+                    />}
+                  {
+                    actionType === "create" &&
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="text"
+                      label="Email"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.email}
+                      name="email"
+                      error={!!touched.email && !!errors.email}
+                      helperText={touched.email && errors.email}
+                      sx={{
+                        gridColumn: "span 4",
+                        ...labelStyles, // Appliquer les styles pour les labels ici
+
+                      }}
+                    />}
                   {(userData.user === "superAdmin" || (userData.user === "manager" && actionType === "update")) &&
                     <TextField
                       fullWidth

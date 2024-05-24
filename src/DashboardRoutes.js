@@ -7,7 +7,6 @@ import Form from "./dashboard/scenes/users/form";
 import Geography from "./dashboard/scenes/geography";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { ColorModeContext, useMode } from "./dashboard/theme";
-import Calendar from "./dashboard/scenes/calendar/calendar";
 import Manager from "./dashboard/scenes/users/Manager";
 import Employee from "./dashboard/scenes/users/Employee";
 import FullFeaturedCrudGrid from "./dashboard/scenes/inspection/InspectionResult";
@@ -22,6 +21,8 @@ import Infrastructures from "./dashboard/scenes/infrastructure/allInfrastructure
 import ProjectInfoSteps from "./dashboard/scenes/projects/ProjectInfoSteps";
 import UploadMediaSteps from "./dashboard/scenes/projects/UploadMediaSteps";
 import { ProtectedDashboardRoute } from './ProtectedRoute';
+import TasksManagement from "./dashboard/scenes/tasks/TasksManagement";
+import MyTasks from "./dashboard/scenes/tasks/MyTasks";
 
 const formWizardTheme = createTheme({
   palette: {},
@@ -43,7 +44,9 @@ function DashboardRoutes() {
 
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/taskmanagement" element={<TasksManagement/>} />
+              <Route path="/mytasks" element={<MyTasks/>} />
+
               <Route path="/form" element={<Form />} />
               <Route path="/allprojects" element={<Projects />} />
 

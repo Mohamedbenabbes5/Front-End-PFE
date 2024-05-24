@@ -26,7 +26,7 @@ const Profile = () => {
     const [profileData, setProfileData] = useState(null);
     const [projectCount, setProjectCount] = useState(0);
     const status = ['pending', 'active', 'suspended'];
-    const roles = ['guest', 'project manager', 'expert', 'inspector'];
+    const roles = ['guest', 'inspector', 'expert', 'project manager'];
     const profileImagesPath = 'http://localhost:3000/uploads/profileImages/';
     const location = useLocation();
     const successCreation = location.state?.successCreation;

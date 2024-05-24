@@ -22,7 +22,8 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import defaultadminImage from "../../../public/assets/admin.png"
 import defaultmanagerImage from "../../../public/assets/manager.png";
 import defaultemployeeImage from "../../../public/assets/employee.jpg";
-
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import ListIcon from '@mui/icons-material/List';
 const Item = ({ title, to, icon, selected, setSelected, style }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -57,14 +58,14 @@ const Sidebar = () => {
   // Fonction pour gérer l'erreur de chargement de l'image
 
   // Déterminer la source de l'image par défaut en cas d'échec de chargement en fonction du type d'utilisateur
-  const fallbackSrc = userData.user === 'superAdmin' ? defaultadminImage :( userData.user === 'manager' ? defaultmanagerImage:defaultemployeeImage) ;
+  const fallbackSrc = userData.user === 'superAdmin' ? defaultadminImage : (userData.user === 'manager' ? defaultmanagerImage : defaultemployeeImage);
 
 
   return (
     <Box
       sx={{
         "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
+          background: `${colors.primary[600]} !important`,
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
@@ -73,10 +74,10 @@ const Sidebar = () => {
           padding: "5px 35px 5px 20px !important",
         },
         "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
+          color: `${colors.yellowAccent[400]} !important`,
         },
         "& .pro-menu-item.active": {
-          color: "#6870fa !important",
+          color: `${colors.yellowAccent[500]} !important`,
         },
       }}
     >
@@ -94,11 +95,11 @@ const Sidebar = () => {
             {!isCollapsed && (
               <Box
                 display="flex"
-                justifyContent="space-between"
+                justifyContent="flex-start"
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
+                <Typography variant="h4" color={colors.yellowAccent[500]} style={{ textTransform: "uppercase" }}>
                   {userData.companyname}
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
@@ -128,10 +129,11 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {userData.firstname + ' ' + userData.lastname}
+                  {userData.username ? userData.username : ''}
+                  {userData.firstname && userData.lastname ? ` ${userData.firstname} ${userData.lastname}` : ''}
 
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
+                <Typography variant="h5" color={colors.redAccent[400]}>
                   {userData.user}
                 </Typography>
               </Box>
@@ -163,46 +165,46 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             {userData.user !== 'superAdmin' &&
-              
-                <Item
+
+              <Item
 
 
-                  title="Creacte Project"
-                  to="/creacteproject"
-                  icon={<ControlPointIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  style={!isCollapsed ? { marginLeft: "8px" } : {}}
+                title="Creacte Project"
+                to="/creacteproject"
+                icon={<ControlPointIcon />}
+                selected={selected}
+                setSelected={setSelected}
+                style={!isCollapsed ? { marginLeft: "8px" } : {}}
 
 
-                />
-          }
-                <Item
-                  title="infrastructures"
-                  to="/allinfrastructures"
-                  icon={<AccountBalanceIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-                 {userData.user !== 'superAdmin' &&
-                <Item
-                  title="Creacte Infrastructure"
-                  to="/creacteinfrastructure"
-                  icon={<ControlPointIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                  style={!isCollapsed ? { marginLeft: "8px" } : {}}
+              />
+            }
+            <Item
+              title="infrastructures"
+              to="/allinfrastructures"
+              icon={<AccountBalanceIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            {userData.user !== 'superAdmin' &&
+              <Item
+                title="Creacte Infrastructure"
+                to="/creacteinfrastructure"
+                icon={<ControlPointIcon />}
+                selected={selected}
+                setSelected={setSelected}
+                style={!isCollapsed ? { marginLeft: "8px" } : {}}
 
-                />
-              }
-          {userData.user !== 'employee' && 
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              User Management
-            </Typography>
+              />
+            }
+            {userData.user !== 'employee' &&
+              <Typography
+                variant="h6"
+                color={colors.grey[300]}
+                sx={{ m: "15px 0 5px 20px" }}
+              >
+                User Management
+              </Typography>
             }
             {userData.user === 'superAdmin' && <Item
               title="Companies"
@@ -211,16 +213,16 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />}
-            {userData.user !== 'employee' && 
-            <Item
-              title="Employees"
-              to="/employees"
-              icon={<PeopleOutlinedIcon />}
+            {userData.user !== 'employee' &&
+              <Item
+                title="Employees"
+                to="/employees"
+                icon={<PeopleOutlinedIcon />}
 
-              selected={selected}
-              setSelected={setSelected}
-          
-            />}
+                selected={selected}
+                setSelected={setSelected}
+
+              />}
 
 
             {userData.user !== 'superAdmin' &&
@@ -245,16 +247,27 @@ const Sidebar = () => {
                   color={colors.grey[300]}
                   sx={{ m: "15px 0 5px 20px" }}
                 >
-                  Pages
+                  Tasks
                 </Typography>
+                {(userData.user === 'manager' ||(userData.user === 'employee' && userData.role===3)) &&
 
                 <Item
-                  title="Calendar"
-                  to="/calendar"
-                  icon={<CalendarTodayOutlinedIcon />}
+                  title="Task Management"
+                  to="/taskmanagement"
+                  icon={<AssignmentIcon />}
                   selected={selected}
                   setSelected={setSelected}
                 />
+          }
+                   {userData.user === 'employee' &&
+                 <Item
+                  title="My Tasks"
+                  to="/mytasks"
+                  icon={<ListIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+          }
               </div>
             }
 

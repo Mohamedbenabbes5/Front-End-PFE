@@ -15,7 +15,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import axios from 'axios';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
+const UploadImages = ({ projectId , handleAlertMessage}) => {
   // State pour stocker les fichiers sélectionnés
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -78,7 +78,7 @@ const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
 
       if (response.status === 200) {
         // Enregistrement réussi, afficher un message de succès et rediriger vers la page de connexion
-        onSuccessMessage(response.data.message);
+        handleAlertMessage({ type: "success", message: response.data.message });
 
       }
 
@@ -86,17 +86,10 @@ const UploadImages = ({ projectId , onSuccessMessage, onErrorMessage}) => {
     } catch (error) {
       if (error.response?.data.error) {
         // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
-        onErrorMessage(error.response.data.error);
+        handleAlertMessage({ type: "error", message: error.response.data.error });
 
       } 
-      else if(error.response.status==401){
-        onErrorMessage("Unauthorized ,only inspector admin can upload data.");
-
-      }else {
-        // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-        onErrorMessage("An error occurred while uploading images.");
-
-      }
+     
     } finally {
       setLoading(false); // Arrêter le chargement
     }

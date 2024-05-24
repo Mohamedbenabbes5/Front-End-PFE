@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import FormTask from "./FormTask";
+import React, { useState, useEffect } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -12,7 +13,6 @@ import { useTheme, TextField } from "@mui/material";
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from "react-router-dom";
-
 import {
   GridRowModes,
   DataGrid,
@@ -31,33 +31,27 @@ import PieChartBox from '../../components/PieChartBox';
 import axios from 'axios';
 import TransitionAlerts from "../../components/TransitionAlerts";
 import { jwtDecode } from 'jwt-decode';
-import defaultemployeeImage from "../../../public/assets/employee.jpg";
+import defaultmissionImage from "../../../public/assets/employee.jpg";
 
 
-const Employee = () => {
-
-  const location = useLocation();
-
-  // Vérifiez si le message de succès est passé en tant que state lors de la navigation
-  const successCreation = location.state?.successCreation;
-
-  const profileImagePath = 'http://localhost:3000/uploads/profileImages/';
-
-  const token = localStorage.getItem('accessToken');
-
-  const [alertInfo, setAlertInfo] = useState(null);
-  const fallbackSrc = defaultemployeeImage;
-
+const MyTasks = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const roles = ['guest', 'inspector','expert', 'project manager' ];
-  const status = ['pending', 'suspended', 'active'];
+  const [alertInfo, setAlertInfo] = useState(null);
 
   const decodedToken = localStorage.getItem('decodedToken');
   let userData;
   if (decodedToken) {
     userData = JSON.parse(decodedToken).user;
   }
+
+  const profileImagePath = 'http://localhost:3000/uploads/profileImages/';
+
+  const token = localStorage.getItem('accessToken');
+  const status = ['pending',  'completed'];
+
+  const fallbackSrc = defaultmissionImage;
+
   const mapIntToLabel = (labels, value) => {
     return labels[value];
   };
@@ -92,40 +86,35 @@ const Employee = () => {
       setRowsData(RowsData.filter((row) => row.id !== id));
     }
   };
-  const fetchEmployee = async () => {
+  const fetchMissions = async () => {
     try {
-
-      const response = await axios.get(`http://localhost:3000/users/get-allemployee`, {
+console.log('fetchedmissions');
+      const response = await axios.get(`http://localhost:3000/missions/get-mymissions`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      const AllEmployee = response.data.AllEmployee
-      AllEmployee.forEach(employee => {
-        employee.projectCount = employee.project.length;
-
-        delete employee.project;
-      });
-      console.log(AllEmployee);
-      setRowsData(AllEmployee);
-      console.log("response.data", response.data);
+      const AllMissions = response.data
+      console.log("allmymissions", AllMissions);
+      setRowsData(AllMissions);
     } catch (error) {
-      console.error('Erreur lors de la récupération des dommages :', error);
+      console.error('Erreur lors de la récupération des missions :', error);
       // Vous pouvez rediriger vers une page d'erreur ou afficher un message d'erreur
     }
   };
 
   useEffect(() => {
-    fetchEmployee();
+    fetchMissions();
+    
   }, []);
 
-
+ 
   const handleSaveClick = async (id) => {
     setAlertInfo(null)
     const editedRow = RowsData.find(row => row.id === id);
-    const editedData = editedRow ? { role: editedRow.role, status: editedRow.status, id: editedRow.id } : {};
+    const editedData = editedRow ? { status: editedRow.status} : {};
     try {
-      const response = await axios.post(`http://localhost:3000/users/update-employee`, editedData, {
+      const response = await axios.post(`http://localhost:3000/missions/update-mission/${id}`, editedData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -156,31 +145,7 @@ const Employee = () => {
 
 
 
-  const handleDeleteClick = async (employeeId) => {
-    setAlertInfo(null)
-    try {
-      const response = await axios.delete(`http://localhost:3000/users/delete-employee/${employeeId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
 
-      // Mettre à jour l'état local des données avec les nouvelles valeurs
-
-      setRowsData(RowsData.filter((row) => row.id !== employeeId));
-      setRowModesModel({
-        ...rowModesModel,
-        [employeeId]: { mode: GridRowModes.View, ignoreModifications: true }
-      });
-      setAlertInfo({ type: "success", message: response.data.message });
-
-    } catch (error) {
-      // Gérer les erreurs (par exemple, afficher une alerte d'erreur)
-      console.error('Erreur lors de la sauvegarde des modifications :', error);
-      setAlertInfo({ type: "error", message: error.response.data.error });
-
-    }
-  };
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -198,157 +163,62 @@ const Employee = () => {
   };
 
 
-
+  /************* */
   const columns = [
-    { field: "id", headerName: "ID",   flex: 0.2,
-  },
+    { field: "id", headerName: "id",flex: 0.1  },
 
+  
+   
     {
-      field: "employee",
-      headerName: "employee",
-      flex: 0.7,
-      renderCell: (params) => {
-        console.log('params.row.profileImage', params.row);
-        return (
-          <div className="cellWithImg">
-            <img
-              width="100px"
-              height="100px"
-              src={profileImagePath + '/' + params.row.profileImage}
-              onError={(e) => { e.target.src = fallbackSrc }}
-              style={{ cursor: "pointer", borderRadius: "50%" }}
-              className="cellImg"
-            />
-          </div>
-        );
-      },
-    },
-
-    {
-      field: "name",
-      headerName: "name",
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <div
-
-          > {params.row.firstname + ' ' + params.row.lastname}
-
-
-          </div>
-        );
-      },
-    },
-    {
-      field: "email",
-      headerName: "Email",
+      field: "title",
+      headerName: "Task",
       flex: 1,
     },
-
+    {
+      field: "description",
+      headerName: "description",
+      flex: 2,
+    },
 
     {
-      field: "companyname",
-      headerName: "Company",
-      renderCell: (params) => {
-        return (
-          <div>
-            {params.row.manager.companyname}
-          </div>
-        );
+        field: 'status',
+        headerName: 'status',
+        flex: 1,
+        editable: true,
+        type: 'singleSelect',
+        renderCell: (params) => {
+          return (
+            <div className={`taskStatus ${mapIntToLabel(status, params.row.status)}`}>
+              {mapIntToLabel(status, params.row.status)} {/* Utiliser la fonction de mappage ici */}
+            </div>
+          );
+  
+        },
+        renderEditCell: (params) => (
+          <TextField
+            select
+            value={params.value}
+            onChange={(e) => handleCellEdit(params.id, 'status', e.target.value)}
+            fullWidth
+          >
+            {status.map((label, index) => (
+              <MenuItem key={label} value={index}>{label}</MenuItem>
+            ))}
+          </TextField>
+        ),
+  
       },
-      flex: 1,
-    },
-
-
-
-    {
-
-      field: "projectCount",
-      headerName: "Authorized Projects",
-      flex: 1,
-    },
-
-
-
-    {
-      field: 'status',
-      headerName: 'Status',
-      flex: 1.1,
-      editable: true,
-      type: 'singleSelect',
-      renderCell: (params) => {
-        return (
-          <div className={`cellWithStatus ${mapIntToLabel(status, params.row.status)}`}>
-            {mapIntToLabel(status, params.row.status)} {/* Utiliser la fonction de mappage ici */}
-          </div>
-        );
-
-      },
-      renderEditCell: (params) => (
-        <TextField
-          select
-          value={params.value}
-          onChange={(e) => handleCellEdit(params.id, 'status', e.target.value)}
-          fullWidth
-        >
-          {status.map((label, index) => (
-            <MenuItem key={label} value={index}>{label}</MenuItem>
-          ))}
-        </TextField>
-      ),
-
-    },
-    {
-      field: 'role',
-      headerName: 'Role',
-      flex: 1,
-      editable: true,
-      type: 'singleSelect',
-      renderCell: (params) => {
-        return (
-          <div >
-            {mapIntToLabel(roles, params.row.role)} {/* Utiliser la fonction de mappage ici */}
-          </div>
-        );
-
-      },
-      renderEditCell: (params) => (
-        <TextField
-          select
-          value={params.value}
-          onChange={(e) => handleCellEdit(params.id, 'role', e.target.value)}
-          fullWidth
-        >
-          {roles.map((label, index) => (
-            <MenuItem key={label} value={index}>{label}</MenuItem>
-          ))}
-        </TextField>
-      ),
-
-    },
     {
       field: "createdAt",
-      headerName: "CreatedAt",
+      headerName: "createdAt",
       flex: 1,
     },
-    {
-      field: "accountVerified",
-      headerName: "account Verified",
-      flex: 1,
-      renderCell: (params) => {
-        return (
-          <div className={`accountStatus ${params.row.accountVerified}`}>
-            {params.row.accountVerified.toString()} {/* Convertissez la valeur booléenne en chaîne */}
-          </div>
-        );
-      },
-    }
-    ,
+   
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      flex: 0.8,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -379,30 +249,17 @@ const Employee = () => {
             onClick={handleEditClick(id)}
             color="inherit"
           />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => handleDeleteClick(id)} // Wrap in arrow function
-            color="inherit"
-          />,
+         
         ];
       },
     },
   ];
 
   return (
-    <Box m="20px">
-      <div style={{ marginLeft: "20px" }}>
-        {successCreation && (
+    <Box m="20px">       
 
-          <TransitionAlerts
-            sx={{}}
-            type={"success"}
-            message={successCreation}
-            onClose={() => { }}
-            variant={"filled"}
-          />
-        )}
+      <div style={{ marginLeft: "20px" }}>
+   
 
         {alertInfo && (
 
@@ -418,29 +275,10 @@ const Employee = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center" mt="50px">
 
         <Header
-          title="All Employees"
-          subtitle="List of Employees "
+          title="My Tasks"
         />
-        <Box>
-          {userData.user === "manager" &&
-            <Link to="/dashboard/form" state={{ actionType: "create" }} style={{ textDecoration: "none" }}>
-              <Button
-
-                sx={{
-                  backgroundColor: colors.greenAccent[700],
-                  color: colors.grey[100],
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  padding: "10px 20px",
-                }}
-              >
-                Create new Employee Account
-              </Button>
-            </Link>
-          }
-        </Box>
+      
       </Box>
-
       <Box
         m="40px 0 0 0"
         height="100vh"
@@ -490,9 +328,9 @@ const Employee = () => {
         />
       </Box>
     </Box>
+
+
   );
-
-
 };
 
-export default Employee;
+export default MyTasks;

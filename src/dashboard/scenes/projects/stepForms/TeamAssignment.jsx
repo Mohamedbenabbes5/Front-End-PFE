@@ -88,7 +88,7 @@ console.log('emplouee assog',employeeAssignment);
   return (
     <Form>
         <Col lg="12" className="form-row">
-          <Label className="label-form">Visual Resource Manager assignment <span className="text-danger">*</span></Label>
+          <Label className="label-form">Visual Resource (Inspector) assignment <span className="text-danger">*</span></Label>
           <CheckboxesTags
             Role={1}
             EmployeeList={allEmployee}

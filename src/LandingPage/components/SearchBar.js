@@ -27,7 +27,7 @@ export const SearchBar = ({ setResults }) => {
   return (
     
       <input
-        placeholder="select manager name "
+        placeholder="select Company name "
         value={input}
         className="form-control"
         onChange={(e) => handleChange(e.target.value)}

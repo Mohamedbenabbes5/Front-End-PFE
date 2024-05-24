@@ -35,8 +35,8 @@ import ConfirmDialog from "../../components/ConfirmDialog";
 
 const ProjectInfoSteps = ({ }) => {
     const token = localStorage.getItem('accessToken');
-    const decodedToken = jwtDecode(token);
-    console.log(decodedToken.user);
+    const decodedToken = JSON.parse(localStorage.getItem('decodedToken'));
+    console.log('decodedToken', decodedToken.user.user);
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -56,16 +56,14 @@ const ProjectInfoSteps = ({ }) => {
 
     const [activeTab, setactiveTab] = useState(3);
 
-    const handleSuccessMessage = (message) => {
-        setSuccessMessage("");
-        setSuccessMessage(message);
-        setErrorMessage(""); // Effacer le message d'erreur
-    };
+  
+    const handleAlertMessage = (m) => {
+        console.log('handleAlertMessage msg ', m.message);
+        console.log('handleAlertMessage type ', m.type);
+        
+         setAlertInfo({message:m.message,type:m.type});
 
-    const handleErrorMessage = (message) => {
-        setErrorMessage("");
-        setErrorMessage(message);
-        setSuccessMessage(""); // Effacer le message de succès
+    
     };
 
     const nextStep = () => {
@@ -96,20 +94,31 @@ const ProjectInfoSteps = ({ }) => {
             if (error.response?.data.error) {
                 // Si le serveur renvoie un message d'erreur, afficher le message d'erreur
                 setAlertInfo({ type: "error", message: error.response.data.error });
-
             }
 
-            else {
-                // Si une autre erreur se produit, afficher un message d'erreur génériqueinspectify
-                setAlertInfo({ type: "error", message: "An error occurred while uploading images." });
-
-            }
         }
         finally {
             setProcessing(false); // Arrêter l'affichage de LinearIndeterminate à la fin de l'exécution
         }
     };
+    const handleConfirmDataDialog = async () => {
+        try {
+            const response = await axios.post('http://localhost:3000/project/confirmResource', { projectId }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setAlertInfo({ type: "success", message: response.data.message });
 
+    
+        } catch (error) {
+            if (error.response.status===409){
+                setAlertInfo({ type: "warning", message: error.response.data.error });
+            }          
+            else{ 
+                 setAlertInfo({ type: "error", message: error.response.data.error });}
+        }
+    };
 
 
     useEffect(() => {
@@ -123,6 +132,13 @@ const ProjectInfoSteps = ({ }) => {
 
     }, []);
 
+    const confirmDataDialogProps = {
+        title: "Confirm Task Completion",
+        description: "Are you sure you want to confirm that your task is completed? After confirmation, no further changes can be made to the data.",
+        confirmButtonText: "Confirm",
+        cancelButtonText: "Cancel",
+        handleLocalConfirm: handleConfirmDataDialog,
+    };
 
 
     return (
@@ -134,29 +150,15 @@ const ProjectInfoSteps = ({ }) => {
                         <TransitionAlerts
                             type={alertInfo.type}
                             message={alertInfo.message}
-                            onClose={() => setAlertInfo(null)}
-                        />
+                            // onClose={() => { }
+                            onClose={() => setAlertInfo(null) }
+
+                       
+                            />
                     )}
 
                     <Col lg="12" >
-                        {errorMessage && (
-                            <TransitionAlerts type={"error"}
-                                message={errorMessage}
-                                onClose={() => { }}
-                                variant={"filled"}
-                            >
-
-                            </TransitionAlerts>
-                        )}
-                        {successMessage && (
-                            <TransitionAlerts type={"success"}
-                                message={successMessage}
-                                onClose={() => { }}
-                                variant={"filled"}
-                            >
-
-                            </TransitionAlerts>
-                        )}
+                     
 
                         <Card className="Card">
                             <CardBody>
@@ -214,14 +216,14 @@ const ProjectInfoSteps = ({ }) => {
                                     <TabContent activeTab={activeTab} className="twitter-bs-wizard-tab-content">
                                         <TabPane tabId={3}>
                                             <div>
-                                                <UploadImages projectId={projectId} onSuccessMessage={handleSuccessMessage} onErrorMessage={handleErrorMessage} />
+                                                <UploadImages projectId={projectId} handleAlertMessage={handleAlertMessage}  />
                                             </div>
                                         </TabPane>
 
                                         <TabPane tabId={4}>
                                             <div>
                                                 {/* <FormUpload/> */}
-                                                <DynamicTable projectId={projectId} onSuccessMessage={handleSuccessMessage} onErrorMessage={handleErrorMessage} />
+                                                <DynamicTable projectId={projectId} handleAlertMessage={handleAlertMessage}  />
                                             </div>
                                         </TabPane>
 
@@ -269,9 +271,12 @@ const ProjectInfoSteps = ({ }) => {
                                                 <div>
                                                     {activeTab !== 5 && (
                                                         <>
-                                                            {activeTab === 4 && decodedToken.user.role === 1 && (
-                                                                <ConfirmDialog projectId={projectId}></ConfirmDialog>
+                                                            {activeTab === 4 && (decodedToken.user.role === 1 || decodedToken.user.user === "manager") && (
+                                                                <ConfirmDialog
+                                                                    {...confirmDataDialogProps}
+                                                                />
                                                             )}
+
                                                             <Link to="#" onClick={() => nextStep()} style={{ marginLeft: "10px" }}
                                                             >
                                                                 Next

@@ -226,6 +226,14 @@ console.log(decodedToken);
             field: 'type',
             headerName: 'type',
             flex: 1,
+            renderCell: (params) => {
+                return (
+                    <div className={`dangerType ${params.row.type}`}>
+                        {params.row.type} 
+                    </div>
+                );
+                
+            },
         },
         {
             field: 'confidence',
@@ -238,7 +246,7 @@ console.log(decodedToken);
         {
             field: 'DangerDegre',
             headerName: 'Danger Degre',
-            flex: 1,
+            flex: 1.2,
             editable: true,
             type: 'singleSelect',
             renderCell: (params) => {

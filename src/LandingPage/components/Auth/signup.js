@@ -171,7 +171,7 @@ export default function Signup() {
             validationErrors.name = "name is not valid";
         }
         if (user === "manager" && formData.companyname.length == 1) {
-            validationErrors.companyname = "manager name  is not valid";
+            validationErrors.companyname = "Company name  is not valid";
         }
         console.log("formData.managerId?.length", formData.managerId?.length);
         if (user === "employee" && (!formData.managerId || formData.managerId === "")) {
@@ -261,7 +261,7 @@ export default function Signup() {
                                                                 {errors.name && <span style={{ color: 'red', fontSize: "14px", marginLeft: "10px" }}>{errors.name}</span>}
                                                                 <Col md={12} >
                                                                     <div className="mb-1">
-                                                                        <label className="form-label">manager name <span className="text-danger">*</span></label>
+                                                                        <label className="form-label">Company name <span className="text-danger">*</span></label>
                                                                         {user === "manager" && (<input onChange={handleChange} type="text" className="form-control" placeholder="e.g. ABC Inc" name="companyname" required />)}
                                                                         {user === "employee" && (<div className="search-bar-container">
                                                                             <Select
@@ -269,7 +269,7 @@ export default function Signup() {
                                                                                 onChange={handleManagerChange}
                                                                                 options={allManager.map(manager => ({ value: manager.id, label: manager.companyname }))}
                                                                                 isSearchable // Permet la recherche dans le menu
-                                                                                placeholder="Select your manager name"
+                                                                                placeholder="Select your Company name"
                                                                                 onFocus={loadUsers} // Appel de loadUsers lors du focus sur le champ de recherche
                                                                             />
                                                                         </div>)}

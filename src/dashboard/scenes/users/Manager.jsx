@@ -47,14 +47,14 @@ const Manager = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const status = ['pending', 'active', 'suspended'];
+  const status = ['pending', 'suspended', 'active'];
   const decodedToken = localStorage.getItem('decodedToken');
   let userData;
   if (decodedToken) {
     userData = JSON.parse(decodedToken).user;
-  } 
-   const fallbackSrc =  defaultmanagerImage ;
-console.log(userData.user);
+  }
+  const fallbackSrc = defaultmanagerImage;
+  console.log(userData.user);
   const mapIntToLabel = (labels, value) => {
     return labels[value];
   };
@@ -119,11 +119,13 @@ console.log(userData.user);
 
 
   const handleSaveClick = async (id) => {
+    setAlertInfo(null)
+
     const editedRow = RowsData.find(row => row.id === id);
     const editedData = editedRow ? { status: editedRow.status, id: editedRow.id } : {};
     try {
       console.log(RowsData);
-      const response = await axios.post(`http://localhost:3000/users/update-manager`, editedData , {
+      const response = await axios.post(`http://localhost:3000/users/update-manager`, editedData, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -143,7 +145,7 @@ console.log(userData.user);
         [id]: { mode: GridRowModes.View, ignoreModifications: true }
       });
       // Gérer la réponse de votre backend (par exemple, afficher une alerte de succès)
-      setAlertInfo({ type: "success", message: `Manager account with id ${id}  updated successfully!` });
+      setAlertInfo({ type: "success", message: response.data.message});
 
     } catch (error) {
       // Gérer les erreurs (par exemple, afficher une alerte d'erreur)
@@ -155,6 +157,8 @@ console.log(userData.user);
 
 
   const handleDeleteClick = async (managerId) => {
+    setAlertInfo(null)
+
     try {
       const response = await axios.delete(`http://localhost:3000/users/delete-manager/${managerId}`, {
         headers: {
@@ -169,7 +173,7 @@ console.log(userData.user);
         ...rowModesModel,
         [managerId]: { mode: GridRowModes.View, ignoreModifications: true }
       });
-      setAlertInfo({ type: "success", message: "Manager account deleted successfully!" });
+      setAlertInfo({ type: "success", message: response.data.message });
 
     } catch (error) {
       // Gérer les erreurs (par exemple, afficher une alerte d'erreur)
@@ -213,8 +217,8 @@ console.log(userData.user);
               onError={(e) => { e.target.src = fallbackSrc }}
               style={{ cursor: "pointer", borderRadius: "50%" }}
               className="cellImg"
-            />         
-             </div>
+            />
+          </div>
         );
       },
     },
@@ -275,7 +279,7 @@ console.log(userData.user);
     {
       field: 'status',
       headerName: 'Status',
-      flex: 1,
+      flex: 1.1,
       editable: true,
       type: 'singleSelect',
       renderCell: (params) => {
@@ -308,8 +312,15 @@ console.log(userData.user);
     },
     {
       field: "accountVerified",
-      headerName: "Valid account ",
+      headerName: "account Verified",
       flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className={`accountStatus ${params.row.accountVerified}`}>
+            {params.row.accountVerified.toString()} {/* Convertissez la valeur booléenne en chaîne */}
+          </div>
+        );
+      },
     },
     {
       field: 'actions',
@@ -366,6 +377,16 @@ console.log(userData.user);
             sx={{}}
             type={"success"}
             message={successCreation}
+            onClose={() => { }}
+            variant={"filled"}
+          />
+        )}
+        {alertInfo && (
+
+          <TransitionAlerts
+            sx={{}}
+            type={alertInfo.type}
+            message={alertInfo.message}
             onClose={() => { }}
             variant={"filled"}
           />

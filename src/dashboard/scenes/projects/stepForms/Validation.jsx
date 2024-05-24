@@ -5,12 +5,13 @@ import axios from 'axios';
 import Icon from '@mdi/react';
 const Validation = ({ projectId }) => {
     const [canStart, setCanStart] = useState(null); // Utilisez null pour indiquer que la requête est en cours
-
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("")
     useEffect(() => {
         const checkResource = async () => {
             try {
                 const token = localStorage.getItem('accessToken');
-                const response = await axios.post('http://localhost:3000/project/can-start-prcessing', { projectId }, {
+                const response = await axios.post('http://localhost:3000/project/checkProcessingAllowed', { projectId }, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                     }
@@ -18,10 +19,12 @@ const Validation = ({ projectId }) => {
 
                 if (response.status === 200) {
                     setCanStart(true); // Si la requête réussit, mettez canStart à true
+                    setSuccessMessage(response.data.message);
                 }
             } catch (error) {
-                console.log(error.response);
-                setCanStart(false); // Si la requête échoue, mettez canStart à false
+                console.log(error.response.data.error);
+                setCanStart(false); // Si la requête échoue, mettez canStart à false 
+                setErrorMessage(error.response.data.error)
             }
         }
 
@@ -40,7 +43,7 @@ const Validation = ({ projectId }) => {
                         color="green"
                     />
                     <div>
-                        <h5>Processing allowed! Your submission is valid</h5>
+                        <h5>{successMessage}</h5>
                     </div>
                 </>
             ) : canStart === false ? (
@@ -51,7 +54,7 @@ const Validation = ({ projectId }) => {
                         color="#a20404"
                     />
                     <div>
-                        <h5 style={{color:'#a71616c4'}}>Media missing! You must import media data for continues processing.</h5>
+                        <h5 style={{color:'#a71616c4'}}>{errorMessage}.</h5>
                     </div>
                 </>
             ) : null}
