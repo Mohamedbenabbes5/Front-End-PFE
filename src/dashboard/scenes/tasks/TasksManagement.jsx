@@ -48,10 +48,17 @@ const TasksManagement = () => {
   const handleOpenDialog = () => {
     setIsOpen(true);
   };
-
   const handleCloseDialog = () => {
     setIsOpen(false);
   };
+  const handleAlert = (alert) => {
+    if (alert.type === "success") {
+      window.location.reload();
+    }
+    setAlertInfo(alert);
+
+  };
+
   //*********************** */
   
   const profileImagePath = 'http://localhost:3000/uploads/profileImages/';
@@ -364,7 +371,7 @@ console.log('fetchedmissions');
 
           <TransitionAlerts
             sx={{}}
-            type={"success"}
+            type={alertInfo.type}
             message={alertInfo.message}
             onClose={() => { }}
             variant={"filled"}
@@ -378,7 +385,7 @@ console.log('fetchedmissions');
           subtitle="All Tasks"
         />
         <Box>     
-          <FormTask isOpen={isOpen} onClose={handleCloseDialog} />
+          <FormTask isOpen={isOpen} onClose={handleCloseDialog} onAlert={handleAlert} />
 
             <Button
               onClick={handleOpenDialog}

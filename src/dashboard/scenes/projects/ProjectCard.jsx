@@ -13,6 +13,7 @@ import Grid from '@mui/material/Grid';
 import LocationOnIcon from '@mui/icons-material/LocationOn'; // Importer l'icône de localisation
 import Groups2Icon from '@mui/icons-material/Groups2'; import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AvatarGroup from '@mui/material/AvatarGroup';
+import axios from 'axios';
 
 const LineWithIcon = ({ icon, text }) => (
   <Grid container spacing={1} alignItems="center" sx={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}> {/* Utiliser alignItems pour aligner les éléments verticalement */}
@@ -27,7 +28,8 @@ const LineWithIcon = ({ icon, text }) => (
   </Grid>
 );
 
-const ProjectCard = ({ data }) => {
+const ProjectCard = ({ data ,onAlert}) => {
+  const token = localStorage.getItem('accessToken');
   const theme = useTheme();
   const ImagePath = 'http://localhost:3000/uploads/';
   const navigate = useNavigate();
@@ -39,6 +41,24 @@ const ProjectCard = ({ data }) => {
       state: { projectId: id, step: (status === 1) ? 5 : 3 }
     });
   };
+  const onDeleteProject = async (e) => {
+    e.preventDefault(); // Empêcher le comportement par défaut de soumission du formulaire
+
+    try {
+      // Envoyer la requête HTTP avec Axios en utilisant projectId
+      const response = await axios.delete(`http://localhost:3000/project/delete/${data.id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      onAlert({ type: "success", message: response.data.message });
+
+    } catch (error) {
+      // Gérer les erreurs
+      console.error('Erreur:', error.response.data.error);
+      // Définir alertInfo
+    }
+  }
 
   return (
 
@@ -124,7 +144,10 @@ const ProjectCard = ({ data }) => {
             </Button>
             
           )}
-         
+           <Button component={Link} size="small" variant="contained" color="error" onClick={onDeleteProject}
+          >
+            Delete
+          </Button>
         </CardActions>
       </CardContent>
     </Card>

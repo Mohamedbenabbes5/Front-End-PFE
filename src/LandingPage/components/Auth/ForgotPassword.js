@@ -3,7 +3,7 @@ import { Col, Row, Card, CardBody } from "reactstrap";
 import * as Icon from 'react-feather';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import BackgroundImage from '../../assets/images/bg/1.jpg';
+import BackgroundImage from '../../assets/images/bg/1.png';
 import Logo from "../../assets/images/logo.png";
 import TransitionAlerts from "../TransitionAlerts";
 

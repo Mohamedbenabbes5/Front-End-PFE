@@ -204,7 +204,7 @@ const Form = () => {
     },
     {
       value: '1',
-      label: 'Project Manager',
+      label: 'Inspector',
     },
     {
       value: '2',
@@ -212,7 +212,7 @@ const Form = () => {
     },
     {
       value: '3',
-      label: 'Inspector',
+      label: 'Project Manager',
     }
   ];
   const status = [
@@ -505,17 +505,24 @@ const Form = () => {
                     />
                   )}
 
-                  {actionType === "create" ?
-                    (<Button type="submit" color="secondary" variant="contained">
-                      Create New User
-                    </Button>)
-                    : actionType === "update" ?
-                      (<Button type="submit" color="secondary" variant="contained">
-                        update
-                      </Button>)
-                      : null
-
+                  {
+                    actionType === "create" ? (
+                      userData?.user === "superAdmin" ? (
+                        <Button type="submit" color="secondary" variant="contained">
+                          Create Manager
+                        </Button>
+                      ) : userData?.user === "manager" ? (
+                        <Button type="submit" color="secondary" variant="contained">
+                          Create New Employee
+                        </Button>
+                      ) : null
+                    ) : actionType === "update" ? (
+                      <Button type="submit" color="secondary" variant="contained">
+                        Update
+                      </Button>
+                    ) : null
                   }
+
 
 
 

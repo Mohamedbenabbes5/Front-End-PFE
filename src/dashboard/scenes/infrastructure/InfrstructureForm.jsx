@@ -104,7 +104,7 @@ console.log({infrastrId});
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                navigate(`/dashboard/allinfrastructures`, { state: { successCreation: "Project created successfully" } });
+                navigate(`/dashboard/allinfrastructures`, { state: { successCreation: "infrastructure created successfully" } });
     
             } catch (error) {
                 // Gérer les erreurs
@@ -136,7 +136,7 @@ console.log({infrastrId});
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                navigate(`/dashboard/allinfrastructures`, { state: { successCreation: "Project updated successfully" } });
+                navigate(`/dashboard/allinfrastructures`, { state: { successCreation: "infrastructure updated successfully" } });
     
             } catch (error) {
                 // Gérer les erreurs

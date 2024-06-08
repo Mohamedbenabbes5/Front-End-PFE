@@ -5,7 +5,7 @@ import * as Icon from 'react-feather';
 import axios from 'axios';
 import TransitionAlerts from "../TransitionAlerts";
 
-import BackgroundImage from '../../assets/images/bg/1.jpg';
+import BackgroundImage from '../../assets/images/bg/1.png';
 import Logo from "../../assets/images/logo.png";
 
 /**
@@ -120,9 +120,9 @@ export default function VerificationOTP() {
                                                         <form className="login-form mt-4">
                                                             <Row>
                                                                 <Col lg={12}>
-                                                                    <p className="text-muted">Please enter your One-Time Password to verify your account.</p>
+                                                                    <p className="text-muted">Please enter your One-Time Password to verify your account.  </p>
                                                                     <div className="mb-3">
-                                                                        <label className="form-label">OTP <span className="text-danger">*</span></label>
+                                                                        <label className="form-label"><span className="text-danger">*</span> OTP </label>
                                                                         <input onChange={handleVerificationFormatOTP} type="number" className="form-control" placeholder="Enter your One-Time-Password" name="email" required />
                                                                     </div>
                                                                 </Col>
@@ -139,6 +139,7 @@ export default function VerificationOTP() {
 
                                                                 <div className="mx-auto">
                                                                     <p className="mb-0 mt-3">
+                                                                    <span className="text-danger">*</span>The OTP code will expire in <span className="text-danger">15 minutes </span> <br/> <br/>
                                                                         <small className="text-dark me-2">Dont receive the OTP ?</small>
                                                                         <Link onClick={handleResendOTP} className="text-dark fw-bold resend-link">
                                                                             <span className="fw-bold" style={{ color: 'red' }}>RESEND OTP</span>

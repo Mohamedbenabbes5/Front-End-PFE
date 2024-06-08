@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 
 export default function FreeSolo({ label, onSelectionChange, employeesList }) {
-  const roles = ['guest', 'inspector', 'expert', 'project manager'];
+  const roles =  ['employee', 'inspector','expert', 'project manager' ];
   const decodedToken = localStorage.getItem('decodedToken');
   const userData = JSON.parse(decodedToken).user;
 

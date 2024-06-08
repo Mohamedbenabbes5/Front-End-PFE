@@ -4,7 +4,6 @@ import Topbar from "./dashboard/scenes/global/Topbar";
 import Sidebar from "./dashboard/scenes/global/Sidebar";
 import Dashboard from "./dashboard/scenes/dashboard";
 import Form from "./dashboard/scenes/users/form";
-import Geography from "./dashboard/scenes/geography";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { ColorModeContext, useMode } from "./dashboard/theme";
 import Manager from "./dashboard/scenes/users/Manager";
@@ -48,8 +47,14 @@ function DashboardRoutes() {
               <Route path="/mytasks" element={<MyTasks/>} />
 
               <Route path="/form" element={<Form />} />
-              <Route path="/allprojects" element={<Projects />} />
-
+              <Route
+                path="/allprojects"
+                element={
+                  <ProtectedDashboardRoute allowedUsers={['manager', 'employee']}>
+                    <Projects />
+                  </ProtectedDashboardRoute>
+                }
+              />
               <Route
                 path="/result/:projectId"
                 element={
@@ -66,7 +71,14 @@ function DashboardRoutes() {
                   </ProtectedDashboardRoute>
                 }
               />
-              <Route path="/allinfrastructures"element={ <Infrastructures /> } />
+              <Route
+                path="/allinfrastructures"
+                element={
+                  <ProtectedDashboardRoute allowedUsers={['manager', 'employee']}>
+                    <Infrastructures />
+                  </ProtectedDashboardRoute>
+                }
+              />
               
               <Route
                 path="/creacteinfrastructure"

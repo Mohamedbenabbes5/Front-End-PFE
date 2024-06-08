@@ -4,6 +4,7 @@ import { Col, Row, Container } from "reactstrap";
 import axios from 'axios';
 import ProjectCard from './ProjectCard';
 
+import TransitionAlerts from '../../components/TransitionAlerts';
 
 
 
@@ -11,6 +12,15 @@ import ProjectCard from './ProjectCard';
 const Projects = () => {
   const token = localStorage.getItem('accessToken');
   const [projects, setProjects] = useState([]);
+  const [alertInfo, setAlertInfo] = useState(null);
+
+  const handleAlert = (alert) => {
+    if (alert.type === "success") {
+      window.location.reload();
+    }
+    setAlertInfo(alert);
+
+  };
   const fetchData = async () => {
 
     try {
@@ -41,11 +51,21 @@ const Projects = () => {
 
       <React.Fragment>
         <div className="page-content">
+          {alertInfo && (
+
+            <TransitionAlerts
+              sx={{}}
+              type={alertInfo.type}
+              message={alertInfo.message}
+              onClose={() => { }}
+              variant={"filled"}
+            />
+          )}
           <Container fluid={true}>
             <Row>
               {projects.map((project) => (
                 <Col key={project?.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                  <ProjectCard data={project} />
+                  <ProjectCard data={project} onAlert={handleAlert} />
                 </Col>
               ))}
             </Row>
@@ -53,7 +73,7 @@ const Projects = () => {
         </div>
       </React.Fragment>
 
-     
+
     </div>
   )
 

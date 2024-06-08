@@ -25,8 +25,8 @@ const Profile = () => {
     const [alertInfo, setAlertInfo] = useState(null); // Contient le type de message et le message lui-même sous forme d'objet {type, message}
     const [profileData, setProfileData] = useState(null);
     const [projectCount, setProjectCount] = useState(0);
-    const status = ['pending', 'active', 'suspended'];
-    const roles = ['guest', 'inspector', 'expert', 'project manager'];
+    const status = ['pending', 'suspended','active'];
+    const roles = ['employee', 'inspector', 'expert', 'project manager'];
     const profileImagesPath = 'http://localhost:3000/uploads/profileImages/';
     const location = useLocation();
     const successCreation = location.state?.successCreation;

@@ -12,6 +12,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'; // Importer l'icôn
 import Groups2Icon from '@mui/icons-material/Groups2'; import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import axios from 'axios';
+
+
 const LineWithIcon = ({ icon, text }) => (
   <Grid container spacing={1} alignItems="center" sx={{ marginBottom: '8px', display: 'flex', alignItems: 'center' }}> {/* Utiliser alignItems pour aligner les éléments verticalement */}
     <Grid item> {/* Contrôle de l'espacement horizontal */}
@@ -25,7 +27,7 @@ const LineWithIcon = ({ icon, text }) => (
   </Grid>
 );
 
-const InfrastrauctureCard = ({ data }) => {
+const InfrastrauctureCard = ({ data,onAlert }) => {
   const theme = useTheme();
   const ImagePathInfrastraucture = 'http://localhost:3000/uploads/infrastructureImages';
   const navigate = useNavigate();
@@ -41,7 +43,8 @@ const InfrastrauctureCard = ({ data }) => {
           'Authorization': `Bearer ${token}`
         }
       });
-      navigate(`/dashboard/allinfrastructures`, { replace: true, state: { successCreation: "Project deleted successfully" } });
+      onAlert({ type: "success", message: response.data.message });
+
 
     } catch (error) {
       // Gérer les erreurs
@@ -89,11 +92,7 @@ const InfrastrauctureCard = ({ data }) => {
         </Typography>
 
 
-        <LineWithIcon
-
-          icon={<Avatar src="https://maphotoportrait.fr/1775-thickbox_default/face-ou-profil-quel-est-le-meilleur-angle-pour-la-photo-linkedin-.jpg" aria-label="recipe" />}
-          text={`Created By: ${data?.manager}`}
-        />
+     
 
         <CardActions>
 

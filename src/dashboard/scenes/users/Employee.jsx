@@ -50,7 +50,7 @@ const Employee = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const roles = ['guest', 'inspector','expert', 'project manager' ];
+  const roles = ['employee', 'inspector','expert', 'project manager' ];
   const status = ['pending', 'suspended', 'active'];
 
   const decodedToken = localStorage.getItem('decodedToken');
@@ -246,9 +246,9 @@ const Employee = () => {
     },
 
 
-    {
+    ...(userData?.user === 'superAdmin' ? [{
       field: "companyname",
-      headerName: "Company",
+      headerName: "company name",
       renderCell: (params) => {
         return (
           <div>
@@ -257,9 +257,8 @@ const Employee = () => {
         );
       },
       flex: 1,
-    },
-
-
+    }] : []),
+  
 
     {
 

@@ -122,6 +122,7 @@ console.log(decodedToken);
                 [id]: { mode: GridRowModes.View , ignoreModifications: true}
             });
             // Gérer la réponse de votre backend (par exemple, afficher une alerte de succès)
+            setAlertInfo({ type: "success", message: "row updated successfully!" });
 
         } catch (error) {
             // Gérer les erreurs (par exemple, afficher une alerte d'erreur)

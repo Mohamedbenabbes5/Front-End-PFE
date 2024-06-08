@@ -149,21 +149,25 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             {userData.user !== 'superAdmin' &&
-              <Item
+            <div>
+                <Item
                 title="Profile"
                 to="/profile"
                 icon={<PersonOutlinedIcon />}
                 selected={selected}
                 setSelected={setSelected}
-              />
-            }
-            <Item
+              /> 
+              <Item
               title="ALL Projects"
               to="/allprojects"
               icon={<ViewCompactIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+            </div>
+            
+            }
+           
             {userData.user !== 'superAdmin' &&
 
               <Item
@@ -179,23 +183,26 @@ const Sidebar = () => {
 
               />
             }
-            <Item
-              title="infrastructures"
-              to="/allinfrastructures"
-              icon={<AccountBalanceIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
             {userData.user !== 'superAdmin' &&
-              <Item
-                title="Creacte Infrastructure"
-                to="/creacteinfrastructure"
-                icon={<ControlPointIcon />}
-                selected={selected}
-                setSelected={setSelected}
-                style={!isCollapsed ? { marginLeft: "8px" } : {}}
+              <div>
+                <Item
+                  title="infrastructures"
+                  to="/allinfrastructures"
+                  icon={<AccountBalanceIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Creacte Infrastructure"
+                  to="/creacteinfrastructure"
+                  icon={<ControlPointIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                  style={!isCollapsed ? { marginLeft: "8px" } : {}}
 
-              />
+                />
+              </div>
+
             }
             {userData.user !== 'employee' &&
               <Typography
@@ -207,13 +214,13 @@ const Sidebar = () => {
               </Typography>
             }
             {userData.user === 'superAdmin' && <Item
-              title="Companies"
+              title="Managers"
               to="/companies"
               icon={<CorporateFareIcon />}
               selected={selected}
               setSelected={setSelected}
             />}
-            {userData.user !== 'employee' &&
+            {userData.user === 'manager' &&
               <Item
                 title="Employees"
                 to="/employees"
@@ -227,7 +234,7 @@ const Sidebar = () => {
 
             {userData.user !== 'superAdmin' &&
               <div>
-                <Typography
+                {/* <Typography
                   variant="h6"
                   color={colors.grey[300]}
                   sx={{ m: "15px 0 5px 20px" }}
@@ -240,7 +247,7 @@ const Sidebar = () => {
                   icon={<AssessmentIcon />}
                   selected={selected}
                   setSelected={setSelected}
-                />
+                /> */}
 
                 <Typography
                   variant="h6"
@@ -249,25 +256,25 @@ const Sidebar = () => {
                 >
                   Tasks
                 </Typography>
-                {(userData.user === 'manager' ||(userData.user === 'employee' && userData.role===3)) &&
+                {(userData.user === 'manager' || (userData.user === 'employee' && userData.role === 3)) &&
 
-                <Item
-                  title="Task Management"
-                  to="/taskmanagement"
-                  icon={<AssignmentIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-          }
-                   {userData.user === 'employee' &&
-                 <Item
-                  title="My Tasks"
-                  to="/mytasks"
-                  icon={<ListIcon />}
-                  selected={selected}
-                  setSelected={setSelected}
-                />
-          }
+                  <Item
+                    title="Task Management"
+                    to="/taskmanagement"
+                    icon={<AssignmentIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                }
+                {(userData.user === 'employee' &&   userData.role !== 3) &&
+                  <Item
+                    title="My Tasks"
+                    to="/mytasks"
+                    icon={<ListIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                }
               </div>
             }
 

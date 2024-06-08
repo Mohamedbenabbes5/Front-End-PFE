@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import TransitionAlerts from "../../../LandingPage/components/TransitionAlerts";
 import axios from 'axios';
 
-const FormTask = ({ isOpen, onClose }) => {
+const FormTask = ({ isOpen, onClose ,onAlert}) => {
   const [isAccepted, setIsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
@@ -16,7 +16,6 @@ const FormTask = ({ isOpen, onClose }) => {
     assigneeId: null
   });
   const [allEmployees, setAllEmployees] = useState([]);
-  const [alertInfo, setAlertInfo] = useState(null);
 
   const token = localStorage.getItem('accessToken');
 
@@ -32,7 +31,7 @@ const FormTask = ({ isOpen, onClose }) => {
 
   const fetchEmployee = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/users/get-allemployeeNames", {
+      const response = await axios.get("http://localhost:3000/users/get-allassignee", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,10 +60,11 @@ const FormTask = ({ isOpen, onClose }) => {
           assigneeId: null
         });
         setIsAccepted(false);
-        setAlertInfo({ type: "success", message: response.data.message });
+
+        onAlert({ type: "success", message: response.data.message });
         onClose(); // Close the dialog after mission creation
       } catch (error) {
-        setAlertInfo({ type: "error", message: error.response.data.error });
+        onAlert({ type: "error", message: error.response.data.error });
         console.error("Error creating mission:", error);
       }
     }
@@ -137,7 +137,7 @@ const FormTask = ({ isOpen, onClose }) => {
             control={<Checkbox color="primary" checked={isAccepted} onChange={(e) => setIsAccepted(e.target.checked)} />}
             label="All data is valid"
           />
-          <Button color="primary" variant="contained" onClick={handleSubmit} disabled={!isAccepted}>Create Mission</Button>
+          <Button color="success" variant="contained" onClick={handleSubmit} disabled={!isAccepted}>Create Mission</Button>
         </Stack>
       </DialogContent>
       <DialogActions>

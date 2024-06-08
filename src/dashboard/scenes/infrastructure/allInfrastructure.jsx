@@ -15,12 +15,19 @@ import InfrastrauctureCard from './InfrastrauctureCard';
 const Infrastructures = () => {
   const token = localStorage.getItem('accessToken');
   const [dataInfrastructures, setdataInfrastructures] = useState([]);
+  const [alertInfo, setAlertInfo] = useState(null);
 
   const location = useLocation();
 
   // Vérifiez si le message de succès est passé en tant que state lors de la navigation
   const successCreation = location.state?.successCreation;
+  const handleAlert = (alert) => {
+    if (alert.type === "success") {
+      window.location.reload();
+    }
+    setAlertInfo(alert);
 
+  };
   const fetchInfrastructures = async () => {
 
     try {
@@ -51,6 +58,17 @@ const Infrastructures = () => {
 
       <SearchBar></SearchBar>
       <div style={{ marginLeft: "20px" }}>
+
+        {alertInfo && (
+
+          <TransitionAlerts
+            sx={{}}
+            type={alertInfo.type}
+            message={alertInfo.message}
+            onClose={() => { }}
+            variant={"filled"}
+          />
+        )}
         {successCreation && (
 
           <TransitionAlerts
@@ -61,7 +79,7 @@ const Infrastructures = () => {
             variant={"filled"}
           />
         )}
-        </div>
+      </div>
       <React.Fragment>
         <div className="page-content">
 
@@ -70,7 +88,7 @@ const Infrastructures = () => {
 
               {dataInfrastructures.map((infrastructure) => (
                 <Col key={infrastructure?.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                  <InfrastrauctureCard data={infrastructure} />
+                  <InfrastrauctureCard data={infrastructure} onAlert={handleAlert}  />
                 </Col>
               ))}
             </Row>
